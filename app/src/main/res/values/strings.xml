@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Baymax_RPG</string>
+    <string name="rpg">Baymax App</string>
+    <string name="Email">Email</string>
+    <string name="Senha">Senha</string>
+    <string name="Fortgot_Password">Esqueci minha senha</string>
+    <string name="Connect">Conectar</string>
+    <string name="Nome_Completo">Nome Completo</string>
+    <string name="Role">Role: </string>
+    <string name="Nickname">Nickname</string>
+    <string name="Confirmar_Senha">Confirmar Senha</string>
+    <string name="Cadastrar">Cadastrar</string>
+    <string name="Cadastrado">Email Cadastrado</string>
+    <string name="Enviar">Enviar</string>
+    <string name="Home">Home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
