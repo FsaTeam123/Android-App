@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/Home"
+        android:enabled="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/personFragment"
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/Profile"
+        android:enabled="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/baseline_flag_circle"
+        android:title="@string/Map"
+        android:enabled="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/editFragment"
+        android:icon="@drawable/baseline_edit_document_24"
+        android:title="@string/Card"
+        android:enabled="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/settings_gear"
+        android:title="@string/Card"
+        android:enabled="true"
+        app:showAsAction="always" />
+
+</menu>
