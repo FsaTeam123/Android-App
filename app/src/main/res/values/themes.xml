@@ -1,9 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.AndroidAppRpg" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#000000</item>
+        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">#000000</item>
+    </style>
+    <style name="Theme.AndroidAppRpg" parent="Base.Theme.AndroidAppRpg" />
+
+    <style name="Theme.App.AndroidAppRpg" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/Crowshead</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/wizard_face_svgrepo_com</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.AndroidAppRpg</item>
     </style>
 
-    <style name="Theme.AndroidAppRpg" parent="Base.Theme.AndroidAppRpg" />
 </resources>

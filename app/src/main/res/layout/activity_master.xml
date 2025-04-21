@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tela_principal"
-    tools:context=".Android_Activity.ActivityLogin">
+        tools:context=".Android_Activity.ActivityLogin">
 
     <TextView
         android:id="@+id/header"
@@ -33,7 +33,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- seus botões aqui -->
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="@color/Crowshead"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/Criar_jogo"
+            android:textAlignment="center"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="18dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/Crowshead"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/Entrar_jogo"
+            android:textAlignment="center"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="18dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/Crowshead"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/Meus_Jogos"
+            android:textAlignment="center"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="18dp" />
+
 
     </LinearLayout>
 
