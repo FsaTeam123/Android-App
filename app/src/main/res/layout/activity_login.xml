@@ -12,6 +12,7 @@
     tools:context=".Android_Activity.ActivityLogin">
 
 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
         android:padding="24dp">
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
@@ -62,6 +64,7 @@
             android:textColor="@color/BordasDouradas" />
 
         <TextView
+            android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Esqueci a minha senha"
@@ -83,6 +86,7 @@
         android:padding="24dp">
 
         <Button
+            android:id="@+id/loginButton"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
