@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 
 interface AuthApi {
-    @POST("auth/login") //endpoint
+    @GET("auth/login") //endpoint
     suspend fun login(@Body request:loginModelRequest)
 }
 

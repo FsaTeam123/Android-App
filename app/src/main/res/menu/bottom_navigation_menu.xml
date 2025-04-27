@@ -4,21 +4,21 @@
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/baseline_home_24"
+        android:icon="@drawable/home"
         android:title="@string/Home"
         android:enabled="true"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/personFragment"
-        android:icon="@drawable/baseline_person_24"
+        android:icon="@drawable/profile_navbar"
         android:title="@string/Profile"
         android:enabled="true"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/mapFragment"
-        android:icon="@drawable/baseline_flag_circle"
+        android:icon="@drawable/message"
         android:title="@string/Map"
         android:enabled="true"
         app:showAsAction="always" />
@@ -32,7 +32,7 @@
 
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/settings_gear"
+        android:icon="@drawable/settings"
         android:title="@string/Card"
         android:enabled="true"
         app:showAsAction="always" />

@@ -2,10 +2,8 @@ package com.example.androidapprpg.Android_Activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.androidapprpg.R
@@ -57,11 +55,17 @@ class ActivityLogin : AppCompatActivity() {
         }
     }
 
-
     //Configurando botão de Esquecer a Senha
     binding.forgotPassword.setOnClickListener {
+        val intent = Intent(this, ActivityForgotPassword::class.java)
+        startActivity(intent)
+        }
+
+    //Configurando botão de Cadastro
+    binding.register.setOnClickListener {
         val intent = Intent(this, ActivityCadastro::class.java)
         startActivity(intent)
         }
     }
+
 }
