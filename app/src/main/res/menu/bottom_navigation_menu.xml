@@ -18,15 +18,15 @@
 
     <item
         android:id="@+id/mapFragment"
-        android:icon="@drawable/message"
+        android:icon="@drawable/map"
         android:title="@string/Map"
         android:enabled="true"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/editFragment"
-        android:icon="@drawable/baseline_edit_document_24"
-        android:title="@string/Card"
+        android:id="@+id/lettersfragment"
+        android:icon="@drawable/message"
+        android:title="@string/letters"
         android:enabled="true"
         app:showAsAction="always" />
 

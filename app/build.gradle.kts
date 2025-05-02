@@ -54,7 +54,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    //implementation(libs.smoothbottombar)
+    implementation(libs.smoothbottombar)
     implementation(libs.picasso)
     //implementation(libs.spinkit)
     implementation(libs.navigation.fragment.ktx)

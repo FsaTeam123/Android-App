@@ -9,6 +9,7 @@
     android:background="@drawable/tela_principal"
         tools:context=".Android_Activity.ActivityLogin">
 
+    <!--Header-->
     <TextView
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -24,61 +25,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
+    <!-- Fragment Container View -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
         app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:navGraph="@navigation/nav" />
+
+    <me.ibrahimsn.lib.SmoothBottomBar
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:elevation="12dp"
+        app:backgroundColor="@color/Crowshead"
+        app:iconMargin="8dp"
+        app:iconSize="24dp"
+        app:indicatorRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="@color/Crowshead"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/Criar_jogo"
-            android:textAlignment="center"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="18dp" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:backgroundTint="@color/Crowshead"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/Entrar_jogo"
-            android:textAlignment="center"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="18dp" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:backgroundTint="@color/Crowshead"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/Meus_Jogos"
-            android:textAlignment="center"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="18dp" />
-
-
-    </LinearLayout>
-
-
-
-
-
-
-
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_navigation_menu"
+        app:textSize="14dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

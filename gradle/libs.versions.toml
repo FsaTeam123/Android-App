@@ -18,6 +18,7 @@ navigationFragmentKtxVersion = "2.8.9"
 navigationUiKtxVersion = "2.8.9"
 splashscreen = "1.0.0"
 
+
 [libraries]
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit_gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
