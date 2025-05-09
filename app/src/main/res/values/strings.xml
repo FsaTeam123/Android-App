@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Reinos Perdidos</string>
-    <string name="rpg">Baymax App</string>
+    <string name="rpg">Reinos Perdidos</string>
     <string name="Email">email</string>
     <string name="Senha">senha</string>
     <string name="Fortgot_Password">Esqueci minha senha</string>
@@ -28,6 +28,8 @@
     <string name="language">idioma</string>
     <string name="Exit_account">Encerre sua Conta</string>
     <string name="Portuguese">Português</string>
+    <string name="sentence">Ainda não é um aventureiro?</string>
+    <string name="register">Cadastre-se</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
