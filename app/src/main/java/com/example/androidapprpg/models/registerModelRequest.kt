@@ -4,14 +4,21 @@ import com.google.gson.annotations.SerializedName
 
 data class registerModelRequest(
     @SerializedName("name")
-    val name : String,
+    val name : String?,
 
     @SerializedName("email")
-    val email : String,
+    val email : String?,
 
     @SerializedName("nickname")
-    val nickname : String,
+    val nickname : String?,
 
     @SerializedName("senha")
-    val senha : String
+    val senha : String?,
+
+    @SerializedName("sexo")
+    val idsexo : String?, //pode ser nulo
+
+    @SerializedName("perfil")
+    val idPerfil : String? //pode ser nulo
+
 )

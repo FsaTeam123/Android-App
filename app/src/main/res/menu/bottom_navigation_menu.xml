@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -6,35 +7,31 @@
         android:id="@+id/homeFragment"
         android:icon="@drawable/home"
         android:title="@string/Home"
-        android:enabled="true"
         app:showAsAction="always" />
 
+
     <item
-        android:id="@+id/personFragment"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/profile_navbar"
         android:title="@string/Profile"
-        android:enabled="true"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/mapFragment"
         android:icon="@drawable/map"
         android:title="@string/Map"
-        android:enabled="true"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/lettersfragment"
+        android:id="@+id/lettersFragment"
         android:icon="@drawable/message"
         android:title="@string/letters"
-        android:enabled="true"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/settingsFragment"
         android:icon="@drawable/settings"
         android:title="@string/Card"
-        android:enabled="true"
         app:showAsAction="always" />
 
 </menu>

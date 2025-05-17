@@ -9,37 +9,31 @@
         android:id="@+id/homeFragment"
         android:name="com.example.androidapprpg.fragment.HomeFragment"
         android:label='fragment_home'
-        tools:layout="@layout/fragment_home"
-        >
-    </fragment>
+        tools:layout="@layout/fragment_home"/>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.androidapprpg.fragment.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile"
-        />
+        tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.example.androidapprpg.fragment.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map"
-        />
+        tools:layout="@layout/fragment_map"/>
 
     <fragment
         android:id="@+id/lettersFragment"
         android:name="com.example.androidapprpg.fragment.LettersFragment"
         android:label="fragment_letters"
-        tools:layout="@layout/fragment_letters"
-        />
+        tools:layout="@layout/fragment_letters" />
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.androidapprpg.fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings"
-        />
+        tools:layout="@layout/fragment_settings" />
 
 
 

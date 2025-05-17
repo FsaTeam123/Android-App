@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login"
+    android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tela_principal"
-        tools:context=".Android_Activity.ActivityLogin">
+        tools:context=".Android_Activity.ActivityMaster">
 
     <!--Header-->
     <TextView
@@ -36,21 +36,21 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:navGraph="@navigation/nav" />
 
-    <me.ibrahimsn.lib.SmoothBottomBar
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="0dp"
         android:elevation="12dp"
-        app:backgroundColor="@android:color/transparent"
-        app:iconTint="@color/BordasDouradas"
-        app:iconMargin="8dp"
-        app:iconSize="50dp"
-        app:indicatorRadius="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@android:color/transparent"
+        app:itemIconSize="35dp"
+        app:itemIconTint="@color/BordasDouradas"
+        app:itemTextColor="@color/BordasDouradas"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu"
-        app:textSize="14dp"
-        app:textColor="@color/BordasDouradas"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

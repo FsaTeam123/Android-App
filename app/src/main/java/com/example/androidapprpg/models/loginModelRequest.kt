@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class loginModelRequest(
     @SerializedName("email")
-    val email : String,
+    val email : String?,
 
-    @SerializedName("password")
-    val password : String
+    @SerializedName("senha")
+    val senha : String?
 )
