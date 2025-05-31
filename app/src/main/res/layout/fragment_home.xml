@@ -15,19 +15,18 @@
         android:paddingTop="20dp">
 
         <Button
-            android:id="@+id/criarJogoButton"
+            android:id="@+id/NewGame"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:fontFamily="@font/cinzel_font_bold"
             android:text="@string/Criar_jogo"
             android:textColor="@color/BordasDouradas"
             android:textSize="21sp"
-
             android:background="@android:color/transparent"
             android:visibility="visible" />
 
         <Button
-            android:id="@+id/entrarJogoButton"
+            android:id="@+id/JoinGame"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:text="@string/Entrar_jogo"
@@ -38,7 +37,7 @@
             android:textColor="@color/BordasDouradas" />
 
         <Button
-            android:id="@+id/meusJogosButton"
+            android:id="@+id/MyGames"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:text="@string/Meus_Jogos"

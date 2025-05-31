@@ -16,9 +16,10 @@
         android:title="@string/Profile"
         app:showAsAction="always" />
 
+
     <item
         android:id="@+id/mapFragment"
-        android:icon="@drawable/map"
+        android:icon="@drawable/profile_navbar"
         android:title="@string/Map"
         app:showAsAction="always" />
 
@@ -28,9 +29,10 @@
         android:title="@string/letters"
         app:showAsAction="always" />
 
+
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/profile_navbar"
         android:title="@string/Card"
         app:showAsAction="always" />
 
