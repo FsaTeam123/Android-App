@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.androidapprpg.Android_Activity.ActivityJoinGame
+import com.example.androidapprpg.Android_Activity.ActivityMaster
+import com.example.androidapprpg.Android_Activity.ActivityMyGames
+import com.example.androidapprpg.Android_Activity.ActivityNewGame
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentHomeBinding
 
@@ -25,27 +29,30 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     //onViewCreated ideal para listeners e lógica relacionada a UI
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
     }
 
+    //Realizo uma intent para uma Activity para criar um novo Backstack. Cada intent abre um novo fluxo de trabalho
     private fun setupClickListeners() {
-        //binding para navegar para Fragment New Game
+        //binding para navegar para ActivityNewGame.
         binding.NewGame.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_newGameFragment)
+            val intent = Intent(requireContext(), ActivityNewGame::class.java)
+            startActivity(intent)
         }
 
         //binding para navegar para Fragment My Games
         binding.MyGames.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_myGamesFragment)
+            val intent = Intent(requireContext(), ActivityMyGames::class.java)
+            startActivity(intent)
         }
 
         //binding para navegar para Fragment Join Game
         binding.JoinGame.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_JoinGameFragment)
+            val intent = Intent(requireContext(), ActivityJoinGame::class.java)
+            startActivity(intent)
         }
     }
 

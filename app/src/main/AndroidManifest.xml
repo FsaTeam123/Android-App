@@ -29,6 +29,11 @@
         <activity android:name=".Android_Activity.ActivityForgotPassword" android:exported="true"> </activity>
         <activity android:name=".Android_Activity.ActivityMaster" android:exported="true"> </activity>
         <activity android:name=".Android_Activity.ActivityCadastro" android:exported="true"> </activity>
+        <activity android:name=".Android_Activity.ActivityNewGame" android:exported="true"> </activity>
+        <activity android:name=".Android_Activity.ActivityJoinGame" android:exported="true"> </activity>
+        <activity android:name=".Android_Activity.ActivityMyGames" android:exported="true"> </activity>
+
+
 
 
     </application>

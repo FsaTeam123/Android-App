@@ -11,19 +11,6 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
-        <!-- Ações de navegação do HomeFragment -->
-        <action
-            android:id="@+id/action_homeFragment_to_newGameFragment"
-            app:destination="@id/newGameFragment" />
-
-        <action
-            android:id="@+id/action_homeFragment_to_myGamesFragment"
-            app:destination="@id/myGamesFragment" />
-
-        <action
-            android:id="@+id/action_homeFragment_to_JoinGameFragment"
-            app:destination="@id/JoinGameFragment" />
-
     </fragment>
 
     <fragment
@@ -50,24 +37,6 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 
-    <!-- Novos fragmentos para criar jogo e meus jogos -->
 
-    <fragment
-        android:id="@+id/newGameFragment"
-        android:name="com.example.androidapprpg.fragment.newGameFragment"
-        android:label="fragment_new_game"
-        tools:layout="@layout/fragment_new_game" />
-
-    <fragment
-        android:id="@+id/myGamesFragment"
-        android:name="com.example.androidapprpg.fragment.myGamesFragment"
-        android:label="fragment_my_games"
-        tools:layout="@layout/fragment_my_games" />
-
-    <fragment
-        android:id="@+id/JoinGameFragment"
-        android:name="com.example.androidapprpg.fragment.joinGameFragment"
-        android:label="fragment_join_game"
-        tools:layout="@layout/fragment_join_game" />
 
 </navigation>

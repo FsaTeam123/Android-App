@@ -7,7 +7,17 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cinzel_font_bold"
+        android:text="@string/Profile"
+        android:textAlignment="center"
+        android:textColor="@color/BordasDouradas"
+        android:textFontWeight="600"
+        android:textSize="38dp" />
+
+
+
+
+
 
 </FrameLayout>

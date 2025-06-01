@@ -21,15 +21,10 @@ class ProfileFragment : Fragment() {
         return binding.root //retorna a raiz da view inflada para ser exibida na tela
     }
 
-
     //evita vazamento de memória
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
-
 
 }
