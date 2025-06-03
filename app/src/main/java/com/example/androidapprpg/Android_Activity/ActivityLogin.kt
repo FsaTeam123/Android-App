@@ -10,6 +10,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.ActivityLoginBinding
 import android.content.ContentValues.TAG
+import android.os.Build
+import androidx.activity.enableEdgeToEdge
 
 
 class ActivityLogin : AppCompatActivity() {
@@ -19,13 +21,39 @@ class ActivityLogin : AppCompatActivity() {
 
         installSplashScreen() //instalar Splashscreen
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
 
     //linkando databinding para interagir com o Front
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-    //sharedPreferences
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val controller = window.insetsController
+            if (controller != null) {
+                controller.hide(
+                    android.view.WindowInsets.Type.navigationBars() or
+                            android.view.WindowInsets.Type.statusBars()
+                )
+                controller.systemBarsBehavior =
+                    android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    )
+        }
+
+
+
+        //sharedPreferences
     //val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     //val userId = sharedPreferences.getLong("USER_ID", -1)
 
