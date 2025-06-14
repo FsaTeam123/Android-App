@@ -1,12 +1,9 @@
-package com.example.androidapprpg.Android_Activity
+package com.example.androidapprpg.ui.activity
 
 
-import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 
-import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.NavController

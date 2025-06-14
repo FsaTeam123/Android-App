@@ -1,4 +1,4 @@
-package com.example.androidapprpg.models
+package com.example.androidapprpg.data.model
 
 import com.google.gson.annotations.SerializedName
 

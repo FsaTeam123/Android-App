@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.androidapprpg.fragment.HomeFragment"
+        android:name="com.example.androidapprpg.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -15,25 +15,25 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.androidapprpg.fragment.ProfileFragment"
+        android:name="com.example.androidapprpg.ui.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.androidapprpg.fragment.MapFragment"
+        android:name="com.example.androidapprpg.ui.fragment.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/lettersFragment"
-        android:name="com.example.androidapprpg.fragment.LettersFragment"
+        android:name="com.example.androidapprpg.ui.fragment.LettersFragment"
         android:label="fragment_letters"
         tools:layout="@layout/fragment_letters" />
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.androidapprpg.fragment.SettingsFragment"
+        android:name="com.example.androidapprpg.ui.fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 

@@ -1,18 +1,13 @@
-package com.example.androidapprpg.Android_Activity
+package com.example.androidapprpg.ui.activity
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.ActivityLoginBinding
-import android.content.ContentValues.TAG
 import android.os.Build
 import androidx.activity.enableEdgeToEdge
-
 
 class ActivityLogin : AppCompatActivity() {
     private lateinit var binding:ActivityLoginBinding
@@ -22,7 +17,6 @@ class ActivityLogin : AppCompatActivity() {
         installSplashScreen() //instalar Splashscreen
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
 
     //linkando databinding para interagir com o Front
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -51,8 +45,6 @@ class ActivityLogin : AppCompatActivity() {
                     )
         }
 
-
-
         //sharedPreferences
     //val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     //val userId = sharedPreferences.getLong("USER_ID", -1)
@@ -69,50 +61,38 @@ class ActivityLogin : AppCompatActivity() {
         Log.d(TAG, "Nenhum usuario logado, permanecer na tela de login")
     }*/
 
-    //Configurando Botão de Login
-        binding.loginButton.setOnClickListener {
-            val email = binding.email.text.toString()
-            val password = binding.password.text.toString()
-
-            if(email.isNotEmpty() && password.isNotEmpty()){
-                val intent = Intent(this, ActivityMaster::class.java)
-                startActivity(intent)
-                finish()
-
-        }
-
-
-        /*
-        val email = binding.email.text.toString()
-        val password = binding.password.text.toString()
-
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            //realiza as verificações no Banco - AWS
-
-
-            //Realiza o Intent para a próxima Activity
-            val intent = Intent(this, ActivityMaster::class.java)
-            startActivity(intent)
-        }*/
-
+        settingsButtons()
 
     }
 
-    //Configurando botão de Esquecer a Senha
+        private fun settingsButtons() {
 
-        binding.forgotPassword.setOnClickListener {
-            val intent = Intent(this, ActivityForgotPassword::class.java)
-            startActivity(intent)
+            //Configurando Botão de Login
+            binding.loginButton.setOnClickListener {
+                val email = binding.email.text.toString()
+                val password = binding.password.text.toString()
 
-        }
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    val intent = Intent(this, ActivityMaster::class.java)
+                    startActivity(intent)
+                    finish()
 
+                }
+            }
 
+            //Configurando botão de Esquecer a Senha
+            binding.forgotPassword.setOnClickListener {
+                val intent = Intent(this, ActivityForgotPassword::class.java)
+                startActivity(intent)
 
-    //Configurando botão de Cadastro
+            }
 
-        binding.register.setOnClickListener {
-            val intent = Intent(this, ActivityCadastro::class.java)
-            startActivity(intent)
+            //Configurando botão de Cadastro
+            binding.register.setOnClickListener {
+                val intent = Intent(this, ActivityCadastro::class.java)
+                startActivity(intent)
+
+            }
 
         }
 

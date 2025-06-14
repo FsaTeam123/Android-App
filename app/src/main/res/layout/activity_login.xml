@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/login_background"
-    tools:context=".Android_Activity.ActivityLogin">
+    tools:context=".ui.activity.ActivityLogin">
 
     <TextView
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.androidapprpg.fragment
+package com.example.androidapprpg.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,12 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.example.androidapprpg.Android_Activity.ActivityJoinGame
-import com.example.androidapprpg.Android_Activity.ActivityMaster
-import com.example.androidapprpg.Android_Activity.ActivityMyGames
-import com.example.androidapprpg.Android_Activity.ActivityNewGame
-import com.example.androidapprpg.R
+import com.example.androidapprpg.ui.activity.ActivityJoinGame
+import com.example.androidapprpg.ui.activity.ActivityMyGames
+import com.example.androidapprpg.ui.activity.ActivityNewGame
 import com.example.androidapprpg.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {

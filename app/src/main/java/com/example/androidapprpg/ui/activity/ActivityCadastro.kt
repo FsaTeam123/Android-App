@@ -1,11 +1,10 @@
-package com.example.androidapprpg.Android_Activity
+package com.example.androidapprpg.ui.activity
 
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.ActivityCadastroBinding
 
 class ActivityCadastro : AppCompatActivity() {
@@ -39,7 +38,6 @@ class ActivityCadastro : AppCompatActivity() {
                             or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     )
         }
-
 
         //Configurando botão de Cadastro
         binding.registerButton.setOnClickListener {
