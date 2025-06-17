@@ -1,4 +1,4 @@
-package com.example.androidapprpg.webClient.services
+package com.example.androidapprpg.data.remote.services
 
 import com.example.androidapprpg.data.model.UserResponse
 import com.example.androidapprpg.data.model.loginModelRequest

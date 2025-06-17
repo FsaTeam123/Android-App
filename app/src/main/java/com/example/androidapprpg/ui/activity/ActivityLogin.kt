@@ -8,9 +8,18 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.androidapprpg.databinding.ActivityLoginBinding
 import android.os.Build
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Observer
+import com.example.androidapprpg.utils.Result
+import com.example.androidapprpg.ui.viewmodel.LoginViewModel
 
 class ActivityLogin : AppCompatActivity() {
     private lateinit var binding:ActivityLoginBinding
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -22,46 +31,9 @@ class ActivityLogin : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val controller = window.insetsController
-            if (controller != null) {
-                controller.hide(
-                    android.view.WindowInsets.Type.navigationBars() or
-                            android.view.WindowInsets.Type.statusBars()
-                )
-                controller.systemBarsBehavior =
-                    android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (
-                    android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    )
-        }
-
-        //sharedPreferences
-    //val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-    //val userId = sharedPreferences.getLong("USER_ID", -1)
-
-    //LOG
-    //Log.d(TAG, "User ID iniciou LoginActivity: $userId ")
-
-    /*if(userId != -1L) {
-        //usuario já está logado redirecionar para ActivityMaster
-        val intent = Intent(this, ActivityMaster::class.java)
-        startActivity(intent)
-        finish()
-    } else {
-        Log.d(TAG, "Nenhum usuario logado, permanecer na tela de login")
-    }*/
-
         settingsButtons()
+        ativarFullscreen()
+        observarLogin()
 
     }
 
@@ -76,7 +48,6 @@ class ActivityLogin : AppCompatActivity() {
                     val intent = Intent(this, ActivityMaster::class.java)
                     startActivity(intent)
                     finish()
-
                 }
             }
 
@@ -84,19 +55,58 @@ class ActivityLogin : AppCompatActivity() {
             binding.forgotPassword.setOnClickListener {
                 val intent = Intent(this, ActivityForgotPassword::class.java)
                 startActivity(intent)
-
             }
 
             //Configurando botão de Cadastro
             binding.register.setOnClickListener {
                 val intent = Intent(this, ActivityCadastro::class.java)
                 startActivity(intent)
-
             }
 
         }
 
+    private fun ativarFullscreen() {
+        val windowInsetsController =
+            WindowCompat.getInsetsController(window, window.decorView)
+
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
+    private fun observarLogin() {
+        viewModel.loginResult.observe(this, Observer{ result ->
+            when(result) {
+                is Result.Loading -> {
+                    //ProgressBar
+                }
+
+                is Result.Success -> {
+                    val intent = Intent(this, ActivityMaster::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+
+                is Result.Error -> {
+                    android.widget.Toast.makeText(this, result.message, android.widget.Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+
+        })
+
+
 
     }
 
+
+
 }
+
+
+
+
+
+
