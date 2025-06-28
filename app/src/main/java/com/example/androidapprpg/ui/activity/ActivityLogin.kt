@@ -1,12 +1,16 @@
 package com.example.androidapprpg.ui.activity
 
 
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.nfc.Tag
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.androidapprpg.databinding.ActivityLoginBinding
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
@@ -16,7 +20,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import com.example.androidapprpg.utils.Result
 import com.example.androidapprpg.ui.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ActivityLogin : AppCompatActivity() {
     private lateinit var binding:ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
@@ -45,9 +51,10 @@ class ActivityLogin : AppCompatActivity() {
                 val password = binding.password.text.toString()
 
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    val intent = Intent(this, ActivityMaster::class.java)
-                    startActivity(intent)
-                    finish()
+                    viewModel.login(email, password)
+                    Log.d(TAG, "API access")
+                } else {
+                    Toast.makeText(this, "Preencha email e senha", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -55,12 +62,14 @@ class ActivityLogin : AppCompatActivity() {
             binding.forgotPassword.setOnClickListener {
                 val intent = Intent(this, ActivityForgotPassword::class.java)
                 startActivity(intent)
+                Log.d(TAG, "Entrando na seção esqueci minha senha?")
             }
 
             //Configurando botão de Cadastro
             binding.register.setOnClickListener {
                 val intent = Intent(this, ActivityCadastro::class.java)
                 startActivity(intent)
+                Log.d(TAG,"Entrando na seção cadastro")
             }
 
         }

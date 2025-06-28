@@ -5,6 +5,10 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
 }
 
+hilt {
+    enableAggregatingTask = false
+}
+
 android {
     namespace = "com.example.androidapprpg"
     compileSdk = 35
@@ -64,7 +68,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
+    implementation(libs.javapoet)
     kapt(libs.hilt.compiler)
+
 
 
     testImplementation(libs.junit)
