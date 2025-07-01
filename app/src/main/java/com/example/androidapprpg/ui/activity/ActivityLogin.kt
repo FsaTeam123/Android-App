@@ -18,6 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.utils.Result
 import com.example.androidapprpg.ui.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,16 @@ class ActivityLogin : AppCompatActivity() {
 
         installSplashScreen() //instalar Splashscreen
         super.onCreate(savedInstanceState)
+
+        val sessionManager = SessionManager(applicationContext)
+        if (sessionManager.isLoggedIn()) {
+            Log.d(TAG, "Usuario já está logado: ${sessionManager.getUserId()}")
+            startActivity(Intent(this, ActivityMaster::class.java))
+            finish()
+            return
+
+        }
+
         enableEdgeToEdge()
 
     //linkando databinding para interagir com o Front
@@ -48,10 +59,11 @@ class ActivityLogin : AppCompatActivity() {
             //Configurando Botão de Login
             binding.loginButton.setOnClickListener {
                 val email = binding.email.text.toString()
-                val password = binding.password.text.toString()
+                val senha = binding.password.text.toString()
 
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.login(email, password)
+                //preciso salvar o usuario no sharedPrefences da aplicação de modo privado.
+                if (email.isNotEmpty() && senha.isNotEmpty()) {
+                    viewModel.login(email, senha)
                     Log.d(TAG, "API access")
                 } else {
                     Toast.makeText(this, "Preencha email e senha", Toast.LENGTH_SHORT).show()
@@ -71,7 +83,6 @@ class ActivityLogin : AppCompatActivity() {
                 startActivity(intent)
                 Log.d(TAG,"Entrando na seção cadastro")
             }
-
         }
 
     private fun ativarFullscreen() {
@@ -92,6 +103,14 @@ class ActivityLogin : AppCompatActivity() {
                 }
 
                 is Result.Success -> {
+
+                    val user = result.data
+
+                    //Salva Dados
+                    val sessionManager = SessionManager(applicationContext)
+                    sessionManager.saveLogin(user.idUsuario.toLong(), user.token)
+
+
                     val intent = Intent(this, ActivityMaster::class.java)
                     startActivity(intent)
                     finish()
@@ -106,11 +125,7 @@ class ActivityLogin : AppCompatActivity() {
 
         })
 
-
-
     }
-
-
 
 }
 

@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="388dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/custom_edittext"
+    android:padding="24dp">
+
+    <!-- Header com título e botão fechar -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/closeAccountTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/encerrar_conta"
+            android:textAlignment="center"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="20sp"
+            android:fontFamily="@font/cinzel_font_bold"/>
+
+    </RelativeLayout>
+
+    <!-- Mensagem -->
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/close_Account"
+        android:textAlignment="center"
+        android:textColor="@color/BordasDouradas"
+        android:textSize="15sp"
+        android:fontFamily="@font/cinzel_font_bold"/>
+
+    <!-- Botões -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/DarkSiena"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/cancelar"
+            android:textColor="@color/BordasDouradas"/>
+
+        <Space
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/DarkSiena"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/encerrar"
+            android:textColor="@color/BordasDouradas"/>
+    </LinearLayout>
+</LinearLayout>
