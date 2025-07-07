@@ -39,7 +39,6 @@ class ActivityLogin : AppCompatActivity() {
             startActivity(Intent(this, ActivityMaster::class.java))
             finish()
             return
-
         }
 
         enableEdgeToEdge()
@@ -117,7 +116,7 @@ class ActivityLogin : AppCompatActivity() {
                 }
 
                 is Result.Error -> {
-                    android.widget.Toast.makeText(this, result.message, android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
 
             }

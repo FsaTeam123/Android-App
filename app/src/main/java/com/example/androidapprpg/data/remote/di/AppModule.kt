@@ -1,6 +1,8 @@
 package com.example.androidapprpg.data.remote.di
 
 import com.example.androidapprpg.data.remote.services.AuthService
+import com.example.androidapprpg.data.remote.services.ForgotPasswordService
+import com.example.androidapprpg.webClient.services.RegisterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +29,17 @@ object AppModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit) : AuthService =
         retrofit.create(AuthService::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideCadastroService(retrofit: Retrofit) : RegisterService =
+        retrofit.create(RegisterService::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideForgotPasswordService(retrofit: Retrofit) : ForgotPasswordService =
+        retrofit.create(ForgotPasswordService::class.java)
+
 }

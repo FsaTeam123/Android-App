@@ -6,34 +6,29 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/home"
-        android:title="@string/Home"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/profile_navbar"
-        android:title="@string/Profile"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/mapFragment"
-        android:icon="@drawable/profile_navbar"
-        android:title="@string/Map"
+        android:icon="@drawable/new_map"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/lettersFragment"
         android:icon="@drawable/message"
-        android:title="@string/letters"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/profile_navbar"
-        android:title="@string/Card"
+        android:icon="@drawable/settings"
         app:showAsAction="always" />
 
 </menu>

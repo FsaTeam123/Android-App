@@ -30,13 +30,26 @@
     <string name="Portuguese">Português</string>
     <string name="sentence">Ainda não é um aventureiro?</string>
     <string name="register">Cadastre-se</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="close_Account">Tem certeza que deseja encerrar sua conta?</string>
     <string name="encerrar_conta">Encerrar Conta</string>
     <string name="encerrar">Encerrar</string>
     <string name="cancelar">Cancelar</string>
     <string name="fechar">Fechar</string>
+    <string name="insira_seu_endere_o_de_email_para_receber_instru_es_para_redefinir_sua_senha">Insira seu endereço de email para receber instruções para redefinir sua senha</string>
+    <string name="lembrou_sua_senha">Lembrou sua senha?</string>
+    <string name="reinos_perdidos">Reinos Perdidos</string>
+    <string name="insira_o_token_enviado_para_o_seu_email"> Insira o token enviado para o seu email </string>
+    <string name="verificar"> Verificar </string>
+    <string name="trocar_senha"> Trocar Senha</string>
+    <string name="alterar_senha">Alterar Senha</string>
+    <string name="nova_senha">Nova senha</string>
+    <string name="confirmar_senha">Confirmar senha</string>
+    <string name="pelo_menos_8_caracteres">• Pelo menos 8 caracteres</string>
+    <string name="pelo_menos_1_letra_mai_scula">• Pelo menos 1 letra maiúscula</string>
+    <string name="pelo_menos_1_n_mero">• Pelo menos 1 número</string>
+    <string name="pelo_menos_1_caractere_especial">• Pelo menos 1 caractere especial</string>
+    <string name="notificações">Notificações</string>
+    <string name="Configurações">Configurações</string>
 
 </resources>

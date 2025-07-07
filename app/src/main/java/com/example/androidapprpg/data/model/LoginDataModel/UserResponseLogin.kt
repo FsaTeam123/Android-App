@@ -1,8 +1,8 @@
-package com.example.androidapprpg.data.model
+package com.example.androidapprpg.data.model.LoginDataModel
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse(
+data class UserResponseLogin(
 
     @SerializedName("token")
     val token: String?,

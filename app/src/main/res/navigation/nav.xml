@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/lettersFragment"
-        android:name="com.example.androidapprpg.ui.fragment.LettersFragment"
+        android:name="com.example.androidapprpg.ui.fragment.NotificationsFragment"
         android:label="fragment_letters"
         tools:layout="@layout/fragment_letters" />
 

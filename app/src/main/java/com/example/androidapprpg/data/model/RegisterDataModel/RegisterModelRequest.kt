@@ -1,8 +1,8 @@
-package com.example.androidapprpg.data.model
+package com.example.androidapprpg.data.model.RegisterDataModel
 
 import com.google.gson.annotations.SerializedName
 
-data class registerModelRequest(
+data class RegisterModelRequest(
     @SerializedName("name")
     val name : String?,
 
@@ -15,10 +15,4 @@ data class registerModelRequest(
     @SerializedName("senha")
     val senha : String?,
 
-    @SerializedName("sexo")
-    val idsexo : String?, //pode ser nulo
-
-    @SerializedName("perfil")
-    val idPerfil : String? //pode ser nulo
-
-)
+    )
