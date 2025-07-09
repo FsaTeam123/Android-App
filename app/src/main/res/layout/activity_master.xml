@@ -6,11 +6,8 @@
     android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/tela_principal"
-        tools:context=".ui.activity.ActivityMaster">
-
-    <!--Header-->
-
+    android:background="@drawable/login_background"
+    tools:context=".ui.activity.ActivityMaster">
 
     <!-- Header -->
     <LinearLayout
@@ -18,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
@@ -25,15 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Ícone do menu -->
-        <ImageView
-            android:id="@+id/PersonIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="Person Icon"
-            android:src="@drawable/baseline_person_24"
-            app:tint="@color/BordasDouradas" />
 
         <!-- Título centralizado -->
         <TextView
@@ -43,21 +32,14 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/app_name"
+            android:background="@drawable/custom_edittext"
+            android:fontFamily="@font/cinzel_font_bold"
             android:textColor="@color/BordasDouradas"
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <!-- Ícone de saída -->
-        <ImageView
-            android:id="@+id/ExitIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="Exit Icon"
-            android:src="@drawable/baseline_exit_to_app_24"
-            app:tint="@color/BordasDouradas" />
-    </LinearLayout>
 
+    </LinearLayout>
 
     <!-- Fragment Container View -->
     <androidx.fragment.app.FragmentContainerView
@@ -71,22 +53,23 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:navGraph="@navigation/nav" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!-- SmoothBottomBar -->
+    <me.ibrahimsn.lib.SmoothBottomBar
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="0dp"
+        android:layout_height="56dp"
         android:elevation="12dp"
-        android:background="@android:color/transparent"
-        app:itemIconSize="35dp"
-        app:itemIconTint="@color/BordasDouradas"
-        app:itemTextColor="@color/BordasDouradas"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_navigation_menu"
+        app:backgroundColor="@android:color/transparent"
+        app:iconMargin="8dp"
+        app:iconSize="35dp"
+        app:iconTint="@color/BordasDouradas"
+        app:iconTintActive="@color/BordasDouradas"
+        app:indicatorRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_navigation_menu"
+        app:labelVisibilityMode="unlabeled"
+        app:textSize="14dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

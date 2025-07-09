@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/home"
-        app:showAsAction="always" />
-
+        app:showAsAction="always"
+        android:title=""/>
 
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/profile_navbar"
-        app:showAsAction="always" />
-
+        app:showAsAction="always"
+        android:title="" />
 
     <item
         android:id="@+id/mapFragment"
         android:icon="@drawable/new_map"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title=""/>
 
     <item
         android:id="@+id/lettersFragment"
         android:icon="@drawable/message"
-        app:showAsAction="always" />
-
-
-    <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/settings"
-        app:showAsAction="always" />
-
+        app:showAsAction="always"
+        android:title=""/>
 </menu>

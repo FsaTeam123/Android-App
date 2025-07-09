@@ -1,6 +1,478 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/master"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.ActivityNewGame">
 
+    <!-- Barra superior fixa -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/DarkSiena"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/titleNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/novo_jogo"
+            android:textSize="32sp"
+            android:textColor="@color/BordasDouradas"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnFechar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/fechar"
+            android:src="@drawable/close_circle_svgrepo_com"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ScrollView com o formulário -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/login_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/retangulo_arredondado"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <!-- Sistema RPG (fixo) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Sistema: Tormenta20"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="ID do Jogo"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIdJogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Nome do Jogo -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:hint="Nome do Jogo"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNomeJogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Descrição -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="História do Jogo"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescricao"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Nº Jogadores -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nº de Jogadores"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMaxJogadores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Nível Inicial -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nível Inicial"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nivelInicial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Tipo de Partida -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Tipo de Partida"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkPartidaPublica"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Pública"
+                    android:textColor="@color/BordasDouradas" />
+
+                <CheckBox
+                    android:id="@+id/checkPartidaPrivada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Privada"
+                    android:textColor="@color/BordasDouradas" />
+            </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/BordasDouradas" />
+
+            <!-- Estilo de Campanha -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Estilo de Campanha"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/campanhaOneShot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="One Shot"
+                    android:textColor="@color/BordasDouradas" />
+
+                <CheckBox
+                    android:id="@+id/campanhaEstendida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Estendida"
+                    android:textColor="@color/BordasDouradas" />
+            </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/BordasDouradas" />
+
+            <!-- Geração de Mundo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Geração de Mundo"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/seedTormenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Tormenta"
+                    android:textColor="@color/BordasDouradas" />
+
+                <CheckBox
+                    android:id="@+id/seedAutoral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Autoral"
+                    android:textColor="@color/BordasDouradas" />
+            </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/BordasDouradas" />
+
+            <!-- Tema -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Tema"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/temaTerror"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Terror"
+                    android:textColor="@color/BordasDouradas" />
+
+                <CheckBox
+                    android:id="@+id/temaInvestigacao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Investigação"
+                    android:textColor="@color/BordasDouradas" />
+
+                <CheckBox
+                    android:id="@+id/temaRomance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/BordasDouradas"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="Romance"
+                    android:textColor="@color/BordasDouradas" />
+            </LinearLayout>
+
+
+            <!-- Dificuldade -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Dificuldade"
+                android:textColor="@color/BordasDouradas" />
+
+            <Spinner
+                android:id="@+id/spinnerDificuldade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:spinnerMode="dropdown" />
+
+            <!-- Senha (opcional) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Senha"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSenha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/baseline_lock_24"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:inputType="textPassword"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Confirmar Senha"
+                android:textColorHint="@color/BordasDouradas"
+                app:boxBackgroundColor="@color/Crowshead"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="25dp"
+                app:boxCornerRadiusBottomStart="25dp"
+                app:boxCornerRadiusTopEnd="25dp"
+                app:boxCornerRadiusTopStart="25dp"
+                app:boxStrokeColor="@color/BordasDouradas"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/BordasDouradas"
+                app:hintTextColor="@color/BordasDouradas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmarSenhaJogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/baseline_lock_24"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:inputType="textPassword"
+                    android:padding="12dp"
+                    android:textColor="@color/BordasDouradas"
+                    android:textColorHint="@color/BordasDouradas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Botão Criar Jogo -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCriarJogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/btn1"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Criar Jogo"
+                android:textColor="@color/BordasDouradas"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

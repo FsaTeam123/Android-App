@@ -26,20 +26,32 @@ class ActivityMaster : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMasterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge()
 
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
+        val navController = navHostFragment!!.findNavController()
 
-        if(navHostFragment != null){
-            navController = navHostFragment!!.findNavController()
-        }
 
-        val popupMenu = PopupMenu(this, binding.bottomNavigation)
+        val popupMenu = android.widget.PopupMenu(this, null)
         popupMenu.inflate(R.menu.bottom_navigation_menu)
-        binding.bottomNavigation.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(popupMenu.menu, navController)
 
+        ativarFullscreen()
 
     }
+
+    private fun ativarFullscreen() {
+        val windowInsetsController =
+            WindowCompat.getInsetsController(window, window.decorView)
+
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
+
 
 
 

@@ -14,37 +14,42 @@
         android:layout_gravity="center"
         android:paddingTop="20dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/NewGame"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/Criar_jogo"
+            android:fontFamily="serif"
+            android:text="@string/novo_jogo"
             android:textColor="@color/BordasDouradas"
             android:textSize="21sp"
-            android:background="@android:color/transparent"
-            android:visibility="visible" />
+            android:background="@drawable/btn1"
+            android:foreground="@null"
+            android:elevation="10dp"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/JoinGame"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:text="@string/Entrar_jogo"
+            android:elevation="12dp"
             android:textSize="21sp"
-            android:fontFamily="@font/cinzel_font_bold"
+            android:fontFamily="serif"
             android:layout_marginTop="30dp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/btn1"
             android:textColor="@color/BordasDouradas" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/MyGames"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:text="@string/Meus_Jogos"
             android:textSize="21sp"
-            android:fontFamily="@font/cinzel_font_bold"
+            android:fontFamily="serif"
             android:layout_marginTop="30dp"
-            android:background="@android:color/transparent"
+            android:elevation="12dp"
+            android:background="@drawable/btn1"
             android:textColor="@color/BordasDouradas" />
     </LinearLayout>
 </FrameLayout>

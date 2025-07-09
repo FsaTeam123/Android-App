@@ -17,9 +17,9 @@
     <string name="Card">Card</string>
     <string name="Login">login</string>
     <string name="Enviar">enviar</string>
-    <string name='Criar_jogo'><u>Criar um jogo</u></string>
-    <string name='Entrar_jogo'><u>Entrar em um jogo</u></string>
-    <string name='Meus_Jogos'><u>Meus Jogos</u></string>
+    <string name='Criar_jogo'>Criar um jogo</string>
+    <string name='Entrar_jogo'>Entrar em um jogo</string>
+    <string name='Meus_Jogos'>Meus Jogos</string>
     <string name="settings">Configurações</string>
     <string name="letters">Letters</string>
     <string name="audio">Audio</string>
@@ -51,5 +51,6 @@
     <string name="pelo_menos_1_caractere_especial">• Pelo menos 1 caractere especial</string>
     <string name="notificações">Notificações</string>
     <string name="Configurações">Configurações</string>
+    <string name="novo_jogo">Novo Jogo</string>
 
 </resources>
