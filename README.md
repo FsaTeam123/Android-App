@@ -1,4 +1,4 @@
-# 🤖 SE RPG - Aplicativo Android
+# 🤖 SE RPG - Aplicativo Android --> Reinos Perdidos
 
 **SE RPG** é um aplicativo Android desenvolvido para auxiliar mestres e jogadores em campanhas do sistema **Tormenta20**, permitindo gerenciar sessões, personagens e interações em tempo real.
 
@@ -13,7 +13,7 @@
 - 🧾 **Gerenciamento de Fichas de Personagem**
 - 🌐 **Comunicação em tempo real** via WebSocket
 - 🔍 **Entrar em jogos existentes** via ID ou filtro
-- 🧙‍♂️ Interface temática medieval
+- 🧙‍♂️ **Interface temática medieval**
 
 ---
 
