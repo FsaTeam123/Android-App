@@ -8,7 +8,7 @@
 ## 📱 Funcionalidades
 
 - 📋 **Criação de Jogos** com opções como estilo de campanha, número de jogadores, tema e dificuldade
-- 🔐 **Login e Cadastro** com autenticação segura
+- 🔐 **Login e Cadastro** com autenticação segura via JWT
 - 🎲 **Rolagem de Dados 3D** (via Unity integrada)
 - 🧾 **Gerenciamento de Fichas de Personagem**
 - 🌐 **Comunicação em tempo real** via WebSocket
