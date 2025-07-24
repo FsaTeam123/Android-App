@@ -1,43 +1,55 @@
-package com.example.androidapprpg.ui.activity
+package com.example.androidapprpg.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.example.androidapprpg.databinding.ActivityNewGameBinding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelRequest
+import com.example.androidapprpg.databinding.FragmentNewGameBinding
+import com.example.androidapprpg.ui.viewmodel.NewGameViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class ActivityNewGame : AppCompatActivity() {
+@AndroidEntryPoint
+class NewGameFragment : Fragment() {
 
-    private lateinit var binding: ActivityNewGameBinding
+    private var _binding: FragmentNewGameBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: NewGameViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentNewGameBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        binding = ActivityNewGameBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        enableEdgeToEdge()
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         ativarFullscreen()
         setupCheckBoxMutualExclusion()
         setupExitButton()
         setupCreateButton()
+        observarResultado()
     }
 
     private fun ativarFullscreen() {
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
+        val controller = requireActivity().window.decorView
+        val insetsController = WindowInsetsControllerCompat(requireActivity().window, controller)
+        insetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        insetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
     private fun setupExitButton() {
         binding.btnFechar.setOnClickListener {
-            startActivity(Intent(this, ActivityMaster::class.java))
+            findNavController().popBackStack()
         }
     }
 
@@ -93,10 +105,40 @@ class ActivityNewGame : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            Toast.makeText(this, "Jogo criado com sucesso!", Toast.LENGTH_SHORT).show()
+            val request = NewGamesDataModelRequest(
+                sistema = "Tormenta20",
+                id = null,
+                idMaster = 1, // ID do mestre (substitua pelo valor real)
+                titulo = nome,
+                qtdPessoas = numeroJogadores,
+                dificuldade = nivelInicial, // Pode vir de um Spinner no futuro
+                senha = senha,
+                idEstiloCampanha = if (binding.campanhaOneShot.isChecked) 1 else 2,
+                idGeracaoMundo = if (binding.seedTormenta.isChecked) 1 else 2,
+                idHistoria = 1, // Pode adaptar depois
+                idTema = when {
+                    binding.temaTerror.isChecked -> 1
+                    binding.temaRomance.isChecked -> 2
+                    binding.temaInvestigacao.isChecked -> 3
+                    else -> 0
+                },
+                idTipoJogo = if (binding.checkPartidaPublica.isChecked) 1 else 2
+            )
 
-            //Ajustar posteriormente para realizar a intent e criar o jogo no Server.
-            startActivity(Intent(this, ActivityGame::class.java))
+            viewModel.criarJogo(request)
+        }
+    }
+
+    private fun observarResultado() {
+        viewModel.newGamesResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Jogo criado com sucesso!", Toast.LENGTH_SHORT).show()
+                // findNavController().navigate(R.id.action_newGameFragment_to_gameFragment)
+            }
+
+            result.onFailure {
+                Toast.makeText(requireContext(), "Erro ao criar jogo: ${it.message}", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -147,10 +189,8 @@ class ActivityNewGame : AppCompatActivity() {
         }
     }
 
-    // ========== Funções auxiliares de validação ==========
-
     private fun mostrarErro(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), mensagem, Toast.LENGTH_SHORT).show()
     }
 
     private fun camposEstaoPreenchidos(
@@ -183,5 +223,10 @@ class ActivityNewGame : AppCompatActivity() {
 
     private fun temaSelecionado(): Boolean {
         return binding.temaTerror.isChecked || binding.temaRomance.isChecked || binding.temaInvestigacao.isChecked
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

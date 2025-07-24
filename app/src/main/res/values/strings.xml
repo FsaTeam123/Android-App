@@ -18,7 +18,7 @@
     <string name="Login">login</string>
     <string name="Enviar">enviar</string>
     <string name='Criar_jogo'>Criar um jogo</string>
-    <string name='Entrar_jogo'>Entrar em um jogo</string>
+    <string name='Entrar_jogo'>Entrar no jogo</string>
     <string name='Meus_Jogos'>Meus Jogos</string>
     <string name="settings">Configurações</string>
     <string name="letters">Letters</string>
@@ -52,5 +52,6 @@
     <string name="notificações">Notificações</string>
     <string name="Configurações">Configurações</string>
     <string name="novo_jogo">Novo Jogo</string>
+    <string name="search_hint">Pesquisar</string>
 
 </resources>

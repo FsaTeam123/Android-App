@@ -20,6 +20,7 @@ splashscreen = "1.0.0"
 okhttp = "4.12.0"
 hilt = "2.56.2"
 javapoet = "1.13.0"
+uiAndroid = "1.8.3"
 
 
 
@@ -52,9 +53,11 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version = "2.8.3" }
 

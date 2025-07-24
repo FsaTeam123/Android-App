@@ -28,5 +28,10 @@
     <color name="OleYeller">#C99E61</color>
     <color name="Crowshead">#1C130A</color>
     <color name="DarkSiena">#40140B</color>
+    <color name="VermelhoEscuro">#270A02</color>
+    <color name="DouradoEspecial">#D9921F</color>
+    <color name="cinza_claro">#E6E6E6</color>
+    <color name="cinza_escuro">#171717</color>
+
 
 </resources>

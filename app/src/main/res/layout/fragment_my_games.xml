@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context=".ui.fragment.MyGamesFragment">
+
+    <!-- Barra superior fixa -->
+
+    <!-- Linha dourada abaixo da barra -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/VermelhoEscuro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Título -->
+
+        <!-- Botão fechar ao lado do título -->
+
+        <TextView
+            android:id="@+id/titleNewGame"
+            android:layout_width="254dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="64dp"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/Meus_Jogos"
+            android:textColor="@color/DouradoEspecial"
+            android:textSize="35sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.516" />
+
+        <ImageView
+            android:id="@+id/btnFechar"
+            android:layout_width="56dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/fechar"
+            android:src="@drawable/close_circle_svgrepo_com"
+            app:layout_constraintBottom_toBottomOf="@id/titleNewGame"
+            app:layout_constraintStart_toEndOf="@id/titleNewGame"
+            app:layout_constraintTop_toTopOf="@id/titleNewGame" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/separadorDourado"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginEnd="0dp"
+        android:background="@color/DouradoEspecial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
+
+    <!-- Campo de busca -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_edittext_bg"
+        android:elevation="8dp"
+        android:fontFamily="@font/cinzel_font_bold"
+        android:hint="@string/search_hint"
+        android:inputType="text"
+        android:paddingStart="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/DouradoEspecial"
+        android:textColorHint="@color/DouradoEspecial"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/separadorDourado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Lista de jogos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMyGames"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_game_card"
+        app:layout_constraintTop_toBottomOf="@id/searchEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.navigation.safe.args)
     id("org.jetbrains.kotlin.kapt")
+
 }
 
 hilt {
@@ -69,6 +71,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
     implementation(libs.javapoet)
+    implementation(libs.androidx.ui.android)
     kapt(libs.hilt.compiler)
 
 

@@ -11,7 +11,20 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
+        <action
+            android:id="@+id/action_home_to_newGame"
+            app:destination="@id/nav_newgame" />
+
+        <action
+            android:id="@+id/action_home_to_myGames"
+            app:destination="@id/nav_mygames" />
+
+        <action
+            android:id="@+id/action_home_to_joinGame"
+            app:destination="@id/nav_joingame" />
     </fragment>
+
+
 
     <fragment
         android:id="@+id/profileFragment"
@@ -38,5 +51,9 @@
         tools:layout="@layout/fragment_settings" />
 
 
+    <!--Nested Graphs-->
+    <include app:graph="@navigation/nav_newgame" />
+    <include app:graph="@navigation/nav_joingame" />
+    <include app:graph="@navigation/nav_mygames" />
 
 </navigation>
