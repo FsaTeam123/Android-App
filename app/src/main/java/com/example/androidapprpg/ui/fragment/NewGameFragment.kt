@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelRequest
 import com.example.androidapprpg.databinding.FragmentNewGameBinding
 import com.example.androidapprpg.ui.viewmodel.NewGameViewModel
@@ -132,8 +133,16 @@ class NewGameFragment : Fragment() {
     private fun observarResultado() {
         viewModel.newGamesResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
-                Toast.makeText(requireContext(), "Jogo criado com sucesso!", Toast.LENGTH_SHORT).show()
-                // findNavController().navigate(R.id.action_newGameFragment_to_gameFragment)
+                val id = it.id
+                if (id != null) {
+                    Toast.makeText(requireContext(), "Jogo criado com sucesso!", Toast.LENGTH_SHORT).show()
+                    val bundle = Bundle().apply {
+                        putLong("idJogo", id)
+                    }
+                    findNavController().navigate(R.id.gameLobby, bundle)
+                } else {
+                    Toast.makeText(requireContext(), "Erro: ID do jogo não retornado", Toast.LENGTH_LONG).show()
+                }
             }
 
             result.onFailure {
@@ -141,6 +150,7 @@ class NewGameFragment : Fragment() {
             }
         }
     }
+
 
     private fun setupCheckBoxMutualExclusion() {
         binding.checkPartidaPublica.setOnCheckedChangeListener { _, isChecked ->

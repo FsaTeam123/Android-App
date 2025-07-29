@@ -18,7 +18,7 @@
         app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:navGraph="@navigation/game_nav" />
+        app:navGraph="@navigation/nav_game_lobby" />
 
     <!-- SmoothBottomBar -->
     <me.ibrahimsn.lib.SmoothBottomBar
@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:menu="@menu/bottom_navigation_menu"
+        app:menu="@menu/bottom_navigation_menu_game_lobby"
         app:labelVisibilityMode="unlabeled"
         app:textSize="14dp" />
 

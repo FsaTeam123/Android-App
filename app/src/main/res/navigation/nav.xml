@@ -5,6 +5,10 @@
     android:id="@+id/nav"
     app:startDestination="@id/homeFragment">
 
+    <action
+        android:id="@+id/action_global_gameLobby"
+        app:destination="@id/gameLobby" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.androidapprpg.ui.fragment.HomeFragment"
@@ -55,5 +59,6 @@
     <include app:graph="@navigation/nav_newgame" />
     <include app:graph="@navigation/nav_joingame" />
     <include app:graph="@navigation/nav_mygames" />
+    <include app:graph="@navigation/nav_game_lobby" />
 
 </navigation>

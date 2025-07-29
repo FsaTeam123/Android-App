@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentJoinGameBinding
 import com.example.androidapprpg.ui.viewmodel.JoinGameViewModel
 import com.example.androidapprpg.utils.Result
@@ -81,23 +82,32 @@ class JoinGameFragment : Fragment() {
         viewModel.joinGameResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
-                    // Sem ProgressBar, pode usar Toast ou nada
                     Toast.makeText(requireContext(), "Buscando jogo...", Toast.LENGTH_SHORT).show()
                 }
+
                 is Result.Success -> {
                     val jogo = result.data
-                    Toast.makeText(requireContext(), "Entrou no jogo: ${jogo.titulo}", Toast.LENGTH_SHORT).show()
 
-                    // Se quiser navegar para o fragment do jogo:
-                    // val action = JoinGameFragmentDirections.actionJoinGameFragmentToGameFragment(jogo)
-                    // findNavController().navigate(action)
+                    jogo.id?.let { idJogo ->
+                        Toast.makeText(requireContext(), "Entrou no jogo: ${jogo.titulo}", Toast.LENGTH_SHORT).show()
+
+                        val bundle = Bundle().apply {
+                            putLong("idJogo", idJogo)
+                        }
+
+                        findNavController().navigate(R.id.gameLobby, bundle)
+                    } ?: run {
+                        Toast.makeText(requireContext(), "Erro: ID do jogo não retornado", Toast.LENGTH_LONG).show()
+                    }
                 }
+
                 is Result.Error -> {
                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

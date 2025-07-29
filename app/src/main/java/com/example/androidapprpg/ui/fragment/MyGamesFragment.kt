@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.androidapprpg.R
 import com.example.androidapprpg.adapter.MyGamesAdapter
 import com.example.androidapprpg.data.model.MyGamesDataModel.MyGamesDataModelResponse
 import com.example.androidapprpg.databinding.FragmentMyGamesBinding
@@ -82,15 +83,18 @@ class MyGamesFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = MyGamesAdapter(emptyList()) { jogo ->
-            // Aqui futuramente você irá navegar para a tela de detalhes do jogo
-            // val action = MyGamesFragmentDirections.actionMyGamesFragmentToGameDetailFragment(jogo)
-            // findNavController().navigate(action)
-
-            // Por enquanto, apenas imprime no log para confirmar clique
-            Log.d("MyGamesFragment", "Jogo clicado: ${jogo.titulo}")
+            jogo.id?.let { idJogo ->
+                val bundle = Bundle().apply {
+                    //putLong("idJogo", idJogo)
+                }
+                findNavController().navigate(R.id.gameLobby, bundle)
+            } ?: run {
+                Toast.makeText(requireContext(), "ID do jogo não disponível", Toast.LENGTH_SHORT).show()
+            }
         }
         binding.recyclerViewMyGames.adapter = adapter
     }
+
 
     private fun updateRecyclerView() {
         val filtered = listaCompleta.filter {

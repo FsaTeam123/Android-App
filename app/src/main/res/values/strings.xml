@@ -53,5 +53,9 @@
     <string name="Configurações">Configurações</string>
     <string name="novo_jogo">Novo Jogo</string>
     <string name="search_hint">Pesquisar</string>
+    <string name="jogadores_online">Jogadores Online</string>
+    <string name="convidar">Convidar</string>
+    <string name="nome_do_jogador">Nome do Jogador</string>
+    <string name="icone_jogador">Icone Jogador</string>
 
 </resources>

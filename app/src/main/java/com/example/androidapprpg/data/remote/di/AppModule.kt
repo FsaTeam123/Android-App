@@ -28,7 +28,6 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit) : AuthService =
@@ -39,7 +38,6 @@ object AppModule {
     @Singleton
     fun provideCadastroService(retrofit: Retrofit) : RegisterService =
         retrofit.create(RegisterService::class.java)
-
 
     @Provides
     @Singleton

@@ -70,7 +70,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_edittext_bg"
+        android:background="@drawable/retangulo_borda_fundo_transparente"
         android:elevation="8dp"
         android:fontFamily="@font/cinzel_font_bold"
         android:hint="@string/search_hint"
