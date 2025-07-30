@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Container com borda translúcida -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerFicha"
+            android:layout_width="377dp"
+            android:layout_height="534dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Avatar com botão editar -->
+            <FrameLayout
+                android:id="@+id/avatarContainer"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/avatarImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    android:contentDescription="Avatar do personagem"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_person_24" />
+
+                <ImageButton
+                    android:id="@+id/avatarEditButton"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:contentDescription="Editar avatar"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit"
+                    android:tint="@color/VermelhoEscuro" />
+            </FrameLayout>
+
+            <!-- Nome do personagem (visualização) -->
+
+            <!-- Nome do personagem (edição) -->
+            <TextView
+                android:id="@+id/characterName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:gravity="center"
+                android:text="THRAIN CANTONEGRO"
+                android:textAlignment="center"
+                android:textColor="@color/DouradoEspecial"
+                android:textSize="24sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatarContainer" />
+
+            <EditText
+                android:id="@+id/characterNameEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DouradoEspecial"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:gravity="center"
+                android:inputType="textCapWords"
+                android:text="THRAIN CANTONEGRO"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatarContainer" />
+
+            <!-- Info visual -->
+
+            <!-- Info edição -->
+
+            <TextView
+                android:id="@+id/characterInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="Anão • Necromante • Nível 3"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/characterName" />
+
+            <LinearLayout
+                android:id="@+id/editInfoLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/characterNameEdit">
+
+                <EditText
+                    android:id="@+id/raceEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:hint="Raça"
+                    android:inputType="textCapWords"
+                    android:text="Anão"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/classEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:hint="Classe"
+                    android:inputType="textCapWords"
+                    android:text="Necromante"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/levelEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:hint="Nível"
+                    android:inputType="number"
+                    android:text="3"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <!-- Atributos (por enquanto fixos) -->
+
+            <!-- Status -->
+
+            <!-- Botão Editar/Salvar -->
+
+            <android.widget.GridLayout
+                android:id="@+id/attributesGrid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:columnCount="3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/characterInfo">
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="FOR: 14" />
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="DES: 12" />
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="CON: 15" />
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="INT: 13" />
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="SAB: 10" />
+
+                <TextView
+                    style="@style/Atributo"
+                    android:text="CAR: 16" />
+            </android.widget.GridLayout>
+
+            <LinearLayout
+                android:id="@+id/statusBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/attributesGrid">
+
+                <TextView
+                    style="@style/Status"
+                    android:text="PV: 34" />
+
+                <TextView
+                    style="@style/Status"
+                    android:text="PM: 10" />
+
+                <TextView
+                    style="@style/Status"
+                    android:text="DEF: 17" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/DouradoEspecial"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="EDITAR"
+                android:textColor="@color/VermelhoEscuro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/statusBar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
