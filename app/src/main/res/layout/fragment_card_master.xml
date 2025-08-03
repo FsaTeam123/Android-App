@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerFicha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Avatar -->
+            <FrameLayout
+                android:id="@+id/avatarContainer"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/avatarImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    android:contentDescription="Avatar do personagem"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_person_24" />
+
+                <ImageButton
+                    android:id="@+id/avatarEditButton"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:contentDescription="Editar avatar"
+                    android:padding="4dp"
+                    android:src="@drawable/sharp_box_edit_24"
+                    android:tint="" />
+            </FrameLayout>
+
+            <!-- Campos Extras -->
+            <LinearLayout
+                android:id="@+id/extraFieldsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/avatarContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Tipo -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tipo"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/riquezaSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- Personagem -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Personagem"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/periciasSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- Item -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Item"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/racaSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Botão Editar -->
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/DouradoEspecial"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="Editar"
+                android:textColor="@color/VermelhoEscuro"
+                app:layout_constraintTop_toBottomOf="@id/extraFieldsLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

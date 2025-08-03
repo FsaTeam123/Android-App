@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- CONTAINER COM BORDA -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerFicha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Avatar / Imagem -->
+            <FrameLayout
+                android:id="@+id/avatarContainer"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/avatarImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    android:contentDescription="Avatar do personagem"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_person_24" />
+
+                <ImageButton
+                    android:id="@+id/avatarEditButton"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:contentDescription="Editar avatar"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit"
+                    android:tint="@color/VermelhoEscuro" />
+            </FrameLayout>
+
+            <!-- BLOCO DOS CAMPOS -->
+            <LinearLayout
+                android:id="@+id/extraFieldsLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/avatarContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- SPINNER MAGIAS -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="MAGIAS"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/poderSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- SPINNER ESCOLA -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="ESCOLA"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/escolaSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+
+
+
+                <!-- SPINNER EXCECUÇÃO -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EXECUÇÃO"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/execuçãoSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- SPINNER Resistencia -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Resistência"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/ResistênciaSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- SPINNER CUSTO -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Custo"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/custoSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- SPINNER CIRCULO -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Atributo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Circulo"
+                        android:textColor="@color/DouradoEspecial"
+                        android:fontFamily="@font/cinzel_font_bold" />
+
+                    <Spinner
+                        android:id="@+id/circuloSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DouradoEspecial"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/BordasDouradas" />
+
+                <!-- Duração -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Duração"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/DuraçãoMagia"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:padding="12dp"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Alvo / Area -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Alvo / Area"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/alvoAreaMagia"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:padding="12dp"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Aprimoramento -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Aprimoramento"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/aprimoramentoMagia"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:padding="12dp"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </LinearLayout>
+
+            <!-- BOTÃO -->
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Editar"
+                android:backgroundTint="@color/DouradoEspecial"
+                android:textColor="@color/VermelhoEscuro"
+                android:fontFamily="@font/cinzel_font_bold"
+                app:layout_constraintTop_toBottomOf="@id/extraFieldsLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

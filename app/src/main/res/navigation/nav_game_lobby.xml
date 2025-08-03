@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_nav"
+    app:startDestination="@id/gameLobby">
+
+    <fragment
+        android:id="@+id/gameLobby"
+        android:name="com.example.androidapprpg.ui.fragment.GameLobbyFragment"
+        android:label="fragment_game_looby"
+        tools:layout="@layout/fragment_game_lobby">
+
+        <argument
+            android:name="idJogo"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_global_gameLobby"
+            app:destination="@id/gameLobby" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerPlayersLooby"
+        android:name="com.example.androidapprpg.ui.fragment.PlayersLobbyFragment"
+        android:label="fragment_register_players_looby"
+        tools:layout="@layout/fragment_players_lobby" />
+
+
+
+</navigation>

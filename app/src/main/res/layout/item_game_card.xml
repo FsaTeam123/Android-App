@@ -1,0 +1,127 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp"
+    app:cardBackgroundColor="@color/DarkSiena">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/retangulo_arredondado"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp">
+
+        <!-- Ícone -->
+        <ImageView
+            android:id="@+id/gameIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Imagem_jogo"
+            android:paddingStart="5dp"
+            android:src="@drawable/baseline_sword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Nome do jogo -->
+        <TextView
+            android:id="@+id/gameNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:paddingStart="5dp"
+            android:paddingBottom="2dp"
+            android:text="Ordem do Dragão"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/enterButton"
+            app:layout_constraintStart_toEndOf="@id/gameIcon"
+            app:layout_constraintTop_toTopOf="@id/gameIcon" />
+
+        <!-- Mestre: -->
+        <TextView
+            android:id="@+id/mestreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mestre:"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/gameNameTextView"
+            app:layout_constraintTop_toBottomOf="@id/gameNameTextView" />
+
+        <TextView
+            android:id="@+id/mestreValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Thrain"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/mestreLabel"
+            app:layout_constraintStart_toEndOf="@id/mestreLabel" />
+
+        <!-- Nível: -->
+        <TextView
+            android:id="@+id/nivelLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nível:"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/mestreLabel"
+            app:layout_constraintTop_toBottomOf="@id/mestreLabel" />
+
+        <TextView
+            android:id="@+id/nivelValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Difícil"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/nivelLabel"
+            app:layout_constraintStart_toEndOf="@id/nivelLabel" />
+
+        <!-- Jogadores: -->
+        <TextView
+            android:id="@+id/jogadoresLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Numero de Jogadores:"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/nivelLabel"
+            app:layout_constraintTop_toBottomOf="@id/nivelLabel" />
+
+        <TextView
+            android:id="@+id/jogadoresValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="3/5"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/jogadoresLabel"
+            app:layout_constraintStart_toEndOf="@id/jogadoresLabel" />
+
+        <!-- Botão Entrar -->
+        <Button
+            android:id="@+id/enterButton"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/DouradoEspecial"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="entrar"
+            android:textColor="@color/VermelhoEscuro"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

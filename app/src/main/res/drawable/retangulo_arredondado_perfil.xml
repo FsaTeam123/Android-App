@@ -1,0 +1,6 @@
+<!-- fundo_transparente_borda.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#66000000"/> <!-- semi-transparente -->
+    <stroke android:width="10dp" android:color="@color/DouradoEspecial"/>
+    <corners android:radius="12dp"/>
+</shape>

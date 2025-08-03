@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Seu estilo customizado -->
+    <style name="TokenBoxStyle">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:background">@drawable/custom_edittext</item>
+        <item name="android:backgroundTint">@color/Crowshead</item>
+        <item name="android:fontFamily">@font/cinzel_font_bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+    </style>
+
+    <style name="RegraSenhaItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:fontFamily">@font/cinzel_font_bold</item>
+    </style>
+
+    <!-- Exemplo de estilo -->
+    <style name="Atributo">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="AtributoEdit">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">number</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/retangulo_borda_fundo_transparente</item>
+    </style>
+
+    <style name="CampoFixo" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/BordasDouradas</item>
+        <item name="hintTextColor">@color/BordasDouradas</item>
+        <item name="boxCornerRadiusTopStart">16dp</item>
+        <item name="boxCornerRadiusTopEnd">16dp</item>
+        <item name="boxCornerRadiusBottomStart">16dp</item>
+        <item name="boxCornerRadiusBottomEnd">16dp</item>
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="android:fontFamily">@font/cinzel_font_bold</item>
+    </style>
+
+
+
+</resources>

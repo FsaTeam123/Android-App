@@ -1,0 +1,33 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado pressionado -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <!-- Sombra interna -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/DarkSiena" />
+                    <stroke android:color="@color/BordasDouradas" android:width="3dp"/>
+                    <corners android:radius="10dp"/>
+                </shape>
+            </item>
+            <!-- Simula afundamento com margin negativa -->
+            <item android:top="-2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="#55000000" /> <!-- sombra interna -->
+                    <corners android:radius="10dp"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Estado normal -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/Crowshead" />
+            <stroke android:color="@color/BordasDouradas" android:width="3dp"/>
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+</selector>

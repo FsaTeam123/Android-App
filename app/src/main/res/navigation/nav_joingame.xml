@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_joingame"
+    app:startDestination="@id/joinGameFragment">
+
+    <fragment
+        android:id="@+id/joinGameFragment"
+        android:name="com.example.androidapprpg.ui.fragment.JoinGameFragment"
+        android:label="Entrar em Jogo"
+        tools:layout="@layout/fragment_join_game" />
+
+</navigation>
