@@ -11,6 +11,6 @@ data class RegisterApiResponse(
     val message : String?,
 
     @SerializedName("data")
-    val data : RegisterModelResponse
+    val data : RegisterModelResponse?
 
 )

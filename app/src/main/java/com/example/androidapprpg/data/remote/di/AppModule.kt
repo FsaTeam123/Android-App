@@ -1,16 +1,24 @@
 package com.example.androidapprpg.data.remote.di
 
+
 import com.example.androidapprpg.data.remote.services.AuthService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
 import com.example.androidapprpg.data.remote.services.JoinGameService
 import com.example.androidapprpg.data.remote.services.MyGamesService
 import com.example.androidapprpg.data.remote.services.NewGameService
+import com.example.androidapprpg.data.remote.services.spinners.CardMagiasService
+import com.example.androidapprpg.data.remote.services.spinners.CardMasterService
+import com.example.androidapprpg.data.remote.services.spinners.CardPlayerService
+import com.example.androidapprpg.data.remote.services.spinners.CardPoderService
+import com.example.androidapprpg.data.remote.services.spinners.SexoRegisterService
 import com.example.androidapprpg.webClient.services.RegisterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -28,12 +36,14 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+    //Login Auth
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit) : AuthService =
         retrofit.create(AuthService::class.java)
 
 
+    //Register Auth
     @Provides
     @Singleton
     fun provideCadastroService(retrofit: Retrofit) : RegisterService =
@@ -63,4 +73,26 @@ object AppModule {
     @Singleton
     fun provideGameLobbyService(retrofit: Retrofit) : GameLobbyService =
         retrofit.create(GameLobbyService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCardMasterService(retrofit: Retrofit) : CardMasterService =
+        retrofit.create((CardMasterService::class.java))
+
+    @Provides
+    @Singleton
+    fun provideCardPoderesService(retrofit: Retrofit) : CardPoderService =
+        retrofit.create((CardPoderService::class.java))
+
+    @Provides
+    @Singleton
+    fun provideCardMagiasService(retrofit: Retrofit) : CardMagiasService =
+        retrofit.create(CardMagiasService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCardPlayerService(retrofit: Retrofit) : CardPlayerService =
+        retrofit.create(CardPlayerService::class.java)
+
+
 }

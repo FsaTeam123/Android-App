@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class RegisterModelResponse(
 
-    @SerializedName("idUsuario")
-    val idUsuario : Int?,
-
     @SerializedName("nome")
     val nome : String?,
 
@@ -16,7 +13,13 @@ data class RegisterModelResponse(
     @SerializedName("nickname")
     val nickname : String?,
 
-    @SerializedName("status")
-    val status : String?
+    @SerializedName("senha")
+    val senha : String?,
+
+    @SerializedName(value = "idSexo", alternate = ["id_Sexo"])
+    val idSexo : Int? = null,
+
+    @SerializedName(value = "idPerfil", alternate = ["id_Perfil"])
+    val idPerfil : Int? = null
 
 )

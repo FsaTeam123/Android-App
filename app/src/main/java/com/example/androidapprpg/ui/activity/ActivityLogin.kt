@@ -30,7 +30,22 @@ class ActivityLogin : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        installSplashScreen() //instalar Splashscreen
+        // Instala SplashScreen e permite controlar a duração
+        val splashScreen = installSplashScreen()
+
+        // Variável para controle
+        var keepSplashVisible = true
+
+        // Duração fixa da Splash (2 segundos)
+        window.decorView.postDelayed({
+            keepSplashVisible = false
+        }, 2000)
+
+        // Aplica a condição à Splash
+        splashScreen.setKeepOnScreenCondition {
+            keepSplashVisible
+        }
+
         super.onCreate(savedInstanceState)
 
         val sessionManager = SessionManager(applicationContext)
@@ -42,15 +57,12 @@ class ActivityLogin : AppCompatActivity() {
         }
 
         enableEdgeToEdge()
-
-    //linkando databinding para interagir com o Front
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         settingsButtons()
         ativarFullscreen()
         observarLogin()
-
     }
 
         private fun settingsButtons() {

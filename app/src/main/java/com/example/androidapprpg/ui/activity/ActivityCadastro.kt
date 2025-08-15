@@ -1,8 +1,8 @@
 package com.example.androidapprpg.ui.activity
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,7 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class ActivityCadastro : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroBinding
-    private val viewModel : RegisterViewModel by viewModels()
+    private val viewModel: RegisterViewModel by viewModels()
+
+    private var selectedSexoId: Int? = null
+    private var selectedPerfilId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,72 +30,122 @@ class ActivityCadastro : AppCompatActivity() {
         binding = ActivityCadastroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        registerButton()
         ativarFullscreen()
         observarCadastro()
+        observarCombos()
 
+        viewModel.loadCombos()
+
+        registerButton()
+        backButton()
     }
 
-    private fun registerButton() {
-        //Configurando botão de Cadastro
-        binding.registerButton.setOnClickListener {
-            val name = binding.nome.text.toString()
-            val email = binding.email.text.toString()
-            val nickname = binding.nickname.text.toString()
-            val senha = binding.password.text.toString()
-            val confirmarSenha = binding.checkPassword.text.toString()
-
-            if(name.isNotEmpty() && email.isNotEmpty() && nickname.isNotEmpty() && senha.isNotEmpty() && confirmarSenha.isNotEmpty()) {
-                if(senha != confirmarSenha) {
-                    Toast.makeText(this, "As senhas precisam ser iguais", Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.register(name, email, nickname, senha)
-                }
-            } else {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+    private fun observarCombos() {
+        viewModel.sexos.observe(this) { list ->
+            if (list.isNullOrEmpty()) return@observe
+            val nomes = list.map { it.nome }
+            val adapter = ArrayAdapter(
+                this,
+                com.google.android.material.R.layout.mtrl_auto_complete_simple_item,
+                nomes
+            )
+            binding.idSexo.setAdapter(adapter)
+            binding.idSexo.setOnItemClickListener { _, _, position, _ ->
+                selectedSexoId = list[position].id
             }
         }
 
-        //Configurando Botão de Voltar para tela de Login
-        binding.backToLogin.setOnClickListener {
-            val intent = Intent(this, ActivityLogin ::class.java)
-            startActivity(intent)
+        viewModel.perfis.observe(this) { list ->
+            if (list.isNullOrEmpty()) return@observe
+            val nomes = list.map { it.nome }
+            val adapter = ArrayAdapter(
+                this,
+                com.google.android.material.R.layout.mtrl_auto_complete_simple_item,
+                nomes
+            )
+            binding.idPerfil.setAdapter(adapter)
+            binding.idPerfil.setOnItemClickListener { _, _, position, _ ->
+                selectedPerfilId = list[position].id
+            }
         }
 
+        viewModel.comboError.observe(this) { msg ->
+            msg?.let { toast(it) }
+        }
     }
 
+    private fun registerButton() {
+        binding.registerButton.setOnClickListener {
+            val name = binding.nome.text.toString().trim()
+            val email = binding.email.text.toString().trim()
+            val nickname = binding.nickname.text.toString().trim()
+            val senha = binding.password.text.toString()
+            val confirmarSenha = binding.checkPassword.text.toString()
 
-    private fun ativarFullscreen() {
-        val windowInsetsController =
-            WindowCompat.getInsetsController(window, window.decorView)
+            if (name.isEmpty() || email.isEmpty() || nickname.isEmpty() ||
+                senha.isEmpty() || confirmarSenha.isEmpty()
+            ) return@setOnClickListener toast("Preencha todos os campos")
 
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                return@setOnClickListener toast("Email inválido")
 
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            if (senha != confirmarSenha)
+                return@setOnClickListener toast("As senhas precisam ser iguais")
+
+            val sexoId = selectedSexoId ?: return@setOnClickListener toast("Selecione a orientação")
+            val perfilId = selectedPerfilId ?: return@setOnClickListener toast("Selecione Perfil")
+
+            viewModel.register(
+                name = name,
+                email = email,
+                nickname = nickname,
+                senha = senha,
+                idSexo = sexoId,
+                idPerfil = perfilId
+            )
+        }
+    }
+
+    private fun backButton() {
+        binding.backToLogin.setOnClickListener {
+            startActivity(Intent(this, ActivityLogin::class.java))
+        }
     }
 
     private fun observarCadastro() {
         viewModel.registerResult.observe(this) { result ->
-            when(result) {
-                is Result.Loading -> {
-                    //Exibir Progressbar
-                }
+            when (result) {
+                is Result.Loading -> binding.registerButton.isEnabled = false
+
                 is Result.Success -> {
-                    Toast.makeText(this, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show()
+                    binding.registerButton.isEnabled = true
+                    toast(result.data.message ?: "Cadastro realizado com sucesso")
                     startActivity(Intent(this, ActivityLogin::class.java))
                     finish()
                 }
 
                 is Result.Error -> {
-                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
-
+                    binding.registerButton.isEnabled = true
+                    toast(result.message ?: "Erro no cadastro")
                 }
-
             }
-
         }
-
     }
 
+    private fun ativarFullscreen() {
+        // Edge-to-edge sem esconder barras; deixa o sistema calcular os insets
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Empurra o conteúdo quando o teclado aparecer
+        val root = binding.root
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, maxOf(ime.bottom, sys.bottom))
+            insets
+        }
+    }
+
+    private fun toast(msg: String) =
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }

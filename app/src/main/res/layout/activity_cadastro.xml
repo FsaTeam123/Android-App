@@ -1,244 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cadastro"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/login_background"
-    tools:context=".ui.activity.ActivityCadastro">
-
-    <TextView
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/cinzel_font_bold"
-        android:text="Reinos Perdidos"
-        android:textAlignment="center"
-        android:textColor="@color/BordasDouradas"
-        android:textFontWeight="600"
-        android:textSize="50dp" />
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:descendantFocusability="afterDescendants"
+        android:background="@drawable/login_background"
+        tools:context=".ui.activity.ActivityCadastro">
 
-    <LinearLayout
-        android:layout_width="379dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <!-- Nome -->
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
+            android:id="@+id/cadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="@string/Nome_Completo"
-            android:textColorHint="@color/BordasDouradas"
-            app:hintTextColor="@color/BordasDouradas"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="@color/Crowshead"
-            app:boxStrokeColor="@color/BordasDouradas"
-            app:boxStrokeWidth="2dp"
-            app:boxCornerRadiusTopStart="25dp"
-            app:boxCornerRadiusTopEnd="25dp"
-            app:boxCornerRadiusBottomStart="25dp"
-            app:boxCornerRadiusBottomEnd="25dp">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="24dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nome"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:drawableStart="@drawable/baseline_person_24"
-                android:drawablePadding="8dp"
-                android:textColorHint="@color/BordasDouradas"
-                android:textColor="@color/BordasDouradas"
                 android:fontFamily="@font/cinzel_font_bold"
-                android:textSize="15sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="Reinos Perdidos"
+                android:textAlignment="center"
+                android:textColor="@color/BordasDouradas"
+                android:textFontWeight="600"
+                android:textSize="50dp" />
 
-        <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="@string/Email"
-            android:textColorHint="@color/BordasDouradas"
-            app:hintTextColor="@color/BordasDouradas"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="@color/Crowshead"
-            app:boxStrokeColor="@color/BordasDouradas"
-            app:boxStrokeWidth="2dp"
-            app:boxCornerRadiusTopStart="25dp"
-            app:boxCornerRadiusTopEnd="25dp"
-            app:boxCornerRadiusBottomStart="25dp"
-            app:boxCornerRadiusBottomEnd="25dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="379dp"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/baseline_email_24"
-                android:drawablePadding="8dp"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:inputType="textEmailAddress"
-                android:minHeight="50dp"
-                android:padding="12dp"
-                android:textColor="@color/BordasDouradas"
-                android:textColorHint="@color/BordasDouradas"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-        <!-- Nickname -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="@string/nickname"
-            android:textColorHint="@color/BordasDouradas"
-            app:hintTextColor="@color/BordasDouradas"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="@color/Crowshead"
-            app:boxStrokeColor="@color/BordasDouradas"
-            app:boxStrokeWidth="2dp"
-            app:boxCornerRadiusTopStart="25dp"
-            app:boxCornerRadiusTopEnd="25dp"
-            app:boxCornerRadiusBottomStart="25dp"
-            app:boxCornerRadiusBottomEnd="25dp">
+                <!-- Nome -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Nome_Completo"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nickname"
-                android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        android:drawableStart="@drawable/baseline_person_24"
+                        android:drawablePadding="8dp"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:textColor="@color/BordasDouradas"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:textSize="15sp"
+                        android:padding="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Email -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Email"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/baseline_email_24"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:inputType="textEmailAddress"
+                        android:minHeight="50dp"
+                        android:padding="12dp"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Nickname -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/nickname"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        android:drawableStart="@drawable/baseline_sword"
+                        android:drawablePadding="8dp"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:textColor="@color/BordasDouradas"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:textSize="15sp"
+                        android:padding="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- idSexo -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Genêro"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/BordasDouradas"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/idSexo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/genders"
+                        android:drawablePadding="8dp"
+                        android:inputType="none"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:padding="12dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- idPerfil -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Perfil"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/BordasDouradas"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/idPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/profile"
+                        android:inputType="none"
+                        android:drawablePadding="8dp"
+                        android:textColor="@color/BordasDouradas"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:padding="12dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Senha -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Senha"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="@color/BordasDouradas">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password"
+                        android:imeOptions="actionNext"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        android:drawableStart="@drawable/baseline_lock_24"
+                        android:drawablePadding="8dp"
+                        android:inputType="textPassword"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:textColor="@color/BordasDouradas"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:textSize="15sp"
+                        android:padding="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Confirmar Senha -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/check_password_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/Confirmar_Senha"
+                    android:textColorHint="@color/BordasDouradas"
+                    app:hintTextColor="@color/BordasDouradas"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/Crowshead"
+                    app:boxStrokeColor="@color/BordasDouradas"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="@color/BordasDouradas">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/check_password"
+                        android:imeOptions="actionNext"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        android:drawableStart="@drawable/baseline_lock_24"
+                        android:drawablePadding="8dp"
+                        android:inputType="textPassword"
+                        android:textColorHint="@color/BordasDouradas"
+                        android:textColor="@color/BordasDouradas"
+                        android:fontFamily="@font/cinzel_font_bold"
+                        android:textSize="15sp"
+                        android:padding="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Botão e textos -->
+            <LinearLayout
+                android:layout_width="379dp"
                 android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:drawableStart="@drawable/baseline_sword"
-                android:drawablePadding="8dp"
-                android:textColorHint="@color/BordasDouradas"
-                android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:textSize="15sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-        <!-- Senha -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="@string/Senha"
-            android:textColorHint="@color/BordasDouradas"
-            app:hintTextColor="@color/BordasDouradas"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="@color/Crowshead"
-            app:boxStrokeColor="@color/BordasDouradas"
-            app:boxStrokeWidth="2dp"
-            app:boxCornerRadiusTopStart="25dp"
-            app:boxCornerRadiusTopEnd="25dp"
-            app:boxCornerRadiusBottomStart="25dp"
-            app:boxCornerRadiusBottomEnd="25dp"
-            app:endIconMode="password_toggle"
-            app:endIconTint="@color/BordasDouradas">
+                <Button
+                    android:id="@+id/registerButton"
+                    android:layout_width="250dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/DarkSiena"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:text="@string/Cadastrar"
+                    android:textAlignment="center"
+                    android:textColor="@color/BordasDouradas"
+                    android:textSize="18dp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="8dp"
-                android:inputType="textPassword"
-                android:textColorHint="@color/BordasDouradas"
-                android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:textSize="15sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:paddingTop="8dp"
+                    android:text="Já é um aventureiro?"
+                    android:textColor="@color/BordasDouradas"
+                    android:textSize="14sp" />
 
-        <!-- Confirmar Senha -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/check_password_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="@string/Confirmar_Senha"
-            android:textColorHint="@color/BordasDouradas"
-            app:hintTextColor="@color/BordasDouradas"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="@color/Crowshead"
-            app:boxStrokeColor="@color/BordasDouradas"
-            app:boxStrokeWidth="2dp"
-            app:boxCornerRadiusTopStart="25dp"
-            app:boxCornerRadiusTopEnd="25dp"
-            app:boxCornerRadiusBottomStart="25dp"
-            app:boxCornerRadiusBottomEnd="25dp"
-            app:endIconMode="password_toggle"
-            app:endIconTint="@color/BordasDouradas">
+                <TextView
+                    android:id="@+id/backToLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:paddingTop="2dp"
+                    android:text="Faça Login"
+                    android:textColor="@color/BordasDouradas"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/check_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="8dp"
-                android:inputType="textPassword"
-                android:textColorHint="@color/BordasDouradas"
-                android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:textSize="15sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <!-- Botão e textos -->
-    <LinearLayout
-        android:layout_width="379dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/DarkSiena"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/Cadastrar"
-            android:textAlignment="center"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="18dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:paddingTop="8dp"
-            android:text="Já é um aventureiro?"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/backToLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:paddingTop="2dp"
-            android:text="Faça Login"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-</LinearLayout>
+        </LinearLayout>
+    </ScrollView>

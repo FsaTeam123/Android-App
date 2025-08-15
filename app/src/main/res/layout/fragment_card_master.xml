@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".ui.fragment.CardMasterFragment"
     android:background="@drawable/login_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,8 +50,8 @@
                     android:backgroundTint="@color/DouradoEspecial"
                     android:contentDescription="Editar avatar"
                     android:padding="4dp"
-                    android:src="@drawable/sharp_box_edit_24"
-                    android:tint="" />
+                    android:src="@drawable/ic_edit"
+                     />
             </FrameLayout>
 
             <!-- Campos Extras -->
@@ -82,7 +83,7 @@
                         android:fontFamily="@font/cinzel_font_bold" />
 
                     <Spinner
-                        android:id="@+id/riquezaSpinner"
+                        android:id="@+id/tipoSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -115,7 +116,7 @@
                         android:fontFamily="@font/cinzel_font_bold" />
 
                     <Spinner
-                        android:id="@+id/periciasSpinner"
+                        android:id="@+id/personagemSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -148,7 +149,7 @@
                         android:fontFamily="@font/cinzel_font_bold" />
 
                     <Spinner
-                        android:id="@+id/racaSpinner"
+                        android:id="@+id/itemSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

@@ -5,40 +5,79 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidapprpg.data.model.LoginDataModel.LoginModelRequest
+import com.example.androidapprpg.data.model.RegisterDataModel.PerfilDataModel.PerfilDataModel
+import com.example.androidapprpg.data.model.RegisterDataModel.RegisterApiResponse
 import com.example.androidapprpg.data.model.RegisterDataModel.RegisterModelRequest
-import com.example.androidapprpg.data.model.RegisterDataModel.RegisterModelResponse
+import com.example.androidapprpg.data.model.RegisterDataModel.SexoDataModel.SexoDataModel
 import com.example.androidapprpg.data.repository.RegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import com.example.androidapprpg.utils.Result
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val repository : RegisterRepository) : ViewModel(){
+class RegisterViewModel @Inject constructor(
+    private val repository: RegisterRepository
+) : ViewModel() {
 
-    private val _registerResult = MutableLiveData<Result<RegisterModelResponse>>()
-    val registerResult : LiveData<Result<RegisterModelResponse>> = _registerResult
+    private val _registerResult = MutableLiveData<Result<RegisterApiResponse>>()
+    val registerResult: LiveData<Result<RegisterApiResponse>> = _registerResult
 
-    fun register(name: String?, email: String?, nickname: String?, senha: String?) {
+    private val _sexos = MutableLiveData<List<SexoDataModel>>()
+    val sexos: LiveData<List<SexoDataModel>> = _sexos
+
+    private val _perfis = MutableLiveData<List<PerfilDataModel>>()
+    val perfis: LiveData<List<PerfilDataModel>> = _perfis
+
+    private val _comboError = MutableLiveData<String?>()
+    val comboError: LiveData<String?> = _comboError
+
+    fun loadCombos() {
         viewModelScope.launch {
-            _registerResult.value = Result.Loading // Indica carregamento
             try {
-                val request = RegisterModelRequest(name, email, nickname, senha)
-                val response = repository.register(request)
-
-                if (response.isSuccessful && response.body() != null) {
-                    val userData = response.body()!!.data
-                    _registerResult.value = Result.Success(userData)
-                } else {
-                    val erro = response.errorBody()?.string()
-                    _registerResult.value = Result.Error("Erro no cadastro: $erro")
-                }
+                val sexos = repository.getSexos()
+                val perfis = repository.getPerfis()
+                _sexos.value = sexos
+                _perfis.value = perfis
             } catch (e: Exception) {
-                _registerResult.value = Result.Error("Erro de conexão: ${e.localizedMessage}")
+                _comboError.value = "Falha ao carregar listas: ${e.localizedMessage}"
             }
         }
     }
+
+    fun register(name: String, email: String, nickname: String, senha: String,idSexo: Int, idPerfil: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _registerResult.postValue(Result.Loading)
+            try {
+                val request = RegisterModelRequest( nome = name, email = email, nickname = nickname, senha = senha, idSexo = idSexo, idPerfil = idPerfil)
+                val response = repository.register(request)
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        _registerResult.postValue(Result.Success(body))
+                    } else {
+                        _registerResult.postValue(Result.Error("Resposta vazia do servidor."))
+                    }
+                } else {
+                    val raw = response.errorBody()?.string()
+                    val msg = extractServerMessage(raw) ?: "Erro HTTP ${response.code()}"
+                    _registerResult.postValue(Result.Error(msg))
+                }
+            } catch (e: Exception) {
+                _registerResult.postValue(Result.Error("Erro de conexão: ${e.localizedMessage}"))
+            }
+        }
+    }
+
+    // Tentativa de extrair "message" do JSON de erro
+    private fun extractServerMessage(raw: String?): String? {
+        return try {
+            if (raw.isNullOrBlank()) null
+            else org.json.JSONObject(raw).optString("message").takeIf { it.isNotBlank() }
+        } catch (_: Exception) { null }
+    }
 }
+
 

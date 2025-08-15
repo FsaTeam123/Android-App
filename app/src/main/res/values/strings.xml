@@ -57,12 +57,13 @@
     <string name="convidar">Convidar</string>
     <string name="nome_do_jogador">Nome do Jogador</string>
     <string name="icone_jogador">Icone Jogador</string>
+    <string name="Perfil">Perfil</string>
+    <string name="Genêro">Genêro</string>
     <string-array name="mock_spinner_values">
         <item>Humano</item>
         <item>Anão</item>
         <item>Elfo</item>
     </string-array>
-
 
 
 </resources>

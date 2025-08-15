@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_margin="16dp" />
+        android:layout_marginTop="16dp" />
 
     <!-- Log de mensagens do jogo -->
     <TextView
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@id/currentPlayerTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_margin="8dp" />
+        android:layout_marginTop="16dp" />
 
     <!-- Botões de ação -->
     <LinearLayout

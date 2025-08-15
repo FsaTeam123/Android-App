@@ -129,18 +129,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pesoMaximoMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"
-                        android:padding="12dp"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -153,18 +142,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pesoMaximoMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"
-                        android:padding="12dp"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
 
 
 
@@ -181,18 +159,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pesoLimiteMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"
-                        android:padding="12dp"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
 
                 <!-- PESO ATUAL -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -207,18 +174,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pesoAtualMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"
-                        android:padding="12dp"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
 
                 <!-- PREÇO -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -233,18 +189,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/precoMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"
-                        android:padding="12dp"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
 
                 <!-- DESCRIÇÃO -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -259,19 +204,7 @@
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxStrokeColor="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/descricaoMochila"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:fontFamily="@font/cinzel_font_bold"
-                        android:gravity="top"
-                        android:inputType="textMultiLine"
-                        android:padding="12dp"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:hintTextColor="@color/BordasDouradas"/>
 
             </LinearLayout>
 

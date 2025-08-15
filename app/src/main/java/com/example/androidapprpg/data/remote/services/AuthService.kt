@@ -12,8 +12,6 @@ interface AuthService {
     @POST("auth/login") //endpoint
     suspend fun login(@Body request: LoginModelRequest) : Response<LoginApiResponse>
 
-
-
 }
 
 

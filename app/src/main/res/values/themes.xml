@@ -7,8 +7,8 @@
     <style name="Theme.AndroidAppRpg" parent="Base.Theme.AndroidAppRpg" />
 
     <style name="Theme.App.AndroidAppRpg" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/Crowshead</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/wizard_face_svgrepo_com</item>
+        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icone_reinos_perdidos_dois_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.AndroidAppRpg</item>
     </style>
 

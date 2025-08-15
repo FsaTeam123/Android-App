@@ -26,14 +26,33 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 file("proguard-rules.pro")
             )
         }
     }
+
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("mock") {
+            dimension = "env"
+            applicationIdSuffix = ".mock"
+            versionNameSuffix = "-mock"
+            buildConfigField("boolean", "MOCK_MODE", "true")
+            buildConfigField("String", "BASE_URL", "\"http://15.228.149.190:8085/\"")
+        }
+        create("prod") {
+            dimension = "env"
+            buildConfigField("boolean", "MOCK_MODE", "false")
+            buildConfigField("String", "BASE_URL", "\"http://15.228.149.190:8085/\"")
+        }
+    }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -45,8 +64,8 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
-
 }
 
 dependencies {

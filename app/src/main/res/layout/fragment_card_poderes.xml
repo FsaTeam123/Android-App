@@ -51,7 +51,7 @@
                     android:contentDescription="Editar avatar"
                     android:padding="4dp"
                     android:src="@drawable/ic_edit"
-                    android:tint="@color/VermelhoEscuro" />
+                     />
             </FrameLayout>
 
             <!-- BLOCO DOS CAMPOS -->
@@ -117,7 +117,7 @@
                         android:fontFamily="@font/cinzel_font_bold" />
 
                     <Spinner
-                        android:id="@+id/periciasSpinner"
+                        android:id="@+id/tipoDePoderSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
