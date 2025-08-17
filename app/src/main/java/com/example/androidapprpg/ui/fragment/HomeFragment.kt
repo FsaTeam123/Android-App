@@ -11,8 +11,7 @@ import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentHomeBinding
 import com.example.androidapprpg.ui.activity.ActivityNewGame
 
-class
-HomeFragment : Fragment() {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!

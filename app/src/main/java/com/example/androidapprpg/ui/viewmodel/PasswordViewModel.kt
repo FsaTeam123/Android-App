@@ -4,25 +4,35 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidapprpg.data.model.ForgotPasswordDataModel.EmailRequestModel
-import com.example.androidapprpg.data.remote.services.ForgotPasswordService
+import com.example.androidapprpg.data.repository.ForgotPasswordRepository
+import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import com.example.androidapprpg.utils.Result
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordViewModel @Inject constructor(private val forgotPasswordService: ForgotPasswordService) : ViewModel() {
+class PasswordViewModel @Inject constructor(
+    private val repository: ForgotPasswordRepository
+) : ViewModel() {
 
+    // 1) Enviar e-mail
     private val _forgotPassword = MutableLiveData<Result<Unit>>()
     val forgotPasswordResult: LiveData<Result<Unit>> = _forgotPassword
 
+    // 2) Verificar código recebido por e-mail
+    private val _verifyCode = MutableLiveData<Result<Unit>>()
+    val verifyCodeResult: LiveData<Result<Unit>> = _verifyCode
+
+    // 3) Definir nova senha
+    private val _setNewPassword = MutableLiveData<Result<Unit>>()
+    val setNewPasswordResult: LiveData<Result<Unit>> = _setNewPassword
+
+    /** 1) Solicita envio do e-mail de recuperação */
     fun forgotPassword(email: String) {
         viewModelScope.launch {
             _forgotPassword.value = Result.Loading
-
             try {
-                val response = forgotPasswordService.forgotPassword(EmailRequestModel(email))
+                val response = repository.requestForgotPassword(email) // <- atenção ao typo no repo
                 if (response.isSuccessful) {
                     _forgotPassword.value = Result.Success(Unit)
                 } else {
@@ -33,5 +43,43 @@ class PasswordViewModel @Inject constructor(private val forgotPasswordService: F
             }
         }
     }
-}
 
+    /** 2) Verifica o código digitado pelo usuário */
+    fun verifyCode(email: String, codigo: String) {
+        viewModelScope.launch {
+            _verifyCode.value = Result.Loading
+            try {
+                val response = repository.verifyCode(email, codigo)
+                if (response.isSuccessful) {
+                    _verifyCode.value = Result.Success(Unit)
+                } else {
+                    _verifyCode.value = Result.Error("Erro ${response.code()}: ${response.message()}")
+                }
+            } catch (e: Exception) {
+                _verifyCode.value = Result.Error("Falha na rede: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * 3) Define a nova senha.
+     * Observação: o repositório atual não recebe token.
+     * Mantive a assinatura (email, token, newPassword) para compatibilidade com a UI,
+     * mas o 'token' é ignorado aqui.
+     */
+    fun setNewPassword(email: String, token: String, newPassword: String) {
+        viewModelScope.launch {
+            _setNewPassword.value = Result.Loading
+            try {
+                val response = repository.updatePassword(email, newPassword)
+                if (response.isSuccessful) {
+                    _setNewPassword.value = Result.Success(Unit)
+                } else {
+                    _setNewPassword.value = Result.Error("Erro ${response.code()}: ${response.message()}")
+                }
+            } catch (e: Exception) {
+                _setNewPassword.value = Result.Error("Falha na rede: ${e.message}")
+            }
+        }
+    }
+}

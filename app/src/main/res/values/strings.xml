@@ -59,6 +59,10 @@
     <string name="icone_jogador">Icone Jogador</string>
     <string name="Perfil">Perfil</string>
     <string name="Genêro">Genêro</string>
+    <string name="nova_senha_de_acesso">Criar nova senha de acesso</string>
+    <string name="sua_senha">Sua senha precisa ter: </string>
+    <string name="verificando">Verificando</string>
+    <string name="cadastro"> Cadastro </string>
     <string-array name="mock_spinner_values">
         <item>Humano</item>
         <item>Anão</item>

@@ -16,8 +16,6 @@ import com.example.androidapprpg.ui.viewmodel.PasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
-//Essa tela precisa enviar um email? ou precisa acessar um endereço web?
-//Precsiamos que essa tela avance para uma novca tela, onde a nova tela recebe um código de verificação que foi enivado por email e o usuario consiga seguir com o logon
 @AndroidEntryPoint
 class ActivityForgotPassword : AppCompatActivity() {
 

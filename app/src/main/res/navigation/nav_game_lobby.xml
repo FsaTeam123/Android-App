@@ -26,6 +26,4 @@
         android:label="fragment_register_players_looby"
         tools:layout="@layout/fragment_players_lobby" />
 
-
-
 </navigation>

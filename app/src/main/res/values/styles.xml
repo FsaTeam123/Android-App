@@ -2,17 +2,19 @@
 
     <!-- Seu estilo customizado -->
     <style name="TokenBoxStyle">
-        <item name="android:layout_width">45dp</item>
-        <item name="android:layout_height">60dp</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="android:background">@drawable/custom_edittext</item>
-        <item name="android:backgroundTint">@color/Crowshead</item>
-        <item name="android:fontFamily">@font/cinzel_font_bold</item>
+        <item name="android:layout_width">39dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/token_cell</item>
         <item name="android:textColor">@color/BordasDouradas</item>
-        <item name="android:textSize">22sp</item>
-        <item name="android:inputType">number</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:maxLength">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:importantForAutofill">no</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="RegraSenhaItem">
@@ -48,6 +50,15 @@
         <item name="boxCornerRadiusBottomEnd">16dp</item>
         <item name="android:textColor">@color/BordasDouradas</item>
         <item name="android:fontFamily">@font/cinzel_font_bold</item>
+    </style>
+
+    <style name="Reinos.ChoiceChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="checkedIconVisible">false</item>
+        <item name="chipBackgroundColor">@color/chip_bg_color</item>
+        <item name="chipStrokeColor">@color/BordasDouradas</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="rippleColor">@color/chip_ripple</item>
     </style>
 
 

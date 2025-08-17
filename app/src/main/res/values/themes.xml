@@ -8,7 +8,7 @@
 
     <style name="Theme.App.AndroidAppRpg" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/black</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/icone_reinos_perdidos_dois_splashscreen</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.AndroidAppRpg</item>
     </style>
 

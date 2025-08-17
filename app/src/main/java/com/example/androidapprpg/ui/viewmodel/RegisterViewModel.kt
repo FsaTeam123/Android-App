@@ -1,6 +1,6 @@
 package com.example.androidapprpg.ui.viewmodel
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -71,7 +71,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    // Tentativa de extrair "message" do JSON de erro
+
     private fun extractServerMessage(raw: String?): String? {
         return try {
             if (raw.isNullOrBlank()) null

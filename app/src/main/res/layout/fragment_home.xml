@@ -9,47 +9,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_gravity="top"
         android:gravity="center_horizontal"
-        android:layout_gravity="center"
-        android:paddingTop="20dp">
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:layout_marginTop="80dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/NewGame"
             android:layout_width="300dp"
-            android:layout_height="60dp"
+            android:layout_height="75dp"
+            android:background="@drawable/btn1"
+            android:clickable="true"
+            android:elevation="10dp"
+            android:focusable="true"
             android:fontFamily="serif"
+            android:foreground="@null"
             android:text="@string/novo_jogo"
             android:textColor="@color/BordasDouradas"
-            android:textSize="21sp"
-            android:background="@drawable/btn1"
-            android:foreground="@null"
-            android:elevation="10dp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:textSize="28sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/JoinGame"
             android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:text="@string/Entrar_jogo"
-            android:elevation="12dp"
-            android:textSize="21sp"
-            android:fontFamily="serif"
+            android:layout_height="75dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/btn1"
-            android:textColor="@color/BordasDouradas" />
+            android:elevation="12dp"
+            android:fontFamily="serif"
+            android:text="@string/Entrar_jogo"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="28sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/MyGames"
             android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:text="@string/Meus_Jogos"
-            android:textSize="21sp"
-            android:fontFamily="serif"
+            android:layout_height="75dp"
             android:layout_marginTop="30dp"
-            android:elevation="12dp"
             android:background="@drawable/btn1"
-            android:textColor="@color/BordasDouradas" />
+            android:elevation="12dp"
+            android:fontFamily="serif"
+            android:text="@string/Meus_Jogos"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="28sp" />
     </LinearLayout>
 </FrameLayout>

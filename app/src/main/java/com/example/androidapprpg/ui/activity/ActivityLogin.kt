@@ -83,7 +83,7 @@ class ActivityLogin : AppCompatActivity() {
 
             //Configurando botão de Esquecer a Senha
             binding.forgotPassword.setOnClickListener {
-                val intent = Intent(this, ActivityForgotPassword::class.java)
+                val intent = Intent(this, ActivityMainForgotPassword::class.java)
                 startActivity(intent)
                 Log.d(TAG, "Entrando na seção esqueci minha senha?")
             }

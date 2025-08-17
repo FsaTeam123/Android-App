@@ -43,12 +43,14 @@ android {
             applicationIdSuffix = ".mock"
             versionNameSuffix = "-mock"
             buildConfigField("boolean", "MOCK_MODE", "true")
-            buildConfigField("String", "BASE_URL", "\"http://15.228.149.190:8085/\"")
+            buildConfigField("String", "BASE_URL_GAME", "\"http://15.228.149.190:8085/\"")
+
         }
         create("prod") {
             dimension = "env"
             buildConfigField("boolean", "MOCK_MODE", "false")
-            buildConfigField("String", "BASE_URL", "\"http://15.228.149.190:8085/\"")
+            buildConfigField("String", "BASE_URL_GAME", "\"http://15.228.149.190:8085/\"")
+
         }
     }
 
@@ -90,11 +92,11 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
     implementation(libs.javapoet)
+    implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.testing.android)
     implementation(libs.androidx.fragment.testing)
     kapt(libs.hilt.compiler)
-
 
     testImplementation(libs.junit)
     testImplementation("org.mockito:mockito-core:5.11.0")
