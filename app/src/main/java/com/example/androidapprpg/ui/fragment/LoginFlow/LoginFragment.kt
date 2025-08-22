@@ -80,9 +80,8 @@ class LoginFragment : Fragment() {
                     sessionManager.saveLogin(user.idUsuario.toLong(), user.token)
                     Log.d("Salvando user no Shared Preferences", "User: $user")
 
-                    // Navegar para ActivityMaster
-                    startActivity(Intent(requireContext(), ActivityMaster::class.java))
-                    requireActivity().finish() // fecha Activity host do login
+                    // Navegar para Home Fragment
+                    findNavController().navigate(R.id.action_to_home_fragment)
                 }
                 is Result.Error -> {
                     binding.loginButton.isEnabled = true

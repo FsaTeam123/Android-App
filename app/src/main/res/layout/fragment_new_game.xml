@@ -5,9 +5,8 @@
     android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/new_game_screen_background"
     tools:context=".ui.fragment.NewGameFragment">
-
-    <!-- Barra superior fixa -->
 
     <!-- Linha dourada abaixo da barra -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,10 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Título -->
-
         <!-- Botão fechar ao lado do título -->
-
         <TextView
             android:id="@+id/titleNewGame"
             android:layout_width="254dp"
@@ -62,23 +58,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-
     <!-- ScrollView com o formulário -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/separadorDourado"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/separadorDourado"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="35dp"
-            android:background="@drawable/retangulo_arredondado"
+            android:background="@drawable/retangulo_arrendondado_60_opacidade"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -92,34 +88,6 @@
                 android:text="Sistema: Tormenta20"
                 android:textColor="@color/BordasDouradas"
                 android:textSize="16sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="ID do Jogo"
-                android:textColorHint="@color/BordasDouradas"
-                app:boxBackgroundColor="@color/Crowshead"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusTopStart="25dp"
-                app:boxCornerRadiusTopEnd="25dp"
-                app:boxCornerRadiusBottomStart="25dp"
-                app:boxCornerRadiusBottomEnd="25dp"
-                app:boxStrokeColor="@color/BordasDouradas"
-                app:hintTextColor="@color/BordasDouradas">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etIdJogo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:padding="12dp"
-                    android:textColor="@color/BordasDouradas"
-                    android:textColorHint="@color/BordasDouradas"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Nome do Jogo -->
             <com.google.android.material.textfield.TextInputLayout
@@ -465,7 +433,6 @@
                     android:textColor="@color/BordasDouradas"
                     android:textColorHint="@color/BordasDouradas" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <!-- Botão Criar Jogo -->
             <androidx.appcompat.widget.AppCompatButton

@@ -17,8 +17,7 @@
     <string name="Card">Card</string>
     <string name="Login">login</string>
     <string name="Enviar">enviar</string>
-    <string name='Criar_jogo'>Criar um jogo</string>
-    <string name='Entrar_jogo'>Entrar no jogo</string>
+    <string name='Entrar_jogo'>entrar no jogo</string>
     <string name='Meus_Jogos'>Meus Jogos</string>
     <string name="settings">Configurações</string>
     <string name="letters">Letters</string>
@@ -63,6 +62,24 @@
     <string name="sua_senha">Sua senha precisa ter: </string>
     <string name="verificando">Verificando</string>
     <string name="cadastro"> Cadastro </string>
+    <string name="Termos_Privacidade">Termos e Privacidade</string>
+    <string name="Som">Som</string>
+    <string name="Musica">Musica</string>
+    <string name="content_desc_avatar">Avatar do usuário</string>
+    <string name="editar">Editar</string>
+    <string name="nivel">Nível</string>
+    <string name="partidas">Partidas</string>
+    <string name="amigos">Amigos</string>
+    <string name="tema_escuro">Tema escuro</string>
+    <string name="notificacoes">Notificações</string>
+    <string name="sons">Sons</string>
+    <string name="sair">Sair</string>
+    <string name="nome">Nome</string>
+    <string name="salvar">Salvar</string>
+
+
+
+
     <string-array name="mock_spinner_values">
         <item>Humano</item>
         <item>Anão</item>

@@ -8,6 +8,7 @@ import com.example.androidapprpg.data.remote.services.GameLobbyService
 import com.example.androidapprpg.data.remote.services.JoinGameService
 import com.example.androidapprpg.data.remote.services.MyGamesService
 import com.example.androidapprpg.data.remote.services.NewGameService
+import com.example.androidapprpg.data.remote.services.ProfileService
 import com.example.androidapprpg.data.remote.services.spinners.CardMagiasService
 import com.example.androidapprpg.data.remote.services.spinners.CardMasterService
 import com.example.androidapprpg.data.remote.services.spinners.CardPlayerService
@@ -119,5 +120,10 @@ object AppModule {
     @Singleton
     fun provideForgotPasswordService( retrofit: Retrofit) : ForgotPasswordService =
         retrofit.create(ForgotPasswordService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideProfileService( retrofit : Retrofit) : ProfileService =
+        retrofit.create(ProfileService::class.java)
 
 }

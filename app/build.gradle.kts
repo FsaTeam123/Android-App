@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
     implementation(libs.javapoet)
+    implementation(libs.circleimageview)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.testing.android)

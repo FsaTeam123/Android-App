@@ -24,6 +24,7 @@ uiAndroid = "1.8.3"
 navigationTestingAndroid = "2.9.2"
 fragmentTesting = "1.8.8"
 gridlayout = "1.0.0"
+circleimageview = "3.1.0"
 
 
 
@@ -43,6 +44,7 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 javapoet = {group = "com.squareup", name = "javapoet", version.ref = "javapoet"}
 androidx-gridlayout = { module = "androidx.gridlayout:gridlayout", version.ref = "gridlayout" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 
 
 

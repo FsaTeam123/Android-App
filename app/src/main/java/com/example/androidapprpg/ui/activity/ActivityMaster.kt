@@ -90,4 +90,14 @@ class ActivityMaster : AppCompatActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         controller.hide(WindowInsetsCompat.Type.systemBars())
     }
+
+    private fun settingButtons() {
+        binding.settings
+
+
+    }
+
+
+
+
 }

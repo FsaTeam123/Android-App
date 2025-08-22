@@ -26,8 +26,16 @@
         <action
             android:id="@+id/action_home_to_joinGame"
             app:destination="@id/nav_joingame" />
-    </fragment>
 
+        <action
+            android:id="@id/profileFragment"
+            app:destination="@+id/profileFragment" />
+
+        <action
+            android:id="@+id/settingsFragment"
+            app:destination="@+id/settingsFragment" />
+
+    </fragment>
 
 
     <fragment
@@ -36,17 +44,6 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.example.androidapprpg.ui.fragment.MapFragment"
-        android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
-
-    <fragment
-        android:id="@+id/lettersFragment"
-        android:name="com.example.androidapprpg.ui.fragment.NotificationsFragment"
-        android:label="fragment_letters"
-        tools:layout="@layout/fragment_letters" />
 
     <fragment
         android:id="@+id/settingsFragment"

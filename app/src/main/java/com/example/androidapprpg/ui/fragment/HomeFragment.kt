@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentHomeBinding
-import com.example.androidapprpg.ui.activity.ActivityNewGame
+
 
 class HomeFragment : Fragment() {
 
@@ -46,6 +46,15 @@ class HomeFragment : Fragment() {
         binding.JoinGame.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_joinGame)
         }
+
+        binding.profile.setOnClickListener {
+            findNavController().navigate(R.id.profileFragment)
+        }
+
+        binding.settings.setOnClickListener {
+            findNavController().navigate(R.id.settingsFragment)
+        }
+
     }
 
     override fun onDestroyView() {

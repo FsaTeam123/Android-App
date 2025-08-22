@@ -34,7 +34,7 @@
             android:exported="false" android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <activity
-            android:name="com.example.androidapprpg.ui.activity.ActivityMaster"
+            android:name="com.example.androidapprpg.ui.activity.ActivityMainHome"
             android:exported="true" />
 
         <activity

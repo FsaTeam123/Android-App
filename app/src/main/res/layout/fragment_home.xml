@@ -1,56 +1,121 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.HomeFragment">
+    android:background="@drawable/new_background_screen"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.ActivityMaster">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:layout_marginTop="80dp">
+    <ImageView
+        android:id="@+id/profile"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/Profile"
+        android:src="@drawable/profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/NewGame"
-            android:layout_width="300dp"
-            android:layout_height="75dp"
-            android:background="@drawable/btn1"
-            android:clickable="true"
-            android:elevation="10dp"
-            android:focusable="true"
-            android:fontFamily="serif"
-            android:foreground="@null"
-            android:text="@string/novo_jogo"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="28sp" />
+    <ImageView
+        android:id="@+id/settings"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/settings"
+        android:src="@drawable/settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/JoinGame"
-            android:layout_width="300dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/btn1"
-            android:elevation="12dp"
-            android:fontFamily="serif"
-            android:text="@string/Entrar_jogo"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="28sp" />
+    <ImageView
+        android:id="@+id/headerImage"
+        android:layout_width="180dp"
+        android:layout_height="155dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/espada_version_eins"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.28"
+        android:layout_marginTop="56dp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/MyGames"
-            android:layout_width="300dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/btn1"
-            android:elevation="12dp"
-            android:fontFamily="serif"
-            android:text="@string/Meus_Jogos"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="28sp" />
-    </LinearLayout>
-</FrameLayout>
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="293dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/cinzel_font_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:text="@string/app_name"
+        android:textColor="@color/DouradoEspecial"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="80sp"
+        app:autoSizeMinTextSize="45sp"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerImage" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/NewGame"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn1"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:fontFamily="@font/breeserif_regular"
+        android:foreground="@null"
+        android:text="@string/novo_jogo"
+        android:textColor="@color/BordasDouradas"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/JoinGame"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn1"
+        android:elevation="12dp"
+        android:fontFamily="@font/breeserif_regular"
+        android:text="@string/Entrar_jogo"
+        android:textColor="@color/BordasDouradas"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/NewGame" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/MyGames"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn1"
+        android:elevation="12dp"
+        android:fontFamily="@font/breeserif_regular"
+        android:text="@string/Meus_Jogos"
+        android:textColor="@color/BordasDouradas"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/JoinGame" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

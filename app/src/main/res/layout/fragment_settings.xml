@@ -1,49 +1,57 @@
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-
-    > <!-- ou ajuste para seu fragment real -->
+    android:background="@drawable/home_fragment"
+    tools:context=".ui.fragment.SettingsFragment">
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/settingsTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
         android:fontFamily="@font/cinzel_font_bold"
         android:text="@string/settings"
         android:textAlignment="center"
         android:textColor="@color/BordasDouradas"
         android:textFontWeight="600"
-        android:textSize="38dp" />
+        android:textSize="38sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="379dp"
+        android:id="@+id/settingsContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/retangulo_borda_fundo_transparente"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsTitle"
+        app:layout_constraintWidth_percent="0.9">
 
-        <!-- Áudio -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
             android:background="@drawable/custom_edittext"
             android:backgroundTint="@color/Crowshead"
             android:gravity="center_vertical"
-            android:padding="12dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/cinzel_font_bold"
                 android:text="@string/audio"
                 android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
                 android:textSize="15sp" />
 
             <Switch
@@ -54,7 +62,6 @@
                 android:trackTint="@color/OleYeller" />
         </LinearLayout>
 
-        <!-- Notificações -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -62,16 +69,16 @@
             android:background="@drawable/custom_edittext"
             android:backgroundTint="@color/Crowshead"
             android:gravity="center_vertical"
-            android:padding="12dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/cinzel_font_bold"
                 android:text="@string/notifications"
                 android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
                 android:textSize="15sp" />
 
             <Switch
@@ -82,7 +89,6 @@
                 android:trackTint="@color/OleYeller" />
         </LinearLayout>
 
-        <!-- Idioma -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -90,29 +96,28 @@
             android:background="@drawable/custom_edittext"
             android:backgroundTint="@color/Crowshead"
             android:gravity="center_vertical"
-            android:padding="12dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/cinzel_font_bold"
                 android:text="@string/language"
                 android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvIdiomaValor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cinzel_font_bold"
                 android:text="@string/Portuguese"
                 android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <!-- Conta -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -120,31 +125,19 @@
             android:background="@drawable/custom_edittext"
             android:backgroundTint="@color/Crowshead"
             android:gravity="center_vertical"
-            android:padding="12dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
-
-           <!--ajustar botão-->
             <TextView
                 android:id="@+id/closeAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:gravity="start"
                 android:text="@string/Exit_account"
                 android:textColor="@color/BordasDouradas"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:textSize="15sp"
-                android:gravity="start" />
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Botão Sair -->
-    <LinearLayout
-        android:layout_width="379dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-
-    </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
