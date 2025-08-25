@@ -1,6 +1,5 @@
-package com.example.androidapprpg.ui.fragment.ForgotPasswordFlow
+package com.example.androidapprpg.ui.fragment.ForgotPassword
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentNewPasswordBinding
-import com.example.androidapprpg.ui.activity.ActivityLogin
 import com.example.androidapprpg.ui.viewmodel.PasswordViewModel
 import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint

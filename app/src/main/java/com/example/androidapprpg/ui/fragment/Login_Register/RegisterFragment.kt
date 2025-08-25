@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment.LoginFlow
+package com.example.androidapprpg.ui.fragment.Login_Register
 
 import android.os.Bundle
 import android.view.LayoutInflater

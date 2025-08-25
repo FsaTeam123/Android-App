@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/gameLobby"
-        android:name="com.example.androidapprpg.ui.fragment.GameLobbyFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameLobby.GameLobbyFragment"
         android:label="fragment_game_looby"
         tools:layout="@layout/fragment_game_lobby">
 
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/registerPlayersLooby"
-        android:name="com.example.androidapprpg.ui.fragment.PlayersLobbyFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameLobby.PlayersLobbyFragment"
         android:label="fragment_register_players_looby"
         tools:layout="@layout/fragment_players_lobby" />
 

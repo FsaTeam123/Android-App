@@ -1,8 +1,5 @@
-package com.example.androidapprpg.ui.fragment.ForgotPasswordFlow
+package com.example.androidapprpg.ui.fragment.ForgotPassword
 
-import android.content.ContentValues.TAG
-import android.content.Intent
-import android.nfc.Tag
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -21,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentVerifyCodeBinding
-import com.example.androidapprpg.ui.activity.ActivityLogin
 import com.example.androidapprpg.ui.viewmodel.PasswordViewModel
 import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint

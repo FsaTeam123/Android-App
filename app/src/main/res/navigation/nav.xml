@@ -49,7 +49,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.androidapprpg.ui.fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings2" />
 
 
     <!--Nested Graphs-->

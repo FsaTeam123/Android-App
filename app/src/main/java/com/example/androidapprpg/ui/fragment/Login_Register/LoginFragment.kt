@@ -1,6 +1,5 @@
-package com.example.androidapprpg.ui.fragment.LoginFlow
+package com.example.androidapprpg.ui.fragment.Login_Register
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,14 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.databinding.FragmentLoginBinding
-import com.example.androidapprpg.ui.activity.ActivityMaster
 import com.example.androidapprpg.ui.viewmodel.LoginViewModel
 import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
+    @Inject lateinit var session : SessionManager
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
@@ -69,15 +69,14 @@ class LoginFragment : Fragment() {
             when (result) {
                 is Result.Loading -> {
                     binding.loginButton.isEnabled = false
-                    // Se tiver ProgressBar, exiba aqui (ex.: binding.progress.isVisible = true)
+
                 }
                 is Result.Success -> {
                     binding.loginButton.isEnabled = true
 
                     val user = result.data
                     // Salvar sessão
-                    val sessionManager = SessionManager(requireContext().applicationContext)
-                    sessionManager.saveLogin(user.idUsuario.toLong(), user.token)
+                    session.saveLogin(user.idUsuario.toLong(), user.token)
                     Log.d("Salvando user no Shared Preferences", "User: $user")
 
                     // Navegar para Home Fragment

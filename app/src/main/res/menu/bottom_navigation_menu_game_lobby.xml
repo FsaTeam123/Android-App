@@ -3,5 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home"
+        app:showAsAction="always"
+        android:title=""/>
+
+    <item
+        android:id="@+id/lettersFragment"
+        android:icon="@drawable/message"
+        app:showAsAction="always"
+        android:title=""/>
+
 
 </menu>

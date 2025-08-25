@@ -1,7 +1,6 @@
 package com.example.androidapprpg.data.remote.di
 
 import com.example.androidapprpg.BuildConfig
-import com.example.androidapprpg.data.remote.Interceptor.AuthInterceptor
 import com.example.androidapprpg.data.remote.services.AuthService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
@@ -42,8 +41,7 @@ object AppModule {
     // --------OKHTTP--------------
     @Provides
     @Singleton
-    fun provideGameOkHttp(logging : HttpLoggingInterceptor, authInterceptor: AuthInterceptor) : OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor) // Bearer para rotas do jogo
+    fun provideGameOkHttp(logging : HttpLoggingInterceptor) : OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
@@ -53,9 +51,10 @@ object AppModule {
     // --------RETROFIT--------------
     @Provides
     @Singleton
-    fun provideRetrofit() : Retrofit =
+    fun provideRetrofit(okHttpClient: OkHttpClient) : Retrofit =
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL_GAME)
+            .client(okHttpClient) //configuração do cliente do retrofit
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

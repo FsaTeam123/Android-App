@@ -4,14 +4,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/homeFragment"
-        android:icon="@drawable/home"
+        android:id="@+id/lettersFragment"
+        android:icon="@drawable/folder"
         app:showAsAction="always"
         android:title=""/>
 
     <item
-        android:id="@+id/lettersFragment"
-        android:icon="@drawable/message"
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/notes"
+        app:showAsAction="always"
+        android:title=""/>
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/swords"
+        app:showAsAction="always"
+        android:title=""/>
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/map_location"
+        app:showAsAction="always"
+        android:title=""/>
+
+    <item
+        android:id="@+id/closeFragment"
+        android:icon="@drawable/close_circle_svgrepo_com"
         app:showAsAction="always"
         android:title=""/>
 </menu>

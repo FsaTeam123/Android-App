@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:descendantFocusability="afterDescendants"
     android:background="@drawable/login_background"
-    tools:context=".ui.fragment.LoginFlow.RegisterFragment">
+    tools:context=".ui.fragment.Login_Register.RegisterFragment">
 
     <LinearLayout
         android:id="@+id/cadastro"

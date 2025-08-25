@@ -6,7 +6,6 @@
     android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
     tools:context=".ui.activity.ActivityGameMaster">
 
     <!-- Fragment Container View -->
@@ -26,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:elevation="12dp"
-        app:backgroundColor="@android:color/transparent"
+        app:backgroundColor="@color/VermelhoEscuro"
         app:iconMargin="8dp"
         app:iconSize="35dp"
         app:iconTint="@color/BordasDouradas"

@@ -1,6 +1,5 @@
 package com.example.androidapprpg.data.remote.services
 
-import com.example.androidapprpg.data.model.ForgotPasswordDataModel.EmailRequestModel
 import com.example.androidapprpg.data.model.ForgotPasswordDataModel.UpdatePasswordRequest
 import com.example.androidapprpg.data.model.ForgotPasswordDataModel.VerifyCodeRequest
 import retrofit2.Call

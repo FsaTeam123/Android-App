@@ -32,7 +32,7 @@ class PasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _forgotPassword.value = Result.Loading
             try {
-                val response = repository.requestForgotPassword(email) // <- atenção ao typo no repo
+                val response = repository.requestForgotPassword(email)
                 if (response.isSuccessful) {
                     _forgotPassword.value = Result.Success(Unit)
                 } else {

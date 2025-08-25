@@ -35,24 +35,10 @@
 
         <activity
             android:name="com.example.androidapprpg.ui.activity.ActivityMainHome"
-            android:exported="true" />
-
-        <activity
-            android:name="com.example.androidapprpg.ui.activity.ActivityCadastro"
+            android:theme="@style/Theme.FullScreen.AndroidAppRpg"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
-        <activity
-            android:name="com.example.androidapprpg.ui.activity.ActivityNewGame"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <activity
-            android:name="com.example.androidapprpg.ui.activity.ActivityJoinGame"
-            android:exported="true" />
-
-        <activity
-            android:name="com.example.androidapprpg.ui.activity.ActivityMyGames"
-            android:exported="true" />
     </application>
 </manifest>

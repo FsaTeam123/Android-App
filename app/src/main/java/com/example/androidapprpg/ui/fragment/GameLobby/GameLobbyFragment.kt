@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.GameLobby
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,15 +13,18 @@ import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.ui.viewmodel.GameLobbyViewModel
 import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GameLobbyFragment : Fragment() {
+
+    @Inject lateinit var sessionManager: SessionManager
 
     private var _binding: FragmentGameLobbyBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: GameLobbyViewModel by viewModels()
-    private val args: GameLobbyFragmentArgs by navArgs()
+    private val args: GameLobbyFragmentArgs by navArgs() // vem do SafeArgs: idJogo: Long
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,28 +38,29 @@ class GameLobbyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sessionManager = SessionManager(requireContext())
-        val idUsuario = sessionManager.getUserId()
-        val idJogo = args.idJogo
+        val idJogo: Long = args.idJogo
 
         binding.btnIniciarSessao.setOnClickListener {
-            viewModel.iniciarSessao(idUsuario, idJogo)
+            val uid: Long = sessionManager.getUserIdOrNull() ?: run {
+                Toast.makeText(requireContext(), "Sessão expirada. Faça login novamente.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            viewModel.iniciarSessao(uid, idJogo)
         }
 
         viewModel.estadoSessao.observe(viewLifecycleOwner) { resultado ->
             when (resultado) {
                 is Result.Loading -> {
-                    // Exibir progresso (você pode ativar um ProgressBar aqui)
                     binding.btnIniciarSessao.isEnabled = false
                 }
                 is Result.Success -> {
                     binding.btnIniciarSessao.isEnabled = true
-                    Toast.makeText(requireContext(), "Sessão iniciada!", Toast.LENGTH_SHORT).show()
-                    // Aqui você pode navegar para outra tela ou atualizar o layout
+                    //Toast.makeText(requireContext(), "Sessão iniciada! ID=${resultado.data.idSessao}", Toast.LENGTH_SHORT).show()
+                    // TODO: navegue para a tela da sessão se quiser
                 }
                 is Result.Error -> {
                     binding.btnIniciarSessao.isEnabled = true
-                    Toast.makeText(requireContext(), resultado.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), resultado.message ?: "Erro ao iniciar sessão", Toast.LENGTH_SHORT).show()
                 }
             }
         }

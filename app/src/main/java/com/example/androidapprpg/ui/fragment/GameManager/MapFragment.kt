@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.GameManager
 
 import androidx.fragment.app.Fragment
 

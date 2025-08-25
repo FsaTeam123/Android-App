@@ -5,10 +5,9 @@
     android:id="@+id/nav_game_manager"
     app:startDestination="@id/gameManager">
 
-
     <fragment
         android:id="@+id/gameManager"
-        android:name="com.example.androidapprpg.ui.fragment.GameLobbyFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.MapFragment"
         android:label="fragment_game_looby"
         tools:layout="@layout/fragment_map">
 
@@ -23,7 +22,7 @@
 
     <fragment
         android:id="@+id/registerPlayersLooby"
-        android:name="com.example.androidapprpg.ui.fragment.PlayersLobbyFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameLobby.PlayersLobbyFragment"
         android:label="fragment_register_players_looby"
         tools:layout="@layout/fragment_players_lobby" />
 
