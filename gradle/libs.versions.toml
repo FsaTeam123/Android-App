@@ -25,6 +25,7 @@ navigationTestingAndroid = "2.9.2"
 fragmentTesting = "1.8.8"
 gridlayout = "1.0.0"
 circleimageview = "3.1.0"
+scenecore = "1.0.0-alpha06"
 
 
 
@@ -66,6 +67,7 @@ navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx",
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-navigation-testing-android = { group = "androidx.navigation", name = "navigation-testing-android", version.ref = "navigationTestingAndroid" }
 androidx-fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
+androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

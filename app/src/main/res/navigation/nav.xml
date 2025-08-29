@@ -5,13 +5,9 @@
     android:id="@+id/nav"
     app:startDestination="@id/homeFragment">
 
-    <action
-        android:id="@+id/action_global_gameLobby"
-        app:destination="@id/gameLobby" />
-
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.androidapprpg.ui.fragment.HomeFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -28,34 +24,29 @@
             app:destination="@id/nav_joingame" />
 
         <action
-            android:id="@id/profileFragment"
-            app:destination="@+id/profileFragment" />
+            android:id="@+id/action_home_to_profile"
+            app:destination="@id/profileFragment" />
 
         <action
-            android:id="@+id/settingsFragment"
-            app:destination="@+id/settingsFragment" />
-
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/settingsFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.androidapprpg.ui.fragment.ProfileFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
-
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.androidapprpg.ui.fragment.SettingsFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings2" />
 
-
-    <!--Nested Graphs-->
+    <!-- Nested Graphs -->
     <include app:graph="@navigation/nav_newgame" />
     <include app:graph="@navigation/nav_joingame" />
     <include app:graph="@navigation/nav_mygames" />
     <include app:graph="@navigation/nav_game_lobby" />
-
 </navigation>

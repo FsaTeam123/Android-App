@@ -1,9 +1,12 @@
 package com.example.androidapprpg.ui.fragment.ForgotPassword
 
+import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -22,7 +25,7 @@ class ForgotPasswordFragment : Fragment() {
     private var _binding: FragmentForgotPasswordBinding? = null
     private val binding get() = _binding!!
 
-    // Compartilhado com a Activity host (bom para um fluxo com vários fragments)
+    // Compartilhado com a Activity host
     private val viewModel: PasswordViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -55,7 +58,8 @@ class ForgotPasswordFragment : Fragment() {
             if (email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 viewModel.forgotPassword(email)
             } else {
-                Toast.makeText(requireContext(), "Insira um email válido", Toast.LENGTH_SHORT).show()
+                showCustomToast("Insira um email válido", requireContext())
+
             }
         }
     }
@@ -67,17 +71,22 @@ class ForgotPasswordFragment : Fragment() {
 
             when (result) {
                 is Result.Loading -> {
-                    Toast.makeText(requireContext(), "Enviando email...", Toast.LENGTH_SHORT).show()
+                    showCustomToast("Enviando email...", requireContext())
                 }
                 is Result.Success -> {
-                    Toast.makeText(requireContext(), "Email enviado com sucesso", Toast.LENGTH_LONG).show()
+                    showCustomToast("Email enviado com sucesso", requireContext())
                     val email = binding.email.text.toString()
                     val dir = ForgotPasswordFragmentDirections.actionToVerify(email)
                     findNavController().navigate(dir)
 
                 }
+
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
                 is Result.Error -> {
-                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_LONG).show()
+                    showCustomToast("Erro ao enviar email", requireContext())
                 }
             }
         }
@@ -94,8 +103,23 @@ class ForgotPasswordFragment : Fragment() {
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.resetPasswordState()
         _binding = null
     }
 }

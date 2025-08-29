@@ -7,6 +7,9 @@ data class UserResponseLogin(
     @SerializedName("token")
     val token: String?,
 
+    @SerializedName("ativo")
+    val ativo: Int?,
+
     @SerializedName("status")
     val status: String?,
 

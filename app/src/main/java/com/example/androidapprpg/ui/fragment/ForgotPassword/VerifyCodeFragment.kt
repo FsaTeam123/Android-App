@@ -1,15 +1,18 @@
 package com.example.androidapprpg.ui.fragment.ForgotPassword
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -70,7 +73,7 @@ class VerifyCodeFragment : Fragment() {
                 // Sem verificar email preenchido — regra solicitada
                 viewModel.verifyCode(emailArg, token)
             } else {
-                Toast.makeText(requireContext(), "Preencha os 8 dígitos do token.", Toast.LENGTH_SHORT).show()
+                showCustomToast("Preencha os 8 dígitos do token.", requireContext())
             }
         }
 
@@ -88,6 +91,11 @@ class VerifyCodeFragment : Fragment() {
                     Log.d("VerifyCodeFragment","Navegando para Fragment NewPassword + email: $emailArg + Token: $token")
 
                 }
+
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
                 is Result.Error -> {
                     setLoading(false)
                     Toast.makeText(
@@ -176,6 +184,21 @@ class VerifyCodeFragment : Fragment() {
 
         fields.first().requestFocus()
     }
+
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

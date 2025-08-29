@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    tools:context=".ui.fragment.MyGamesFragment">
+    tools:context=".ui.fragment.Home.MyGamesFragment">
 
     <!-- Barra superior fixa -->
     <androidx.constraintlayout.widget.ConstraintLayout

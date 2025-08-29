@@ -3,27 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/game_nav"
-    app:startDestination="@id/gameLobby">
+    app:startDestination="@id/navGameLobby">
 
     <fragment
-        android:id="@+id/gameLobby"
+        android:id="@+id/navGameLobby"
         android:name="com.example.androidapprpg.ui.fragment.GameLobby.GameLobbyFragment"
-        android:label="fragment_game_looby"
+        android:label="fragment_game_lobby"
         tools:layout="@layout/fragment_game_lobby">
 
         <argument
             android:name="idJogo"
             app:argType="long" />
 
-        <action
-            android:id="@+id/action_global_gameLobby"
-            app:destination="@id/gameLobby" />
     </fragment>
 
     <fragment
-        android:id="@+id/registerPlayersLooby"
+        android:id="@+id/registerPlayersLobby"
         android:name="com.example.androidapprpg.ui.fragment.GameLobby.PlayersLobbyFragment"
-        android:label="fragment_register_players_looby"
+        android:label="fragment_register_players_lobby"
         tools:layout="@layout/fragment_players_lobby" />
-
 </navigation>

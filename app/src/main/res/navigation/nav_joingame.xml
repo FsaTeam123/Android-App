@@ -7,8 +7,16 @@
 
     <fragment
         android:id="@+id/joinGameFragment"
-        android:name="com.example.androidapprpg.ui.fragment.JoinGameFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.JoinGameFragment"
         android:label="Entrar em Jogo"
-        tools:layout="@layout/fragment_join_game" />
+        tools:layout="@layout/fragment_join_game" >
+
+
+        <action
+            android:id="@+id/action_joinGameFragment_to_game_nav"
+            app:destination="@id/game_nav" />
+    </fragment>
+
+    <include app:graph="@navigation/nav_game_lobby" />
 
 </navigation>

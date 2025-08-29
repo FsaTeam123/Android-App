@@ -1,10 +1,13 @@
 package com.example.androidapprpg.ui.fragment.Login_Register
 
+import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
@@ -53,7 +56,6 @@ class RegisterFragment : Fragment() {
     /** Fecha e retorna para LoginFragment dentro do mesmo gráfico */
     private fun setupCloseButton() = with(binding) {
         btnClose?.setOnClickListener {
-            // Se tiver ação global, prefira: findNavController().navigate(R.id.action_global_login)
             findNavController().popBackStack(R.id.login, false)
         }
     }
@@ -71,17 +73,6 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        viewModel.perfis.observe(viewLifecycleOwner) { list ->
-            if (list.isNullOrEmpty()) return@observe
-            val nomes = list.map { it.nome }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, nomes).apply {
-                setDropDownViewResource(R.layout.spinner_item)
-            }
-            binding.idPerfil.setAdapter(adapter)
-            binding.idPerfil.setOnItemClickListener { _, _, pos, _ ->
-                selectedPerfilId = list[pos].idPerfil
-            }
-        }
 
         viewModel.comboError.observe(viewLifecycleOwner) { msg ->
             msg?.let { toast(it) }
@@ -106,12 +97,12 @@ class RegisterFragment : Fragment() {
             if (name.isEmpty() || email.isEmpty() || nickname.isEmpty() ||
                 senha.isEmpty() || confirmarSenha.isEmpty()
             ) {
-                toast("Preencha todos os campos")
+                showCustomToast("Preencha todos os campos", requireContext())
                 return@setOnClickListener
             }
 
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                toast("Email inválido")
+                showCustomToast("Email inválido", requireContext())
                 return@setOnClickListener
             }
 
@@ -128,9 +119,7 @@ class RegisterFragment : Fragment() {
             val sexoId = selectedSexoId ?: run {
                 toast("Selecione o Genêro"); return@setOnClickListener
             }
-            val perfilId = selectedPerfilId ?: run {
-                toast("Selecione Perfil"); return@setOnClickListener
-            }
+
 
             clearInlineError()
 
@@ -140,7 +129,7 @@ class RegisterFragment : Fragment() {
                 nickname = nickname,
                 senha = senha,
                 idSexo = sexoId,
-                idPerfil = perfilId
+
             )
         }
 
@@ -156,9 +145,12 @@ class RegisterFragment : Fragment() {
                 is Result.Loading -> binding.registerButton.isEnabled = false
                 is Result.Success -> {
                     binding.registerButton.isEnabled = true
-                    toast(result.data.message ?: "Cadastro realizado com sucesso")
-                    // Volta para o Login
+                    showCustomToast("Cadastro realizado com sucesso", requireContext())
+                     // Volta para o Login
                     findNavController().popBackStack(R.id.login, false)
+                }
+                is Result.StopViewModel -> {
+                    //StopViewModel
                 }
                 is Result.Error -> {
                     binding.registerButton.isEnabled = true
@@ -196,7 +188,22 @@ class RegisterFragment : Fragment() {
         if (isPasswordValid(pw)) clearInlineError()
     }
 
-    /** Mostra erro nos TextInputLayouts (melhor UX) */
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
+
+
+
     private fun showInlineError(message: String) = with(binding) {
         passwordInputLayout.error = message
         checkPasswordInputLayout.error = message

@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.Home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -37,7 +37,7 @@ class NewGameFragment : Fragment() {
         setupCheckBoxMutualExclusion()
         setupExitButton()
         setupCreateButton()
-        observarResultado()
+        //observarResultado()
     }
 
     private fun ativarFullscreen() {
@@ -126,11 +126,13 @@ class NewGameFragment : Fragment() {
                 idTipoJogo = if (binding.checkPartidaPublica.isChecked) 1 else 2
             )
 
-            viewModel.criarJogo(request)
+            //viewModel.criarJogo(request)
+
+            findNavController().navigate(R.id.action_newGameFragment_to_game_nav)
         }
     }
 
-    private fun observarResultado() {
+    /*private fun observarResultado() {
         viewModel.newGamesResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 val id = it.id
@@ -149,7 +151,7 @@ class NewGameFragment : Fragment() {
                 Toast.makeText(requireContext(), "Erro ao criar jogo: ${it.message}", Toast.LENGTH_LONG).show()
             }
         }
-    }
+    }*/
 
 
     private fun setupCheckBoxMutualExclusion() {

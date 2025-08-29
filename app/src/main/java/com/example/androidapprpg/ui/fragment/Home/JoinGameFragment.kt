@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.Home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,13 +36,13 @@ class JoinGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ativarFullscreen()
-        setupObservers()
+//        ativarFullscreen()
+        //setupObservers()
         setUpEnterGame()
         setUpExitButton()
     }
 
-    private fun ativarFullscreen() {
+    /*private fun ativarFullscreen() {
         val controller = requireActivity().window.decorView
         val insetsController =
             WindowInsetsControllerCompat(requireActivity().window, controller)
@@ -51,7 +51,7 @@ class JoinGameFragment : Fragment() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
+    }*/
 
     private fun setUpExitButton() {
         binding.btnFechar.setOnClickListener {
@@ -74,11 +74,13 @@ class JoinGameFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            viewModel.joinGame(idGame)
+            //viewModel.joinGame(idGame)
+            findNavController().navigate(R.id.action_joinGameFragment_to_game_nav)
+
         }
     }
 
-    private fun setupObservers() {
+    /*private fun setupObservers() {
         viewModel.joinGameResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -95,7 +97,7 @@ class JoinGameFragment : Fragment() {
                             putLong("idJogo", idJogo)
                         }
 
-                        findNavController().navigate(R.id.gameLobby, bundle)
+                        findNavController().navigate(R.id.navGameLobby, bundle)
                     } ?: run {
                         Toast.makeText(requireContext(), "Erro: ID do jogo não retornado", Toast.LENGTH_LONG).show()
                     }
@@ -106,7 +108,7 @@ class JoinGameFragment : Fragment() {
                 }
             }
         }
-    }
+    }*/
 
 
     override fun onDestroyView() {

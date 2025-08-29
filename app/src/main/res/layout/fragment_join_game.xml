@@ -6,9 +6,9 @@
     android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
+    android:background="@drawable/new_game_screen_background"
     android:fitsSystemWindows="false"
-    tools:context=".ui.fragment.JoinGameFragment">
+    tools:context=".ui.fragment.Home.JoinGameFragment">
 
     <!-- Barra superior -->
     <androidx.constraintlayout.widget.ConstraintLayout

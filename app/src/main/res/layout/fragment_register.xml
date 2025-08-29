@@ -208,36 +208,7 @@
                         android:textColorHint="@color/BordasDouradas"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Perfil -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/Perfil"
-                    android:textColorHint="@color/BordasDouradas"
-                    app:hintTextColor="@color/BordasDouradas"
-                    app:boxBackgroundMode="outline"
-                    app:boxBackgroundColor="@color/Crowshead"
-                    app:boxStrokeColor="@color/BordasDouradas"
-                    app:boxStrokeWidth="2dp"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/BordasDouradas"
-                    app:boxCornerRadiusTopStart="25dp"
-                    app:boxCornerRadiusTopEnd="25dp"
-                    app:boxCornerRadiusBottomStart="25dp"
-                    app:boxCornerRadiusBottomEnd="25dp">
 
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/idPerfil"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/profile"
-                        android:drawablePadding="8dp"
-                        android:padding="12dp"
-                        android:inputType="none"
-                        android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"/>
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Senha -->
                 <com.google.android.material.textfield.TextInputLayout

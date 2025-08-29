@@ -7,7 +7,15 @@
 
     <fragment
         android:id="@+id/newGameFragment"
-        android:name="com.example.androidapprpg.ui.fragment.NewGameFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.NewGameFragment"
         android:label="Novo Jogo"
-        tools:layout="@layout/fragment_new_game" />
+        tools:layout="@layout/fragment_new_game">
+
+
+        <action
+            android:id="@+id/action_newGameFragment_to_game_nav"
+            app:destination="@id/game_nav" />
+    </fragment>
+
+    <include app:graph="@navigation/nav_game_lobby" />
 </navigation>

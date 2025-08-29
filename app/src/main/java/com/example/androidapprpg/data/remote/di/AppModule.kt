@@ -1,6 +1,7 @@
 package com.example.androidapprpg.data.remote.di
 
 import com.example.androidapprpg.BuildConfig
+import com.example.androidapprpg.data.remote.authInterceptor.AuthInterceptor
 import com.example.androidapprpg.data.remote.services.AuthService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
@@ -12,6 +13,7 @@ import com.example.androidapprpg.data.remote.services.spinners.CardMagiasService
 import com.example.androidapprpg.data.remote.services.spinners.CardMasterService
 import com.example.androidapprpg.data.remote.services.spinners.CardPlayerService
 import com.example.androidapprpg.data.remote.services.spinners.CardPoderService
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.webClient.services.RegisterService
 import dagger.Module
 import dagger.Provides
@@ -38,10 +40,17 @@ object AppModule {
         }
     }
 
+    // --------AuthInterceptor - Bearer Token--------------
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(sessionManager: SessionManager): AuthInterceptor =
+        AuthInterceptor(sessionManager)
+
     // --------OKHTTP--------------
     @Provides
     @Singleton
-    fun provideGameOkHttp(logging : HttpLoggingInterceptor) : OkHttpClient = OkHttpClient.Builder()
+    fun provideGameOkHttp(logging : HttpLoggingInterceptor, authInterceptor: AuthInterceptor) : OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
         .addInterceptor(logging)
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)

@@ -36,5 +36,7 @@
     <color name="opaco_40">#66000000</color>
     <color name="opaco_60">#99000000</color>
     <color name="opaco_80">#CC000000</color>"
+    <color name="vermelho_metalico">#3f0503</color>
+
 
 </resources>

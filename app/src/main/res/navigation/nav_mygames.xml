@@ -7,8 +7,15 @@
 
     <fragment
         android:id="@+id/myGamesFragment"
-        android:name="com.example.androidapprpg.ui.fragment.MyGamesFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Home.MyGamesFragment"
         android:label="Meus Jogos"
-        tools:layout="@layout/fragment_my_games" />
+        tools:layout="@layout/fragment_my_games" >
+
+    <action
+        android:id="@+id/action_newGameFragment_to_game_nav"
+        app:destination="@id/game_nav" />
+    </fragment>
+
+<include app:graph="@navigation/nav_game_lobby" />
 
 </navigation>

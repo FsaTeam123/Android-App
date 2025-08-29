@@ -94,6 +94,7 @@
                 android:id="@+id/digit1"
                 style="@style/TokenBoxStyle"
                 android:layout_width="0dp"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="3dp" />
@@ -102,6 +103,7 @@
                 android:id="@+id/digit2"
                 style="@style/TokenBoxStyle"
                 android:layout_width="0dp"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="3dp" />
@@ -109,6 +111,7 @@
             <com.example.androidapprpg.utils.OtpEditText
                 android:id="@+id/digit3"
                 style="@style/TokenBoxStyle"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -118,6 +121,7 @@
                 android:id="@+id/digit4"
                 style="@style/TokenBoxStyle"
                 android:layout_width="0dp"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="3dp" />
@@ -125,6 +129,7 @@
             <com.example.androidapprpg.utils.OtpEditText
                 android:id="@+id/digit5"
                 style="@style/TokenBoxStyle"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -133,6 +138,7 @@
             <com.example.androidapprpg.utils.OtpEditText
                 android:id="@+id/digit6"
                 style="@style/TokenBoxStyle"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -141,6 +147,7 @@
             <com.example.androidapprpg.utils.OtpEditText
                 android:id="@+id/digit7"
                 style="@style/TokenBoxStyle"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -149,6 +156,7 @@
             <com.example.androidapprpg.utils.OtpEditText
                 android:id="@+id/digit8"
                 style="@style/TokenBoxStyle"
+                app:cursorColor="@color/DouradoEspecial"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"

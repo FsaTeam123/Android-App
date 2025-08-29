@@ -6,18 +6,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
-import com.example.androidapprpg.databinding.ActivityGameManagerBinding
+import com.example.androidapprpg.databinding.ActivityGameLobbyBinding
 
+class ActivityGameLobby : AppCompatActivity() {
 
-class ActivityGameMaster : AppCompatActivity(){
-
-    private lateinit var binding : ActivityGameManagerBinding
+    private lateinit var binding: ActivityGameLobbyBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityGameManagerBinding.inflate(layoutInflater)
+        binding = ActivityGameLobbyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
@@ -25,9 +24,8 @@ class ActivityGameMaster : AppCompatActivity(){
 
 
         val popupMenu = PopupMenu(this, null)
-        popupMenu.inflate(R.menu.bottom_navigation_menu_game_manager)
+        popupMenu.inflate(R.menu.bottom_navigation_menu_game_lobby)
         binding.bottomNavigation.setupWithNavController(popupMenu.menu, navController)
-
 
 
     }

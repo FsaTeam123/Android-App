@@ -6,21 +6,35 @@
     android:id="@+id/master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_background_screen"
+    android:background="@drawable/home_fragment_background_screen"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activity.ActivityMaster">
+    tools:context=".ui.activity.ActivityMainHome">
 
-    <ImageView
-        android:id="@+id/profile"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="16dp"
+    <!-- Avatar + Moldura -->
+    <FrameLayout
+        android:id="@+id/profileContainer"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
-        android:contentDescription="@string/Profile"
-        android:src="@drawable/profile"
+        android:padding="10dp"
+        android:foreground="@drawable/moldura_tormenta"
+        android:foregroundGravity="fill"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+    <!-- Foto do usuário -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icone_reinos_perdidos_dois_splashscreen"
+        />
+    <!-- se não quiser redondo, remova a linha acima -->
+</FrameLayout>
+
+    <!-- Ícone de configurações -->
     <ImageView
         android:id="@+id/settings"
         android:layout_width="58dp"
@@ -32,10 +46,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+   <!-- Título -->
     <ImageView
         android:id="@+id/headerImage"
         android:layout_width="180dp"
         android:layout_height="155dp"
+        android:layout_marginTop="5dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:importantForAccessibility="no"
@@ -43,11 +59,10 @@
         android:src="@drawable/espada_version_eins"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.28"
-        android:layout_marginTop="56dp" />
+        app:layout_constraintTop_toBottomOf="@id/profileContainer"
+        app:layout_constraintWidth_percent="0.28" />
 
     <TextView
         android:id="@+id/titleText"
@@ -70,52 +85,118 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerImage" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/NewGame"
+    <!-- BOTÃO: NOVO JOGO -->
+    <FrameLayout
+        android:id="@+id/btnNewGame"
         android:layout_width="270dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/btn1"
+        android:background="@drawable/btn2"
+        android:fontFamily="@font/cinzel_font_bold"
         android:clickable="true"
-        android:elevation="10dp"
         android:focusable="true"
-        android:fontFamily="@font/breeserif_regular"
-        android:foreground="@null"
-        android:text="@string/novo_jogo"
-        android:textColor="@color/BordasDouradas"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/JoinGame"
+        <ImageView
+            android:id="@+id/iconNovoJogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/swords_home"
+
+            android:contentDescription="@string/novo_jogo" />
+
+        <TextView
+            android:id="@+id/txtNovoJogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/novo_jogo"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="26sp"
+            android:fontFamily="@font/breeserif_regular"
+            android:includeFontPadding="false"/>
+    </FrameLayout>
+
+    <!-- BOTÃO: ENTRAR NO JOGO -->
+    <FrameLayout
+        android:id="@+id/btnJoinGame"
         android:layout_width="270dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/btn1"
-        android:elevation="12dp"
-        android:fontFamily="@font/breeserif_regular"
-        android:text="@string/Entrar_jogo"
-        android:textColor="@color/BordasDouradas"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/btn2"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/NewGame" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnNewGame">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/MyGames"
+        <ImageView
+            android:id="@+id/iconEntrarJogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/shield"
+
+            android:contentDescription="@string/Entrar_jogo" />
+
+        <TextView
+            android:id="@+id/txtEntrarJogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:text="@string/Entrar_jogo"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="26sp"
+            android:fontFamily="@font/breeserif_regular"
+            android:includeFontPadding="false"/>
+    </FrameLayout>
+
+    <!-- BOTÃO: MEUS JOGOS -->
+    <FrameLayout
+        android:id="@+id/btnMyGames"
         android:layout_width="270dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/btn1"
-        android:elevation="12dp"
-        android:fontFamily="@font/breeserif_regular"
-        android:text="@string/Meus_Jogos"
-        android:textColor="@color/BordasDouradas"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/btn2"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/JoinGame" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnJoinGame">
+
+        <ImageView
+            android:id="@+id/iconMeusJogos"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/scroll"
+            android:contentDescription="@string/Meus_Jogos" />
+
+        <TextView
+            android:id="@+id/txtMeusJogos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:text="@string/Meus_Jogos"
+            android:textColor="@color/BordasDouradas"
+            android:textSize="26sp"
+            android:fontFamily="@font/breeserif_regular"
+            android:includeFontPadding="false"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

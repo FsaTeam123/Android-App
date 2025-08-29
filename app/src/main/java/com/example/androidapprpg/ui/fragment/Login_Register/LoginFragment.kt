@@ -1,11 +1,16 @@
 package com.example.androidapprpg.ui.fragment.Login_Register
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -31,6 +36,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        ativarFullscreen()
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,6 +44,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUi()
         observarLogin()
+
     }
 
     private fun setupUi() = with(binding) {
@@ -47,10 +54,11 @@ class LoginFragment : Fragment() {
             val senha = password.text?.toString()?.trim().orEmpty()
 
             if (email.isEmpty() || senha.isEmpty()) {
-                Toast.makeText(requireContext(), "Preencha email e senha", Toast.LENGTH_SHORT).show()
+                showCustomToast("Preencha email e senha", requireContext())
                 return@setOnClickListener
             }
             viewModel.login(email, senha)
+
         }
 
         // Ir para Cadastro (RegisterFragment)
@@ -69,11 +77,9 @@ class LoginFragment : Fragment() {
             when (result) {
                 is Result.Loading -> {
                     binding.loginButton.isEnabled = false
-
                 }
                 is Result.Success -> {
                     binding.loginButton.isEnabled = true
-
                     val user = result.data
                     // Salvar sessão
                     session.saveLogin(user.idUsuario.toLong(), user.token)
@@ -82,13 +88,37 @@ class LoginFragment : Fragment() {
                     // Navegar para Home Fragment
                     findNavController().navigate(R.id.action_to_home_fragment)
                 }
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
                 is Result.Error -> {
                     binding.loginButton.isEnabled = true
-                    // binding.progress.isVisible = false
-                    Toast.makeText(requireContext(), result.message ?: "Erro ao entrar", Toast.LENGTH_SHORT).show()
+                    showCustomToast("Erro ao entrar", requireContext())
                 }
             }
         }
+    }
+
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
+
+    private fun ativarFullscreen() {
+        val controller = requireActivity().window.decorView
+        val insetsController = WindowInsetsControllerCompat(requireActivity().window, controller)
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        insetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
     override fun onDestroyView() {

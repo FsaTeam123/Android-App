@@ -43,13 +43,13 @@ android {
             applicationIdSuffix = ".mock"
             versionNameSuffix = "-mock"
             buildConfigField("boolean", "MOCK_MODE", "true")
-            buildConfigField("String", "BASE_URL_GAME", "\"http://15.228.149.190:8085/\"")
+            buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
 
         }
         create("prod") {
             dimension = "env"
             buildConfigField("boolean", "MOCK_MODE", "false")
-            buildConfigField("String", "BASE_URL_GAME", "\"http://15.228.149.190:8085/\"")
+            buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
 
         }
     }
@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.testing.android)
     implementation(libs.androidx.fragment.testing)
+    implementation(libs.androidx.scenecore)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

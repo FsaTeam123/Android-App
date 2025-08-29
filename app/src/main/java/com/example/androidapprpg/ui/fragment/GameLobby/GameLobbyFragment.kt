@@ -24,7 +24,7 @@ class GameLobbyFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: GameLobbyViewModel by viewModels()
-    private val args: GameLobbyFragmentArgs by navArgs() // vem do SafeArgs: idJogo: Long
+    //private val args: GameLobbyFragmentArgs by navArgs() // vem do SafeArgs: idJogo: Long
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,14 +38,14 @@ class GameLobbyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val idJogo: Long = args.idJogo
+        //val idJogo: Long = args.idJogo
 
         binding.btnIniciarSessao.setOnClickListener {
             val uid: Long = sessionManager.getUserIdOrNull() ?: run {
                 Toast.makeText(requireContext(), "Sessão expirada. Faça login novamente.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            viewModel.iniciarSessao(uid, idJogo)
+            //viewModel.iniciarSessao(uid, idJogo)
         }
 
         viewModel.estadoSessao.observe(viewLifecycleOwner) { resultado ->
@@ -61,6 +61,10 @@ class GameLobbyFragment : Fragment() {
                 is Result.Error -> {
                     binding.btnIniciarSessao.isEnabled = true
                     Toast.makeText(requireContext(), resultado.message ?: "Erro ao iniciar sessão", Toast.LENGTH_SHORT).show()
+                }
+
+                is Result.StopViewModel -> {
+                    //StopViewModel
                 }
             }
         }

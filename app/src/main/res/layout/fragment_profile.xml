@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@drawable/new_home_fragment_image"
-    android:fitsSystemWindows="true"
-    tools:context=".ui.fragment.ProfileFragment">
+    tools:context=".ui.fragment.Home.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -11,9 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordViewModel @Inject constructor(
-    private val repository: ForgotPasswordRepository
-) : ViewModel() {
+class PasswordViewModel @Inject constructor(private val repository: ForgotPasswordRepository) : ViewModel() {
 
     // 1) Enviar e-mail
     private val _forgotPassword = MutableLiveData<Result<Unit>>()
@@ -81,5 +79,12 @@ class PasswordViewModel @Inject constructor(
                 _setNewPassword.value = Result.Error("Falha na rede: ${e.message}")
             }
         }
+    }
+
+    // Resetando os estados do LiveData para evitar disparo indesejado
+    fun resetPasswordState() {
+        _forgotPassword.value = Result.StopViewModel
+        _verifyCode.value = Result.StopViewModel
+        _setNewPassword.value = Result.StopViewModel
     }
 }

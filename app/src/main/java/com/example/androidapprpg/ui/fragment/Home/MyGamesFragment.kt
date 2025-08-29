@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.Home
 
 import android.os.Bundle
 import android.text.Editable
@@ -87,7 +87,7 @@ class MyGamesFragment : Fragment() {
                 val bundle = Bundle().apply {
                     //putLong("idJogo", idJogo)
                 }
-                findNavController().navigate(R.id.gameLobby, bundle)
+                findNavController().navigate(R.id.navGameLobby, bundle)
             } ?: run {
                 Toast.makeText(requireContext(), "ID do jogo não disponível", Toast.LENGTH_SHORT).show()
             }
@@ -107,7 +107,7 @@ class MyGamesFragment : Fragment() {
         viewModel.myGamesResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
-                    // TODO: Mostrar progresso se quiser
+
                 }
                 is Result.Success -> {
                     listaCompleta = result.data
@@ -116,6 +116,11 @@ class MyGamesFragment : Fragment() {
                 is Result.Error -> {
                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                 }
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
+
             }
         }
     }

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidapprpg.data.model.RegisterDataModel.PerfilDataModel.PerfilDataModel
 import com.example.androidapprpg.data.model.RegisterDataModel.RegisterApiResponse
 import com.example.androidapprpg.data.model.RegisterDataModel.RegisterModelRequest
 import com.example.androidapprpg.data.model.RegisterDataModel.SexoDataModel.SexoDataModel
@@ -28,9 +27,6 @@ class RegisterViewModel @Inject constructor(
     private val _sexos = MutableLiveData<List<SexoDataModel>>()
     val sexos: LiveData<List<SexoDataModel>> = _sexos
 
-    private val _perfis = MutableLiveData<List<PerfilDataModel>>()
-    val perfis: LiveData<List<PerfilDataModel>> = _perfis
-
     private val _comboError = MutableLiveData<String?>()
     val comboError: LiveData<String?> = _comboError
 
@@ -38,20 +34,19 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val sexos = repository.getSexos()
-                val perfis = repository.getPerfis()
                 _sexos.value = sexos
-                _perfis.value = perfis
+
             } catch (e: Exception) {
                 _comboError.value = "Falha ao carregar listas: ${e.localizedMessage}"
             }
         }
     }
 
-    fun register(name: String, email: String, nickname: String, senha: String,idSexo: Int, idPerfil: Int) {
+    fun register(name: String, email: String, nickname: String, senha: String,idSexo: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _registerResult.postValue(Result.Loading)
             try {
-                val request = RegisterModelRequest( nome = name, email = email, nickname = nickname, senha = senha, idSexo = idSexo, idPerfil = idPerfil)
+                val request = RegisterModelRequest( nome = name, email = email, nickname = nickname, senha = senha, idSexo = idSexo, idPerfil = 1)
                 val response = repository.register(request)
                 if (response.isSuccessful) {
                     val body = response.body()

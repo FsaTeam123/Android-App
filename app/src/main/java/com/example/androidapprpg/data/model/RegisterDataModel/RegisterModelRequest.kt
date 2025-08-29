@@ -19,6 +19,6 @@ data class RegisterModelRequest(
     val idSexo : Int?,
 
     @SerializedName("idPerfil")
-    val idPerfil : Int?
+    val idPerfil: Int = 1
 
 )

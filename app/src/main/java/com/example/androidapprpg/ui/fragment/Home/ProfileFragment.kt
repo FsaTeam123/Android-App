@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment
+package com.example.androidapprpg.ui.fragment.Home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -57,7 +57,7 @@ class ProfileFragment : Fragment() {
         observeVm()
         ativarFullscreen()
 
-        // ↓ Carregue a lista de sexos ANTES do profile para evitar corrida
+
         viewModel.loadSexos()
         viewModel.getProfile(userId!!)
     }
@@ -66,7 +66,10 @@ class ProfileFragment : Fragment() {
 
     private fun setupUi() = with(binding) {
         btnFechar.setOnClickListener {
-            findNavController().popBackStack(R.id.homeFragment, false)
+            val nav = findNavController()
+            if (!nav.popBackStack()) {
+                nav.navigate(R.id.homeFragment)
+            }
         }
 
         // Modo inicial: somente leitura
@@ -120,6 +123,9 @@ class ProfileFragment : Fragment() {
                     // tenta pré-selecionar após chegar o profile
                     maybePreselectSexo()
                 }
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
                 is Result.Error -> {
                     setEnabled(true)
                     toast(result.message)
@@ -136,6 +142,9 @@ class ProfileFragment : Fragment() {
                     setEnabled(true)
                     // tenta pré-selecionar após configurar o adapter
                     maybePreselectSexo()
+                }
+                is Result.StopViewModel -> {
+                    //StopViewModel
                 }
                 is Result.Error -> {
                     setEnabled(true)
@@ -155,6 +164,10 @@ class ProfileFragment : Fragment() {
                     setEditable(false)
                     maybePreselectSexo()
                 }
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
                 is Result.Error -> {
                     setEnabled(true)
                     toast(result.message)

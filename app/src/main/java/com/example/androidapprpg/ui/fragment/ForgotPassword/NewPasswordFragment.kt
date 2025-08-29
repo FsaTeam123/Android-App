@@ -1,10 +1,13 @@
 package com.example.androidapprpg.ui.fragment.ForgotPassword
 
+import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.getSystemService
 import androidx.core.widget.doOnTextChanged
@@ -59,12 +62,12 @@ class NewPasswordFragment : Fragment() {
 
             if (!isPasswordValid(nova)) {
                 showInlineError("Senha inválida. Siga as regras acima.")
-                Toast.makeText(requireContext(), "Senha inválida. Siga as regras acima.", Toast.LENGTH_SHORT).show()
+                showCustomToast("Senha inválida. Siga as regras acima.", requireContext())
                 return@setOnClickListener
             }
             if (nova != confirmar) {
                 showInlineError("As senhas não conferem.")
-                Toast.makeText(requireContext(), "As senhas não conferem.", Toast.LENGTH_SHORT).show()
+                showCustomToast("As senhas não conferem.", requireContext())
                 return@setOnClickListener
             }
 
@@ -90,22 +93,41 @@ class NewPasswordFragment : Fragment() {
             btnTrocarSenha.isEnabled = result !is Result.Loading
             when (result) {
                 is Result.Loading -> {
-                    Toast.makeText(requireContext(), "Alterando senha...", Toast.LENGTH_SHORT).show()
+                    showCustomToast("Alterando senha...", requireContext())
                 }
                 is Result.Success -> {
-                    Toast.makeText(requireContext(), "Senha alterada com sucesso!", Toast.LENGTH_LONG).show()
-                    // Volta para o login (ou popBackStack até onde preferir)
+                    showCustomToast("Senha alterada com sucesso!", requireContext())
                     findNavController().popBackStack(R.id.login, false)
                 }
+
+                is Result.StopViewModel -> {
+                    //StopViewModel
+                }
+
                 is Result.Error -> {
                     val msg = result.message ?: "Ocorreu um erro. Tente novamente."
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                    showCustomToast(msg, requireContext())
+
                 }
             }
         }
     }
 
     // --------- Validação e UI helpers ---------
+
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
 
     private fun isPasswordValid(pw: String): Boolean {
         val hasMin = pw.length >= 8

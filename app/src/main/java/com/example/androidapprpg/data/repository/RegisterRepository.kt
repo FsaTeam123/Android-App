@@ -15,6 +15,5 @@ class RegisterRepository @Inject constructor(private val registerService: Regist
 
     suspend fun getSexos() = registerService.getSexos()
 
-    suspend fun getPerfis() = registerService.getPerfis()
 
 }
