@@ -2,101 +2,71 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gameRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background">
+    tools:context=".ui.fragment.GameManager.GameFragment">
 
-    <!-- Nome do jogador atual -->
-    <TextView
-        android:id="@+id/currentPlayerTextView"
+    <com.example.androidapprpg.ui.widget.GridCanvasView
+        android:id="@+id/gridCanvas"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Vez de: Thrain"
-        android:textColor="@color/DouradoEspecial"
-        android:textSize="20sp"
-        android:fontFamily="@font/cinzel_font_bold"
-        android:gravity="center"
-        android:padding="8dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:background="@color/VermelhoEscuro"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:elevation="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <!-- Log de mensagens do jogo -->
-    <TextView
-        android:id="@+id/gameLogTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Thrain atacou o Goblin causando 12 de dano!"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:gravity="center"
-        android:padding="12dp"
-        android:background="@drawable/retangulo_borda_fundo_transparente"
-        app:layout_constraintTop_toBottomOf="@id/currentPlayerTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <!-- Botões de ação -->
-    <LinearLayout
-        android:id="@+id/actionButtonsContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/gameLogTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/attackButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:layout_marginEnd="8dp"
-            android:text="Atacar"
-            android:textColor="@color/VermelhoEscuro"
-            android:backgroundTint="@color/DouradoEspecial"
-            android:fontFamily="@font/cinzel_font_bold" />
+        <ImageView
+            android:id="@+id/btnDice"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/dice_twenty_faces"
+            android:contentDescription="@string/dice"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <Button
-            android:id="@+id/defendButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:layout_marginEnd="8dp"
-            android:text="Defender"
-            android:textColor="@color/VermelhoEscuro"
-            android:backgroundTint="@color/DouradoEspecial"
-            android:fontFamily="@font/cinzel_font_bold" />
+        <ImageView
+            android:id="@+id/btnChat"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/chat_icon"
+            android:contentDescription="@string/fechar"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <Button
-            android:id="@+id/passButton"
+        <TextView
+            android:id="@+id/settingsTitle"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:text="Passar"
-            android:textColor="@color/VermelhoEscuro"
-            android:backgroundTint="@color/DouradoEspecial"
-            android:fontFamily="@font/cinzel_font_bold" />
-    </LinearLayout>
-
-    <!-- Resultado da rolagem de dado -->
-    <TextView
-        android:id="@+id/diceResultTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🎲 18"
-        android:textSize="36sp"
-        android:textColor="@color/BordasDouradas"
-        android:fontFamily="@font/cinzel_font_bold"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/actionButtonsContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/reinos_perdidos"
+            android:textColor="@color/DouradoEspecial"
+            android:textSize="23sp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/btnDice"
+            app:layout_constraintEnd_toStartOf="@id/btnChat"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

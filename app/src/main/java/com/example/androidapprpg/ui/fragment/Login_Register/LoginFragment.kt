@@ -110,7 +110,7 @@ class LoginFragment : Fragment() {
         val toast = Toast(context)
         toast.duration = Toast.LENGTH_SHORT
         toast.view = layout
-        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.setGravity(Gravity.BOTTOM, 0, 200)
         toast.show()
     }
 

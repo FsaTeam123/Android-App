@@ -78,6 +78,8 @@
     <string name="salvar">Salvar</string>
     <string name="dice">Dados</string>
     <string name="confirmação">Deseja sair do Jogo?</string>
+    <string name="chat">Chat</string>
+    <string name="escreva">Mensagem</string>
 
 
     <string-array name="mock_spinner_values">

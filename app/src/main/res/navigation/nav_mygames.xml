@@ -11,11 +11,17 @@
         android:label="Meus Jogos"
         tools:layout="@layout/fragment_my_games" >
 
+<!--    <action-->
+<!--        android:id="@+id/action_newGameFragment_to_game_nav"-->
+<!--        app:destination="@id/game_nav" />-->
     <action
-        android:id="@+id/action_newGameFragment_to_game_nav"
-        app:destination="@id/game_nav" />
+            android:id="@+id/action_myGamesFragment_to_nav_game_manager"
+            app:destination="@id/nav_game_manager" />
+
+
     </fragment>
 
-<include app:graph="@navigation/nav_game_lobby" />
+<!--<include app:graph="@navigation/nav_game_lobby" />-->
+<include app:graph="@navigation/nav_game_manager"/>
 
 </navigation>

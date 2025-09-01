@@ -16,7 +16,7 @@
         android:title=""/>
 
     <item
-        android:id="@+id/mapFragment"
+        android:id="@+id/gameManager"
         android:icon="@drawable/swords"
         app:showAsAction="always"
         android:title=""/>

@@ -1,9 +1,14 @@
 package com.example.androidapprpg.ui.fragment.Home
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -14,6 +19,7 @@ import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelRequest
 import com.example.androidapprpg.databinding.FragmentNewGameBinding
 import com.example.androidapprpg.ui.viewmodel.NewGameViewModel
+import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,20 +39,24 @@ class NewGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ativarFullscreen()
+        //ativarFullscreen()
+        requireActivity().window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
         setupCheckBoxMutualExclusion()
         setupExitButton()
         setupCreateButton()
+        updatePasswordVisibility(binding.checkPartidaPrivada.isChecked)
         //observarResultado()
     }
-
-    private fun ativarFullscreen() {
+    /*private fun ativarFullscreen() {
         val controller = requireActivity().window.decorView
         val insetsController = WindowInsetsControllerCompat(requireActivity().window, controller)
         insetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
+    }*/
 
     private fun setupExitButton() {
         binding.btnFechar.setOnClickListener {
@@ -67,56 +77,44 @@ class NewGameFragment : Fragment() {
             val nivelInicial = nivelTexto.toIntOrNull()
 
             if (!camposEstaoPreenchidos(nome, historia, jogadoresTexto, nivelTexto, senha, confirmarSenha)) {
-                mostrarErro("Preencha todos os campos obrigatórios")
+                mostrarErro("Preencha todos os campos")
                 return@setOnClickListener
             }
-
             if (numeroJogadores == null || numeroJogadores <= 0) {
                 mostrarErro("Informe um número de jogadores válido")
                 return@setOnClickListener
             }
-
             if (nivelInicial == null || nivelInicial <= 0) {
                 mostrarErro("Informe um nível inicial válido")
                 return@setOnClickListener
             }
 
-            if (senha != confirmarSenha) {
+            // Só confere igualdade se for privada
+            if (binding.checkPartidaPrivada.isChecked && senha != confirmarSenha) {
                 mostrarErro("As senhas precisam ser iguais")
                 return@setOnClickListener
             }
 
-            if (!partidaSelecionada()) {
-                mostrarErro("Selecione o estilo de Partida")
-                return@setOnClickListener
-            }
+            if (!partidaSelecionada()) { mostrarErro("Selecione o estilo de Partida"); return@setOnClickListener }
+            if (!campanhaSelecionada()) { mostrarErro("Selecione o estilo de Campanha"); return@setOnClickListener }
+            if (!geracaoSelecionada()) { mostrarErro("Selecione a Geração de Mundo"); return@setOnClickListener }
+            if (!temaSelecionado()) { mostrarErro("Selecione um tema"); return@setOnClickListener }
 
-            if (!campanhaSelecionada()) {
-                mostrarErro("Selecione o estilo de Campanha")
-                return@setOnClickListener
-            }
-
-            if (!geracaoSelecionada()) {
-                mostrarErro("Selecione a Geração de Mundo")
-                return@setOnClickListener
-            }
-
-            if (!temaSelecionado()) {
-                mostrarErro("Selecione um tema")
-                return@setOnClickListener
-            }
+            // Envia senha somente se for privada
+            val senhaParaEnviar: String? =
+                if (binding.checkPartidaPrivada.isChecked) senha else null
 
             val request = NewGamesDataModelRequest(
                 sistema = "Tormenta20",
                 id = null,
-                idMaster = 1, // ID do mestre (substitua pelo valor real)
+                idMaster = 1,
                 titulo = nome,
                 qtdPessoas = numeroJogadores,
-                dificuldade = nivelInicial, // Pode vir de um Spinner no futuro
-                senha = senha,
+                dificuldade = nivelInicial,
+                senha = senhaParaEnviar,
                 idEstiloCampanha = if (binding.campanhaOneShot.isChecked) 1 else 2,
                 idGeracaoMundo = if (binding.seedTormenta.isChecked) 1 else 2,
-                idHistoria = 1, // Pode adaptar depois
+                idHistoria = 1,
                 idTema = when {
                     binding.temaTerror.isChecked -> 1
                     binding.temaRomance.isChecked -> 2
@@ -128,7 +126,8 @@ class NewGameFragment : Fragment() {
 
             //viewModel.criarJogo(request)
 
-            findNavController().navigate(R.id.action_newGameFragment_to_game_nav)
+            val intent = Intent(requireContext(), ActivityGameMaster::class.java)
+            startActivity(intent)
         }
     }
 
@@ -157,10 +156,12 @@ class NewGameFragment : Fragment() {
     private fun setupCheckBoxMutualExclusion() {
         binding.checkPartidaPublica.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) binding.checkPartidaPrivada.isChecked = false
+            updatePasswordVisibility(binding.checkPartidaPrivada.isChecked)
         }
 
         binding.checkPartidaPrivada.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) binding.checkPartidaPublica.isChecked = false
+            updatePasswordVisibility(isChecked)
         }
 
         binding.campanhaOneShot.setOnCheckedChangeListener { _, isChecked ->
@@ -202,7 +203,17 @@ class NewGameFragment : Fragment() {
     }
 
     private fun mostrarErro(mensagem: String) {
-        Toast.makeText(requireContext(), mensagem, Toast.LENGTH_SHORT).show()
+          showCustomToast(mensagem, requireContext())
+    }
+
+    private fun updatePasswordVisibility(isPrivate: Boolean) {
+        binding.senhaSection.visibility = if (isPrivate) View.VISIBLE else View.GONE
+        if (!isPrivate) {
+            binding.etSenha.text?.clear()
+            binding.confirmarSenhaJogo.text?.clear()
+            binding.etSenha.clearFocus()
+            binding.confirmarSenhaJogo.clearFocus()
+        }
     }
 
     private fun camposEstaoPreenchidos(
@@ -213,12 +224,15 @@ class NewGameFragment : Fragment() {
         senha: String,
         confirmar: String
     ): Boolean {
-        return nome.isNotEmpty() &&
+        val baseOk = nome.isNotEmpty() &&
                 historia.isNotEmpty() &&
                 jogadores.isNotEmpty() &&
-                nivel.isNotEmpty() &&
-                senha.isNotEmpty() &&
-                confirmar.isNotEmpty()
+                nivel.isNotEmpty()
+
+        val precisaSenha = binding.checkPartidaPrivada.isChecked
+        val senhaOk = if (precisaSenha) senha.isNotEmpty() && confirmar.isNotEmpty() else true
+
+        return baseOk && senhaOk
     }
 
     private fun partidaSelecionada(): Boolean {
@@ -236,6 +250,21 @@ class NewGameFragment : Fragment() {
     private fun temaSelecionado(): Boolean {
         return binding.temaTerror.isChecked || binding.temaRomance.isChecked || binding.temaInvestigacao.isChecked
     }
+
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
+        toast.show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

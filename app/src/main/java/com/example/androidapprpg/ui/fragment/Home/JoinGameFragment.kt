@@ -75,7 +75,7 @@ class JoinGameFragment : Fragment() {
             }
 
             //viewModel.joinGame(idGame)
-            findNavController().navigate(R.id.action_joinGameFragment_to_game_nav)
+            findNavController().navigate(R.id.action_joinGameFragment_to_nav_game_manager)
 
         }
     }

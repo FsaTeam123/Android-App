@@ -4,11 +4,16 @@ import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelRe
 import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface NewGameService {
 
     @POST("/jogo") //endpoint
     suspend fun criarJogo(@Body request : NewGamesDataModelRequest) : Response<NewGamesDataModelResponse>
+
+    @GET("/historia")
+    suspend fun getHistoria() : Response<NewGamesDataModelResponse>
+
 
 }

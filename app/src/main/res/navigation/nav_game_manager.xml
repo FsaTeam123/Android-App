@@ -7,21 +7,25 @@
 
     <fragment
         android:id="@+id/gameManager"
-        android:name="com.example.androidapprpg.ui.fragment.GameManager.MapFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.GameFragment"
         android:label="fragment_game_looby"
-        tools:layout="@layout/fragment_map">
+        tools:layout="@layout/fragment_game">
 
         <argument
             android:name="idJogo"
             app:argType="long" />
+        <action
+            android:id="@+id/action_gameManager_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
 
 
     </fragment>
 
     <fragment
-        android:id="@+id/registerPlayersLooby"
-        android:name="com.example.androidapprpg.ui.fragment.GameLobby.PlayersLobbyFragment"
-        android:label="fragment_register_players_looby"
-        tools:layout="@layout/fragment_players_lobby" />
+        android:id="@+id/ChatFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+
 
 </navigation>
