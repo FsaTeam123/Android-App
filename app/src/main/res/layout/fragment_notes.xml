@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notesFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fundo_preto_claro"
+    tools:context=".ui.fragment.GameManager.NotesFragment">
+
+    <!-- TopBar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:background="@color/VermelhoEscuro"
+        android:elevation="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnDice"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/dice_twenty_faces"
+            android:contentDescription="@string/dice"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnChat"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/chat_icon"
+            android:contentDescription="@string/fechar"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:text="@string/rpg"
+            android:textColor="@color/DouradoEspecial"
+            android:textSize="23sp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/btnDice"
+            app:layout_constraintEnd_toStartOf="@id/btnChat"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Separador dourado logo abaixo da TopBar -->
+    <View
+        android:id="@+id/separadorDourado"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginEnd="0dp"
+        android:background="@color/DouradoEspecial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
+
+
+    <!-- Campo de busca -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/retangulo_borda_fundo_transparente"
+        android:elevation="8dp"
+        android:fontFamily="@font/cinzel_font_bold"
+        android:hint="@string/search_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:paddingStart="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/DouradoEspecial"
+        android:textColorHint="@color/DouradoEspecial"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/separadorDourado" />
+
+    <!-- Botão adicionar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotes"
+        android:layout_width="389dp"
+        android:layout_height="503dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/fabAddNote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/fabAddNote"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/add"
+        android:contentDescription="@string/add_note"
+        android:background="@drawable/retangulo_borda_fundo_transparente"
+        android:elevation="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

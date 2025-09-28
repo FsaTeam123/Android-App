@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dicePanelRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:background="@drawable/retangulo_arredondado"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Topo: título + switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="DADOS"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/DouradoEspecial"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swGmRoll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rolo de GM"
+                android:textColor="@color/cinza_claro"/>
+        </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/tgAdvantage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Desv."
+                android:textAllCaps="false"
+                android:textColor="@color/DouradoEspecial"
+                app:strokeColor="@color/DouradoEspecial"
+                app:strokeWidth="1dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Normal"
+                android:textAllCaps="false"
+                android:textColor="@color/DouradoEspecial"
+                app:strokeColor="@color/DouradoEspecial"
+                app:strokeWidth="1dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Vant."
+                android:textAllCaps="false"
+                android:textColor="@color/DouradoEspecial"
+                app:strokeColor="@color/DouradoEspecial"
+                app:strokeWidth="1dp"/>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Cabeçalho -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Dado"
+                android:textColor="@color/cinza_claro"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.8"
+                android:text="Quantidade"
+                android:textColor="@color/cinza_claro"/>
+        </LinearLayout>
+
+        <!-- ======= LINHAS FIXAS ======= -->
+
+        <!-- D4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D4"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D4"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_6"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D6"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D8 (seu nome customizado) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_eight_faces_eight_svgrepo_com__1_"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D8"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D8"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D10 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D10"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D10"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D12 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D12"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D12"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D20 (seu nome customizado) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D20"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D20"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- D100 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="D100"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="D100"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- FUDGE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/dice_twenty_faces"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="Fudge"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Fudge"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.8"
+                app:singleSelection="true">
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="1" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="2" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="3" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="4" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="5" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="6" android:textAllCaps="false" android:textColor="@color/DouradoEspecial" app:strokeColor="@color/DouradoEspecial" app:strokeWidth="1dp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <!-- Rodapé -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="Adv: rolo"
+            android:textColor="@color/cinza_claro"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

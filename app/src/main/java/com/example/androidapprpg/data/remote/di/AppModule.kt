@@ -3,17 +3,21 @@ package com.example.androidapprpg.data.remote.di
 import com.example.androidapprpg.BuildConfig
 import com.example.androidapprpg.data.remote.authInterceptor.AuthInterceptor
 import com.example.androidapprpg.data.remote.services.AuthService
+import com.example.androidapprpg.data.remote.services.FakeNotesService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
 import com.example.androidapprpg.data.remote.services.HomeService
 import com.example.androidapprpg.data.remote.services.JoinGameService
 import com.example.androidapprpg.data.remote.services.MyGamesService
 import com.example.androidapprpg.data.remote.services.NewGameService
+import com.example.androidapprpg.data.remote.services.NotesService
 import com.example.androidapprpg.data.remote.services.ProfileService
 import com.example.androidapprpg.data.remote.services.spinners.CardMagiasService
 import com.example.androidapprpg.data.remote.services.spinners.CardMasterService
 import com.example.androidapprpg.data.remote.services.spinners.CardPlayerService
 import com.example.androidapprpg.data.remote.services.spinners.CardPoderService
+import com.example.androidapprpg.data.repository.NotesRepository
+import com.example.androidapprpg.data.repository.NotesRepositoryImpl
 import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.webClient.services.RegisterService
 import dagger.Module
@@ -139,5 +143,15 @@ object AppModule {
     @Singleton
     fun provideHomeService(retrofit: Retrofit) : HomeService =
         retrofit.create(HomeService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNotesService(): NotesService = FakeNotesService()
+
+    @Provides
+    @Singleton
+    fun provideNotesRepository(service: NotesService): NotesRepository =
+        NotesRepositoryImpl(service)
+
 
 }

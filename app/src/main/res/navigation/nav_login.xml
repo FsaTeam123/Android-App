@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_login"
+    app:startDestination="@id/login">
+
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.androidapprpg.ui.fragment.Login_Register.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_to_register"
+            app:destination="@id/register" />
+
+
+        <action
+            android:id="@+id/action_to_forgot_Password"
+            app:destination="@id/nav_reset_password" />
+
+        <action
+            android:id="@+id/action_to_home_fragment"
+            app:destination="@id/nav" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/register"
+        android:name="com.example.androidapprpg.ui.fragment.Login_Register.RegisterFragment"
+        android:label="Cadastro"
+        tools:layout="@layout/fragment_register" />
+
+
+    <include app:graph="@navigation/nav_reset_password" />
+    <include app:graph="@navigation/nav" />
+</navigation>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addNotePanelRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:background="@drawable/retangulo_arredondado"
+    android:padding="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Cabeçalho -->
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notas"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/DouradoEspecial"
+            android:letterSpacing="0.04"
+            android:paddingBottom="8dp"/>
+
+        <!-- Título (sem borda; ícone editar à direita) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/titulo"
+            app:hintTextColor="@color/DouradoEspecial"
+            app:boxStrokeColor="@drawable/textinput_box_color"
+            app:counterTextColor="@color/DouradoEspecial"
+            app:counterEnabled="true"
+            app:counterMaxLength="80"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/edit_1_svgrepo_com"
+            app:endIconTint="@color/DouradoEspecial"
+            app:endIconContentDescription="@string/editar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textColorHint="#88FFFFFF"
+                tools:text="Título"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/escreva_sua_nota"
+            app:hintTextColor="@color/DouradoEspecial"
+            app:boxStrokeColor="@drawable/textinput_box_color"
+            app:counterTextColor="@color/DouradoEspecial"
+            app:counterEnabled="true"
+            app:counterMaxLength="500"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="5"
+                android:maxLines="10"
+                android:gravity="top|start"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:textColorHint="#88FFFFFF"
+                tools:text="Alguma anotação importante..."/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Ações -->
+        <LinearLayout
+            android:id="@+id/actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:layout_marginEnd="12dp"
+                android:backgroundTint="@color/DarkSiena"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="@string/cancelar"
+                android:textColor="@color/BordasDouradas" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:backgroundTint="@color/DarkSiena"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:text="@string/salvar"
+                android:textColor="@color/BordasDouradas" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="@string/limite_500_caracteres"
+            android:textColor="@color/cinza_claro"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

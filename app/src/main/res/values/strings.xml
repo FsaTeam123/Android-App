@@ -98,8 +98,14 @@
     <string name="undo">Refazer</string>
     <string name="redo">Fazer</string>
     <string name="palete">Palete</string>
-
-
+    <string name="limite_500_caracteres">Até 500 caracteres</string>
+    <string name="escreva_sua_nota">Escreva sua nota</string>
+    <string name="notas">NOTAS</string>
+    <string name="titulo_notas">Título</string>
+    <string name="conteudo_nota">Conteúdo da nota…</string>
+    <string name="titulo">titulo</string>
+    <string name="excluir">excluir</string>
+    <string name="apagar">Apagar</string>
 
     <string-array name="mock_spinner_values">
         <item>Humano</item>

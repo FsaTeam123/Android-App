@@ -1,0 +1,110 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- DESABILITADO -->
+    <item android:state_enabled="false">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp"/>
+                    <gradient android:type="linear" android:angle="270"
+                        android:startColor="#553C0F0C" android:centerColor="#66431310" android:endColor="#55220C09"/>
+                    <stroke android:width="3dp" android:color="#66C9A752"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- PRESSIONADO (verde enquanto toca) -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp"/>
+                    <gradient android:type="linear" android:angle="270"
+                        android:startColor="#0C4A22" android:centerColor="#1E9C4E" android:endColor="#083717"/>
+                    <stroke android:width="3dp" android:color="#B7FFAA"/>
+                </shape>
+            </item>
+            <item android:height="28dp" android:gravity="top">
+                <shape>
+                    <corners android:topLeftRadius="12dp" android:topRightRadius="12dp"/>
+                    <gradient android:type="linear" android:angle="90"
+                        android:startColor="#22000000" android:endColor="#00000000"/>
+                </shape>
+            </item>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape>
+                    <corners android:radius="9dp"/>
+                    <stroke android:width="1dp" android:color="#33C8FFC8"/>
+                    <solid android:color="@android:color/transparent"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- NORMAL -->
+    <item>
+        <layer-list>
+
+
+            <item>
+                <shape>
+                    <corners android:radius="12dp"/>
+                    <gradient android:type="radial" android:gradientRadius="120dp"
+                        android:centerX="0.5" android:centerY="0.55"
+                        android:startColor="#18FFD700" android:endColor="#00FFFFFF"/>
+                </shape>
+            </item>
+
+            <!-- base vermelho metálico com miolo mais claro -->
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp"/>
+                    <gradient android:type="linear" android:angle="270"
+                        android:startColor="@color/VermelhoEscuro"
+                        android:centerColor="#78150B"
+                        android:endColor="@color/VermelhoEscuro"/>
+                </shape>
+            </item>
+
+            <!-- borda dourada -->
+            <item>
+                <shape>
+                    <corners android:radius="12dp"/>
+                    <stroke android:width="3dp" android:color="@color/DouradoEspecial"/>
+                    <solid android:color="@android:color/transparent"/>
+                </shape>
+            </item>
+
+            <!-- gloss no topo (mais suave e menor) -->
+            <item android:height="18dp" android:gravity="top">
+                <shape>
+                    <corners android:topLeftRadius="12dp" android:topRightRadius="12dp"/>
+                    <gradient android:type="linear" android:angle="270"
+                        android:startColor="#33FFF8D1"
+                        android:endColor="#00FFFFFF"/>
+                </shape>
+            </item>
+
+            <!-- vinheta no rodapé -->
+            <item android:height="20dp" android:gravity="bottom">
+                <shape>
+                    <corners android:bottomLeftRadius="12dp" android:bottomRightRadius="12dp"/>
+                    <gradient android:type="linear" android:angle="90"
+                        android:startColor="#1A000000" android:endColor="#00000000"/>
+                </shape>
+            </item>
+
+            <!-- brilho interno de contorno -->
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape>
+                    <corners android:radius="9dp"/>
+                    <stroke android:width="1dp" android:color="#44FFE7A3"/>
+                    <solid android:color="@android:color/transparent"/>
+                </shape>
+            </item>
+
+        </layer-list>
+    </item>
+
+</selector>
