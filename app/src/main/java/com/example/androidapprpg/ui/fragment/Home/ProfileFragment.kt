@@ -1,16 +1,22 @@
 package com.example.androidapprpg.ui.fragment.Home
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.ProfileDataModel.ProfileDataModelRequest
 import com.example.androidapprpg.data.model.ProfileDataModel.ProfileDataModelResponse
@@ -36,6 +42,16 @@ class ProfileFragment : Fragment() {
     private var currentIdSexo: Int? = null
     private var sexos: List<SexoDataModel> = emptyList()
 
+    // Picker da imagem
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        val id = userId ?: return@registerForActivityResult
+        uri?.let {
+            viewModel.uploadPhoto(id, it, requireContext().contentResolver)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -48,7 +64,7 @@ class ProfileFragment : Fragment() {
 
         userId = session.getUserIdOrNull()?.toInt()
         if (userId == null) {
-            toast("Sessão expirada. Faça login.")
+            showCustomToast("Sessão expirada. Faça login.", requireContext())
             findNavController().navigate(R.id.login)
             return
         }
@@ -57,9 +73,9 @@ class ProfileFragment : Fragment() {
         observeVm()
         ativarFullscreen()
 
-
         viewModel.loadSexos()
         viewModel.getProfile(userId!!)
+        viewModel.getProfilePhoto(userId!!)
     }
 
     // ---------------- UI ----------------
@@ -67,9 +83,7 @@ class ProfileFragment : Fragment() {
     private fun setupUi() = with(binding) {
         btnFechar.setOnClickListener {
             val nav = findNavController()
-            if (!nav.popBackStack()) {
-                nav.navigate(R.id.homeFragment)
-            }
+            if (!nav.popBackStack()) nav.navigate(R.id.homeFragment)
         }
 
         // Modo inicial: somente leitura
@@ -77,12 +91,16 @@ class ProfileFragment : Fragment() {
 
         btnEditar.setOnClickListener { setEditable(true) }
 
-        // Comportamento do campo de gênero
-        // (MaterialAutoCompleteTextView): só abre no modo edição
+        // Botão de trocar foto
+        btnChangePhoto.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
+        // Gênero: só abre no modo edição
         edtGenero.keyListener = null
         edtGenero.setOnClickListener {
             if (tilGenero.isEnabled) edtGenero.showDropDown()
-            else toast("Toque em Editar para alterar o gênero.")
+            else showCustomToast("Toque em Editar para alterar o gênero.", requireContext())
         }
         edtGenero.setOnItemClickListener { _, _, position, _ ->
             currentIdSexo = sexos.getOrNull(position)?.idSexo
@@ -101,8 +119,8 @@ class ProfileFragment : Fragment() {
                 nome     = edtNome.text?.toString()?.trim(),
                 email    = edtEmail.text?.toString()?.trim(),
                 nickname = edtNickname.text?.toString()?.trim(),
-                idSexo   = currentIdSexo,   // mantém o que estiver selecionado
-                senha    = novaSenha        // null não é serializado pelo Gson
+                idSexo   = currentIdSexo,
+                senha    = novaSenha
             )
 
             userId?.let { id ->
@@ -120,15 +138,12 @@ class ProfileFragment : Fragment() {
                     bindProfile(result.data)
                     setEnabled(true)
                     setEditable(false)
-                    // tenta pré-selecionar após chegar o profile
                     maybePreselectSexo()
                 }
-                is Result.StopViewModel -> {
-                    //StopViewModel
-                }
+                is Result.StopViewModel -> Unit
                 is Result.Error -> {
                     setEnabled(true)
-                    toast(result.message)
+                    showCustomToast(result.message, requireContext())
                 }
             }
         }
@@ -140,15 +155,12 @@ class ProfileFragment : Fragment() {
                     sexos = result.data
                     setSexoAdapter(sexos)
                     setEnabled(true)
-                    // tenta pré-selecionar após configurar o adapter
                     maybePreselectSexo()
                 }
-                is Result.StopViewModel -> {
-                    //StopViewModel
-                }
+                is Result.StopViewModel -> Unit
                 is Result.Error -> {
                     setEnabled(true)
-                    toast(result.message)
+                    showCustomToast(result.message, requireContext())
                 }
             }
         }
@@ -157,21 +169,54 @@ class ProfileFragment : Fragment() {
             when (result) {
                 is Result.Loading -> setEnabled(false)
                 is Result.Success -> {
-                    toast("Perfil atualizado!")
+                    showCustomToast("Perfil atualizado!", requireContext())
                     bindProfile(result.data)
-                    binding.edtSenha.setText("") // limpa senha
+                    binding.edtSenha.setText("")
                     setEnabled(true)
                     setEditable(false)
                     maybePreselectSexo()
                 }
-                is Result.StopViewModel -> {
-                    //StopViewModel
-                }
-
+                is Result.StopViewModel -> Unit
                 is Result.Error -> {
                     setEnabled(true)
-                    toast(result.message)
+                    showCustomToast(result.message, requireContext())
                 }
+            }
+        }
+
+        // FOTO: upload
+        viewModel.uploadPhotoResult.observe(viewLifecycleOwner) { r ->
+            when (r) {
+                is Result.Loading -> avatarLoading(true)
+                is Result.Success -> {
+                    avatarLoading(false)
+                    showCustomToast("Foto atualizada!", requireContext())
+                    userId?.let { viewModel.getProfilePhoto(it) }
+                }
+                is Result.Error -> {
+                    avatarLoading(false)
+                    showCustomToast(r.message, requireContext())
+                }
+                is Result.StopViewModel -> Unit
+            }
+        }
+
+        // FOTO: bytes -> mostrar no avatar
+        viewModel.photoBytesResult.observe(viewLifecycleOwner) { r ->
+            when (r) {
+                is Result.Loading -> avatarLoading(true)
+                is Result.Success -> {
+                    avatarLoading(false)
+                    Glide.with(binding.imgAvatar)
+                        .asBitmap()
+                        .load(r.data) // ByteArray
+                        .into(binding.imgAvatar)
+                }
+                is Result.Error -> {
+                    avatarLoading(false)
+                    // opcional: placeholder/erro
+                }
+                is Result.StopViewModel -> Unit
             }
         }
     }
@@ -184,7 +229,7 @@ class ProfileFragment : Fragment() {
         edtNome.setText(p.nome ?: "")
         edtEmail.setText(p.email ?: "")
         edtNickname.setText(p.nickname ?: "")
-        currentIdSexo = p.sexo?.idSexo // guarda o id do backend p/ comparar na lista
+        currentIdSexo = p.sexo?.idSexo
     }
 
     private fun setSexoAdapter(items: List<SexoDataModel>) {
@@ -192,19 +237,15 @@ class ProfileFragment : Fragment() {
         binding.edtGenero.setAdapter(
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, nomes)
         )
-        // Assim que o adapter existir, tente pré-selecionar
         maybePreselectSexo()
     }
 
     private fun maybePreselectSexo() {
         val id = currentIdSexo ?: return
         if (sexos.isEmpty()) return
-
         val index = sexos.indexOfFirst { it.idSexo == id }
         if (index >= 0) {
-            // Garante que o AutoComplete já tem layout + adapter antes do setText
             binding.edtGenero.post {
-                // false = não filtra a lista, apenas seta o texto
                 binding.edtGenero.setText(sexos[index].nome, false)
             }
         }
@@ -247,6 +288,12 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    // feedback simples no avatar
+    private fun avatarLoading(loading: Boolean) {
+        binding.imgAvatar.alpha = if (loading) 0.5f else 1f
+        binding.btnChangePhoto.isEnabled = !loading
+    }
+
     private fun ativarFullscreen() {
         val controller = requireActivity().window.decorView
         val insetsController = WindowInsetsControllerCompat(requireActivity().window, controller)
@@ -255,8 +302,17 @@ class ProfileFragment : Fragment() {
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
-    private fun toast(msg: String?) =
-        Toast.makeText(requireContext(), msg ?: "Erro inesperado", Toast.LENGTH_LONG).show()
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+        Toast(context).apply {
+            duration = Toast.LENGTH_SHORT
+            view = layout
+            setGravity(Gravity.BOTTOM, 0, 200)
+        }.show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

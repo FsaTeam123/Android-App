@@ -33,7 +33,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- Botão fechar do lado direito -->
             <ImageView
                 android:id="@+id/btnFechar"
                 android:layout_width="56dp"
@@ -46,7 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- Título centralizado entre o spacer e o botão -->
             <TextView
                 android:id="@+id/settingsTitle"
                 android:layout_width="0dp"
@@ -62,7 +60,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Linha dourada abaixo da barra -->
+        <!-- Linha dourada -->
         <View
             android:id="@+id/separadorDourado"
             android:layout_width="0dp"
@@ -91,21 +89,51 @@
                 android:gravity="center_horizontal"
                 android:background="@drawable/retangulo_arrendondado_60_opacidade"
                 android:padding="20dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Avatar -->
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imgAvatar"
-                    android:layout_width="108dp"
-                    android:layout_height="108dp"
+                <!-- Avatar + botão câmera ligeiramente "para fora" -->
+                <FrameLayout
+                    android:id="@+id/avatarContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="12dp"
-                    android:contentDescription="@string/content_desc_avatar"
-                    app:civ_border_color="@color/BordasDouradas"
-                    android:src="@drawable/icone_reinosperdidos"
-                    app:civ_border_width="2dp"
-                    tools:src="@drawable/icone_reinosperdidos" />
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgAvatar"
+                        android:layout_width="108dp"
+                        android:layout_height="108dp"
+                        android:contentDescription="@string/content_desc_avatar"
+                        android:src="@drawable/icone_reinosperdidos"
+                        app:civ_border_color="@color/BordasDouradas"
+                        app:civ_border_width="2dp"
+                        tools:src="@drawable/icone_reinosperdidos" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/btnChangePhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:contentDescription="@string/alterar_foto"
+                        app:fabCustomSize="28dp"
+                        app:maxImageSize="18dp"
+                        app:backgroundTint="@color/DouradoEspecial"
+                        app:tint="@color/Crowshead"
+                        app:srcCompat="@android:drawable/ic_menu_camera"
+                        android:stateListAnimator="@null"
+                        app:elevation="0dp"
+                        app:pressedTranslationZ="0dp"
+                        app:useCompatPadding="false"
+                        android:translationX="8dp"
+                        android:translationY="8dp" />
+
+                </FrameLayout>
 
                 <!-- Nome -->
                 <TextView
@@ -119,7 +147,7 @@
                     android:letterSpacing="0.01"
                     tools:text="Nome Do Usuario" />
 
-                <!-- Nickname-->
+                <!-- Nickname -->
                 <TextView
                     android:id="@+id/txtNicknameSubtitle"
                     android:layout_width="wrap_content"
@@ -172,7 +200,7 @@
                         tools:text="Usuario Teste" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Nome -->
+                <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     android:layout_width="match_parent"
@@ -208,7 +236,6 @@
                         tools:text="usuario@exemplo.com" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <!-- Nickname -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilNickname"
@@ -242,6 +269,7 @@
                         tools:text="user123" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Gênero -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilGenero"
                     android:layout_width="match_parent"
@@ -276,6 +304,7 @@
                         tools:text="Masculino" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Senha -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilSenha"
                     android:layout_width="match_parent"
@@ -310,7 +339,7 @@
                         tools:text="********" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Botões Editar | Salvar -->
+                <!-- Botões -->
                 <LinearLayout
                     android:id="@+id/rowEditSave"
                     android:layout_width="match_parent"
@@ -349,8 +378,6 @@
                         android:text="@string/salvar" />
                 </LinearLayout>
             </LinearLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

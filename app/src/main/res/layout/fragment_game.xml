@@ -8,16 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.GameManager.GameFragment">
 
-    <com.example.androidapprpg.ui.widget.GridCanvasView
-        android:id="@+id/gridCanvas"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBar"
         android:layout_width="0dp"
@@ -30,11 +20,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btnDice"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:src="@drawable/dice_twenty_faces"
+            app:srcCompat="@drawable/dice_twenty_faces"
+            app:tint="@color/DouradoEspecial"
             android:contentDescription="@string/dice"
             android:clickable="true"
             android:focusable="true"
@@ -42,11 +33,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btnChat"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:src="@drawable/chat_icon"
+            app:srcCompat="@drawable/chat_icon"
+            app:tint="@color/DouradoEspecial"
             android:contentDescription="@string/fechar"
             android:clickable="true"
             android:focusable="true"
@@ -59,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/reinos_perdidos"
+            android:text="@string/rpg"
             android:textColor="@color/DouradoEspecial"
             android:textSize="23sp"
             android:textAlignment="center"
@@ -68,5 +60,204 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.example.androidapprpg.ui.widget.GridCanvasView
+        android:id="@+id/gridCanvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/sideToolbar"
+        android:layout_width="59dp"
+        android:layout_height="651dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/retangulo_borda_fundo_transparente"
+        android:elevation="8dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintVertical_bias="0.368">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnSelect"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/pan"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/select_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <!-- divisor -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#40FFFFFF" />
+
+
+        <!-- Ferramentas -->
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnPan"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/pan"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/pan_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnPen"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/pen"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/pen_nib_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnLine"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/line"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/line_tool_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnRect"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/rect"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/rectangle_tool_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnCircle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/circle"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/circle_notch_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/text"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/text_size_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnEraser"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/eraser"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/eraser_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <!-- divisor -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#40FFFFFF" />
+
+        <!-- Ações -->
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnUndo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/undo"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/undo_left_round_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnRedo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/redo"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/undo_right_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+        <!-- divisor -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#40FFFFFF" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnColor"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:contentDescription="@string/palete"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/palete_svgrepo_com"
+            app:tint="@color/DouradoEspecial" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

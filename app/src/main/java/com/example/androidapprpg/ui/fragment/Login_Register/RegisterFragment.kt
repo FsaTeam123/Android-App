@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -46,6 +49,8 @@ class RegisterFragment : Fragment() {
         observarCombos()
         setupValidation()
         setupClicks()
+        applyImeInsetsForRegister()
+        ensureFieldVisibleOnFocus()
 
         viewModel.loadCombos()
 
@@ -202,8 +207,6 @@ class RegisterFragment : Fragment() {
         toast.show()
     }
 
-
-
     private fun showInlineError(message: String) = with(binding) {
         passwordInputLayout.error = message
         checkPasswordInputLayout.error = message
@@ -213,6 +216,44 @@ class RegisterFragment : Fragment() {
         passwordInputLayout.error = null
         checkPasswordInputLayout.error = null
     }
+
+
+    private fun applyImeInsetsForRegister() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.registerFragment) { v, insets ->
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottom = maxOf(sys.bottom, ime.bottom)
+
+            // top ajuda caso a status bar apareça temporariamente (gesto)
+            v.updatePadding(
+                top = sys.top,
+                bottom = bottom + dp(16) // folga pro botão "Cadastrar"
+            )
+            insets
+        }
+    }
+
+    private fun ensureFieldVisibleOnFocus() = with(binding) {
+        fun View.scrollIntoView() {
+            // espera layout/IME estabilizar e rola suave até o campo
+            post {
+                val y = this.bottom + dp(24)    // margem extra
+                registerFragment.smoothScrollTo(0, y)
+            }
+        }
+        // quando focar, certifica que está visível acima do teclado
+        password.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) v.scrollIntoView() }
+        checkPassword.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) v.scrollIntoView() }
+
+        // também ao tocar (para casos sem "focusChange" disparar)
+        password.setOnClickListener { it.scrollIntoView() }
+        checkPassword.setOnClickListener { it.scrollIntoView() }
+    }
+
+    private fun dp(value: Int): Int =
+        (value * resources.displayMetrics.density).toInt()
+
+
 
     private fun toast(msg: String) =
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()

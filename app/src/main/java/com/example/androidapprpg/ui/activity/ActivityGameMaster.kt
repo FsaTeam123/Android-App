@@ -45,7 +45,7 @@
             applyBottomBarInsetsForCutout()
         }
 
-        // Reaplica imersivo quando a Activity recupera o foco (evita a nav bar “voltar” após back/teclado)
+
         override fun onWindowFocusChanged(hasFocus: Boolean) {
             super.onWindowFocusChanged(hasFocus)
             if (hasFocus) enterImmersive()
@@ -58,7 +58,7 @@
         }
 
         private fun applyBottomBarInsetsForCutout() {
-            // Se o aparelho tiver recorte (cutout), preserva um respiro.
+
             ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigation) { v, insets ->
                 val cut = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
                 v.updatePadding(bottom = cut.bottom)

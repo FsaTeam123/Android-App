@@ -44,7 +44,6 @@ class LoginViewModel @Inject constructor(private val repository: AuthRepository)
                     _loginResult.value = Result.Error("Erro de conexão: ${e.localizedMessage}") //Caso tenha qualquer exceção --> falha de rede
             }
         }
-
     }
 
     fun resetLoginState() {

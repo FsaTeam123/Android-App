@@ -5,6 +5,7 @@ import com.example.androidapprpg.data.remote.authInterceptor.AuthInterceptor
 import com.example.androidapprpg.data.remote.services.AuthService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
+import com.example.androidapprpg.data.remote.services.HomeService
 import com.example.androidapprpg.data.remote.services.JoinGameService
 import com.example.androidapprpg.data.remote.services.MyGamesService
 import com.example.androidapprpg.data.remote.services.NewGameService
@@ -133,5 +134,10 @@ object AppModule {
     @Singleton
     fun provideProfileService( retrofit : Retrofit) : ProfileService =
         retrofit.create(ProfileService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHomeService(retrofit: Retrofit) : HomeService =
+        retrofit.create(HomeService::class.java)
 
 }

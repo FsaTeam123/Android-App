@@ -22,12 +22,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 file("proguard-rules.pro")
@@ -98,6 +99,8 @@ dependencies {
     implementation(libs.androidx.navigation.testing.android)
     implementation(libs.androidx.fragment.testing)
     implementation(libs.androidx.scenecore)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

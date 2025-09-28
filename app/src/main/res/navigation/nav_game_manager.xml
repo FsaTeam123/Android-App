@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_gameManager_to_ChatFragment"
             app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_gameManager_to_CardFragment"
+            app:destination="@id/CardFragment" />
 
 
     </fragment>
@@ -26,6 +29,21 @@
         android:name="com.example.androidapprpg.ui.fragment.GameManager.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/CardFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.CardFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_cards_management" />
+
+    <fragment
+        android:id="@+id/NotesFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.NotesFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_notes" />
+
+
+
 
 
 </navigation>

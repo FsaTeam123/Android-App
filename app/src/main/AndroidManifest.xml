@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+
 
     <application
         android:name="com.example.androidapprpg.AppApplicationHilt"
@@ -21,7 +24,8 @@
         <activity
             android:name="com.example.androidapprpg.ui.activity.ActivityMainLogin"
             android:theme="@style/Theme.App.AndroidAppRpg"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -34,8 +38,7 @@
 
         <activity
             android:name="com.example.androidapprpg.ui.activity.ActivityMainHome"
-            android:theme="@style/Theme.FullScreen.AndroidAppRpg"
-            android:exported="true"
+            android:theme="@style/Theme.FullScreen.AndroidAppRpg" android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <activity

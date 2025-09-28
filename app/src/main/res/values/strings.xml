@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Reinos Perdidos</string>
-    <string name="rpg">Reinos Perdidos</string>
+    <string name="rpg">Codéx RPG</string>
+    <string name="codex">Codéx</string>
+    <string name="rpg_login">rpg</string>
+    <string name="app_name_rpg_2_title">Códex\nRPG</string>
     <string name="Email">email</string>
     <string name="Senha">senha</string>
     <string name="Fortgot_Password">Esqueci minha senha</string>
@@ -15,7 +18,7 @@
     <string name="Map">Map</string>
     <string name="Profile">Meu perfil</string>
     <string name="Card">Card</string>
-    <string name="Login">login</string>
+    <string name="Login">Login</string>
     <string name="Enviar">enviar</string>
     <string name='Entrar_jogo'>Entrar no jogo</string>
     <string name='Meus_Jogos'>Meus Jogos</string>
@@ -80,6 +83,22 @@
     <string name="confirmação">Deseja sair do Jogo?</string>
     <string name="chat">Chat</string>
     <string name="escreva">Mensagem</string>
+    <string name="add_note">Adicionar Nota</string>
+    <string name="alterar_foto">Alterar Foto</string>
+    <string name="bem_vindo">
+        Bem-vindo ao <font color='#D9921F'><b><big>Codéx RPG</big></b></font>!
+    </string>
+    <string name="pan">Pan</string>
+    <string name="pen">Pen</string>
+    <string name="line">Linha</string>
+    <string name="rect">Retângulo</string>
+    <string name="circle">Círculo</string>
+    <string name="text">Texto</string>
+    <string name="eraser">Apagar</string>
+    <string name="undo">Refazer</string>
+    <string name="redo">Fazer</string>
+    <string name="palete">Palete</string>
+
 
 
     <string-array name="mock_spinner_values">

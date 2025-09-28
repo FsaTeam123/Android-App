@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:fontFamily="@font/cinzel_font_bold"
-        android:text="@string/reinos_perdidos"
+        android:text="@string/rpg"
         android:textAlignment="center"
         android:textColor="@color/BordasDouradas"
         android:textFontWeight="600"
