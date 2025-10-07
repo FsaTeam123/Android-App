@@ -11,6 +11,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
+        <deepLink app:uri="app://home" />
+
         <action
             android:id="@+id/action_home_to_newGame"
             app:destination="@id/nav_newgame" />

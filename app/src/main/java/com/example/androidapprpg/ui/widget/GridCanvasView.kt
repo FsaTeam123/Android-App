@@ -7,12 +7,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.hypot
-import kotlin.math.max
-import kotlin.math.min
+import kotlin.math.*
 
 class GridCanvasView @JvmOverloads constructor(
     context: Context,
@@ -39,12 +34,24 @@ class GridCanvasView @JvmOverloads constructor(
     private var offsetX = 0f
     private var offsetY = 0f
 
+    // =================== Camada de MAPA ===================
+    private var mapBitmap: Bitmap? = null
+    private val mapPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { alpha = 255 }
+    private val mapMatrix = Matrix()
+
+    /** Opacidade do mapa (0–255). */
+    var mapAlpha: Int
+        get() = mapPaint.alpha
+        set(value) { mapPaint.alpha = value.coerceIn(0, 255); invalidate() }
+
+    /** Se true, a **grade** é desenhada por cima do mapa (padrão). */
+    var drawGridOnTop: Boolean = true
+
     // ================= Ferramentas =================
     enum class Tool { PAN, PEN, LINE, RECT, CIRCLE, TEXT, SELECT, ERASER }
     private var tool: Tool = Tool.PAN
 
     // ================= Pincéis globais usados no draw =================
-    // (Serão preenchidos com o Style da shape antes de desenhar)
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#C8A24A")
         style = Paint.Style.STROKE
@@ -62,7 +69,7 @@ class GridCanvasView @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
     }
 
-    // ======== ESTILO ATUAL ESCOLHIDO PELO USUÁRIO (não é mutado no onDraw) ========
+    // ======== ESTILO ATUAL ESCOLHIDO PELO USUÁRIO ========
     private var currStrokeColor = Color.parseColor("#C8A24A")
     private var currStrokeWidth = 4f
     private var currFillColor   = Color.parseColor("#33C8A24A")
@@ -85,13 +92,8 @@ class GridCanvasView @JvmOverloads constructor(
             tPaint.textSize = textSize
         }
     }
-
     private fun currentStyle() = Style(
-        currStrokeColor,
-        currStrokeWidth,
-        currFillColor,
-        currTextColor,
-        currTextSize
+        currStrokeColor, currStrokeWidth, currFillColor, currTextColor, currTextSize
     )
 
     // ================= Modelos de formas =================
@@ -104,125 +106,73 @@ class GridCanvasView @JvmOverloads constructor(
         data class PenPath(val path: Path, val style: Style) : Shape() {
             private val bounds = RectF()
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
-                style.applyTo(stroke, fill, tPaint)
-                c.drawPath(path, stroke)
+                style.applyTo(stroke, fill, tPaint); c.drawPath(path, stroke)
             }
             override fun hit(x: Float, y: Float, tol: Float): Boolean {
-                path.computeBounds(bounds, true)
-                bounds.inset(-tol, -tol)
-                return bounds.contains(x, y)
+                path.computeBounds(bounds, true); bounds.inset(-tol, -tol); return bounds.contains(x, y)
             }
             override fun translate(dx: Float, dy: Float) { path.offset(dx, dy) }
-            override fun getBounds(out: RectF): Boolean {
-                path.computeBounds(out, true); return true
-            }
+            override fun getBounds(out: RectF): Boolean { path.computeBounds(out, true); return true }
         }
 
-        data class Line(
-            var x1: Float, var y1: Float,
-            var x2: Float, var y2: Float,
-            val style: Style
-        ) : Shape() {
+        data class Line(var x1: Float, var y1: Float, var x2: Float, var y2: Float, val style: Style) : Shape() {
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
-                style.applyTo(stroke, fill, tPaint)
-                c.drawLine(x1, y1, x2, y2, stroke)
+                style.applyTo(stroke, fill, tPaint); c.drawLine(x1, y1, x2, y2, stroke)
             }
             override fun hit(x: Float, y: Float, tol: Float): Boolean {
-                val dx = x2 - x1
-                val dy = y2 - y1
-                val len2 = dx * dx + dy * dy
+                val dx = x2 - x1; val dy = y2 - y1; val len2 = dx*dx + dy*dy
                 if (len2 == 0f) return hypot(x - x1, y - y1) <= tol
-                var t = ((x - x1) * dx + (y - y1) * dy) / len2
-                t = t.coerceIn(0f, 1f)
-                val px = x1 + t * dx
-                val py = y1 + t * dy
-                return hypot(x - px, y - py) <= tol
+                var t = ((x - x1) * dx + (y - y1) * dy) / len2; t = t.coerceIn(0f, 1f)
+                val px = x1 + t*dx; val py = y1 + t*dy; return hypot(x - px, y - py) <= tol
             }
-            override fun translate(dx: Float, dy: Float) {
-                x1 += dx; y1 += dy; x2 += dx; y2 += dy
-            }
+            override fun translate(dx: Float, dy: Float) { x1 += dx; y1 += dy; x2 += dx; y2 += dy }
             override fun getBounds(out: RectF): Boolean {
-                val l = min(x1, x2); val r = max(x1, x2)
-                val t = min(y1, y2); val b = max(y1, y2)
-                out.set(l, t, r, b); return true
+                val l = min(x1,x2); val r = max(x1,x2); val t = min(y1,y2); val b = max(y1,y2)
+                out.set(l,t,r,b); return true
             }
         }
 
-        data class RectBox(
-            var left: Float,
-            var top: Float,
-            var right: Float,
-            var bottom: Float,
-            val style: Style
-        ) : Shape() {
+        data class RectBox(var left: Float, var top: Float, var right: Float, var bottom: Float, val style: Style) : Shape() {
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
                 style.applyTo(stroke, fill, tPaint)
-                val l = min(left, right)
-                val r = max(left, right)
-                val t = min(top, bottom)
-                val b = max(top, bottom)
-                c.drawRect(l, t, r, b, fill)
-                c.drawRect(l, t, r, b, stroke)
+                val l = min(left,right); val r = max(left,right); val t = min(top,bottom); val b = max(top,bottom)
+                c.drawRect(l,t,r,b, fill); c.drawRect(l,t,r,b, stroke)
             }
             override fun hit(x: Float, y: Float, tol: Float): Boolean {
-                val l = min(left, right)
-                val r = max(left, right)
-                val t = min(top, bottom)
-                val b = max(top, bottom)
-                val nearH = (abs(x - l) <= tol || abs(x - r) <= tol) && y in (t - tol)..(b + tol)
-                val nearV = (abs(y - t) <= tol || abs(y - b) <= tol) && x in (l - tol)..(r + tol)
+                val l = min(left,right); val r = max(left,right); val t = min(top,bottom); val b = max(top,bottom)
+                val nearH = (abs(x-l)<=tol || abs(x-r)<=tol) && y in (t - tol)..(b + tol)
+                val nearV = (abs(y-t)<=tol || abs(y-b)<=tol) && x in (l - tol)..(r + tol)
                 val inside = x in l..r && y in t..b
                 return nearH || nearV || inside
             }
-            override fun translate(dx: Float, dy: Float) {
-                left += dx; right += dx; top += dy; bottom += dy
-            }
+            override fun translate(dx: Float, dy: Float) { left+=dx; right+=dx; top+=dy; bottom+=dy }
             override fun getBounds(out: RectF): Boolean {
                 out.set(min(left,right), min(top,bottom), max(left,right), max(top,bottom)); return true
             }
         }
 
-        data class Circle(
-            var cx: Float,
-            var cy: Float,
-            var r: Float,
-            val style: Style
-        ) : Shape() {
+        data class Circle(var cx: Float, var cy: Float, var r: Float, val style: Style) : Shape() {
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
-                style.applyTo(stroke, fill, tPaint)
-                c.drawCircle(cx, cy, r, fill)
-                c.drawCircle(cx, cy, r, stroke)
+                style.applyTo(stroke, fill, tPaint); c.drawCircle(cx, cy, r, fill); c.drawCircle(cx, cy, r, stroke)
             }
             override fun hit(x: Float, y: Float, tol: Float): Boolean {
-                val d = hypot(x - cx, y - cy)
-                // seleciona borda ou interior
-                return abs(d - r) <= tol || d < r
+                val d = hypot(x - cx, y - cy); return abs(d - r) <= tol || d < r
             }
             override fun translate(dx: Float, dy: Float) { cx += dx; cy += dy }
-            override fun getBounds(out: RectF): Boolean {
-                out.set(cx - r, cy - r, cx + r, cy + r); return true
-            }
+            override fun getBounds(out: RectF): Boolean { out.set(cx - r, cy - r, cx + r, cy + r); return true }
         }
 
-        data class TextRun(
-            var x: Float, var y: Float,
-            val text: String,
-            val style: Style
-        ) : Shape() {
+        data class TextRun(var x: Float, var y: Float, val text: String, val style: Style) : Shape() {
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
-                style.applyTo(stroke, fill, tPaint)
-                c.drawText(text, x, y, tPaint)
+                style.applyTo(stroke, fill, tPaint); c.drawText(text, x, y, tPaint)
             }
             override fun hit(x: Float, y: Float, tol: Float): Boolean {
-                val w = text.length * style.textSize * 0.6f
-                val h = style.textSize
-                return x in (this.x - tol)..(this.x + w + tol) &&
-                        y in (this.y - h - tol)..(this.y + tol)
+                val w = text.length * style.textSize * 0.6f; val h = style.textSize
+                return x in (this.x - tol)..(this.x + w + tol) && y in (this.y - h - tol)..(this.y + tol)
             }
             override fun translate(dx: Float, dy: Float) { x += dx; y += dy }
             override fun getBounds(out: RectF): Boolean {
-                val w = text.length * style.textSize * 0.6f
-                val h = style.textSize
+                val w = text.length * style.textSize * 0.6f; val h = style.textSize
                 out.set(x, y - h, x + w, y); return true
             }
         }
@@ -258,8 +208,7 @@ class GridCanvasView @JvmOverloads constructor(
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 val prev = scale
                 scale = (scale * detector.scaleFactor).coerceIn(minScale, maxScale)
-                val fx = detector.focusX
-                val fy = detector.focusY
+                val fx = detector.focusX; val fy = detector.focusY
                 offsetX = (offsetX - fx) * (scale / prev) + fx
                 offsetY = (offsetY - fy) * (scale / prev) + fy
                 invalidate()
@@ -270,22 +219,13 @@ class GridCanvasView @JvmOverloads constructor(
     private val gestureDetector = GestureDetector(context,
         object : GestureDetector.SimpleOnGestureListener() {
             override fun onDown(e: MotionEvent) = true
-
-            override fun onScroll(
-                e1: MotionEvent?,
-                e2: MotionEvent,
-                distanceX: Float,
-                distanceY: Float
-            ): Boolean {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
                 if (tool == Tool.PAN) {
-                    offsetX -= distanceX
-                    offsetY -= distanceY
-                    invalidate()
-                    return true
+                    offsetX -= distanceX; offsetY -= distanceY
+                    invalidate(); return true
                 }
                 return false
             }
-
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 zoomTo((scale * 1.6f).coerceAtMost(maxScale), e.x, e.y)
                 return true
@@ -298,6 +238,8 @@ class GridCanvasView @JvmOverloads constructor(
         offsetX = (offsetX - focusX) * (scale / prev) + focusX
         offsetY = (offsetY - focusY) * (scale / prev) + focusY
         invalidate()
+        // Se quiser que o mapa reencaixe quando der zoom programático:
+        // refitMapToView()
     }
 
     // ================= Touch =================
@@ -364,8 +306,7 @@ class GridCanvasView @JvmOverloads constructor(
                     is Shape.Circle -> { t.r = hypot(wx - t.cx, wy - t.cy) }
                     else -> {
                         if (tool == Tool.SELECT && selectedIndex != null) {
-                            val dx = wx - dragLastX
-                            val dy = wy - dragLastY
+                            val dx = wx - dragLastX; val dy = wy - dragLastY
                             shapes[selectedIndex!!].translate(dx, dy)
                             dragLastX = wx; dragLastY = wy
                         }
@@ -381,8 +322,8 @@ class GridCanvasView @JvmOverloads constructor(
                         tempShape = null
                         currentPath = null
                     }
-                    Tool.SELECT -> { /* já moveu durante o MOVE */ }
-                    Tool.ERASER -> { /* apagou no DOWN */ }
+                    Tool.SELECT -> Unit
+                    Tool.ERASER -> Unit
                     else -> Unit
                 }
                 invalidate()
@@ -405,7 +346,28 @@ class GridCanvasView @JvmOverloads constructor(
         canvas.translate(offsetX, offsetY)
         canvas.scale(scale, scale)
 
-        // grade
+        // --- ordem de camadas ---
+        if (!drawGridOnTop) drawGrid(canvas)
+        // mapa
+        mapBitmap?.let { bmp -> canvas.drawBitmap(bmp, mapMatrix, mapPaint) }
+        if (drawGridOnTop) drawGrid(canvas)
+
+        // shapes
+        shapes.forEach { it.draw(canvas, strokePaint, fillPaint, textPaint) }
+        tempShape?.draw(canvas, strokePaint, fillPaint, textPaint)
+
+        // highlight da seleção
+        selectedIndex?.let { idx ->
+            val r = RectF()
+            if (idx in shapes.indices && shapes[idx].getBounds(r)) {
+                canvas.drawRect(r, selectionPaint)
+            }
+        }
+
+        canvas.restore()
+    }
+
+    private fun drawGrid(canvas: Canvas) {
         val viewW = width / scale
         val viewH = height / scale
         val left = -offsetX / scale
@@ -426,20 +388,6 @@ class GridCanvasView @JvmOverloads constructor(
             val p = if (r % 5 == 0) majorPaint else gridPaint
             canvas.drawLine(startCol * cellSizePx, y, endCol * cellSizePx, y, p)
         }
-
-        // formas (cada uma aplica seu estilo)
-        shapes.forEach { it.draw(canvas, strokePaint, fillPaint, textPaint) }
-        tempShape?.draw(canvas, strokePaint, fillPaint, textPaint)
-
-        // highlight de seleção
-        selectedIndex?.let { idx ->
-            val r = RectF()
-            if (idx in shapes.indices && shapes[idx].getBounds(r)) {
-                canvas.drawRect(r, selectionPaint)
-            }
-        }
-
-        canvas.restore()
     }
 
     // ================= APIs públicas =================
@@ -450,27 +398,64 @@ class GridCanvasView @JvmOverloads constructor(
     }
 
     fun setScaleLimits(min: Float, max: Float) {
-        minScale = min
-        maxScale = max
+        minScale = min; maxScale = max
     }
 
     fun resetView() {
-        scale = 1f
-        offsetX = 0f
-        offsetY = 0f
+        scale = 1f; offsetX = 0f; offsetY = 0f
         invalidate()
     }
 
     fun setTool(t: Tool) { tool = t; invalidate() }
     fun getTool(): Tool = tool
 
-    // Setters: atualizam APENAS as variáveis de estilo atual (curr*).
-    // Isso evita depender dos paints, que são mutados a cada draw de cada shape.
     fun setStrokeColor(color: Int) { currStrokeColor = color; invalidate() }
     fun setFillColor(color: Int)   { currFillColor   = color; invalidate() }
     fun setTextColor(color: Int)   { currTextColor   = color; invalidate() }
     fun setStrokeWidth(px: Float)  { currStrokeWidth = px;    invalidate() }
     fun setTextSize(px: Float)     { currTextSize    = px;    invalidate() }
+
+    /** Define/atualiza o bitmap do mapa e calcula um fit centralizado no viewport atual. */
+    fun setMapBitmap(bmp: Bitmap?) {
+        mapBitmap = bmp
+        if (bmp == null) { invalidate(); return }
+
+        if (width == 0 || height == 0) {
+            // aguarda medir para calcular a matrix corretamente
+            post { setMapBitmap(bmp) }
+            return
+        }
+        computeMapMatrixForViewport(bmp)
+        invalidate()
+    }
+
+    /** Recalcula o encaixe do mapa considerando o viewport atual (útil após mudanças programáticas de zoom/pan). */
+    fun refitMapToView() {
+        mapBitmap?.let { computeMapMatrixForViewport(it); invalidate() }
+    }
+
+    private fun computeMapMatrixForViewport(bmp: Bitmap) {
+        // viewport em coordenadas DO MUNDO
+        val worldW = width  / scale
+        val worldH = height / scale
+        val worldLeft = -offsetX / scale
+        val worldTop  = -offsetY / scale
+
+        // escala que faz caber inteiro
+        val s = min(worldW / bmp.width, worldH / bmp.height).coerceAtLeast(0f)
+
+        // centraliza no viewport atual
+        val drawW = bmp.width * s
+        val drawH = bmp.height * s
+        val cx = worldLeft + worldW / 2f
+        val cy = worldTop  + worldH / 2f
+        val left = cx - drawW / 2f
+        val top  = cy - drawH / 2f
+
+        mapMatrix.reset()
+        mapMatrix.postScale(s, s)
+        mapMatrix.postTranslate(left, top)
+    }
 
     /** Chamado pelo Fragment após o usuário digitar o texto. */
     fun commitText(text: String) {
@@ -507,10 +492,9 @@ class GridCanvasView @JvmOverloads constructor(
         invalidate()
     }
 
-      // ================= Helpers =================
+    // ================= Helpers =================
     private fun screenToWorldX(x: Float) = (x - offsetX) / scale
     private fun screenToWorldY(y: Float) = (y - offsetY) / scale
-
     private fun hitTolerance(): Float = 12f / scale
 
     private fun findShapeAt(wx: Float, wy: Float): Int? {

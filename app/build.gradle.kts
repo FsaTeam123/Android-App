@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.navigation.safe.args)
     id("org.jetbrains.kotlin.kapt")
+    id("kotlin-parcelize")
 
 }
 
@@ -92,14 +93,17 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
+    implementation(libs.dyn4j)
     implementation(libs.javapoet)
     implementation(libs.circleimageview)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.testing.android)
+    implementation(libs.lottie)
     implementation(libs.androidx.fragment.testing)
     implementation(libs.androidx.scenecore)
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.scenecore)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
     kapt(libs.hilt.compiler)
 

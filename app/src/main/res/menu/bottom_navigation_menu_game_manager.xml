@@ -8,7 +8,7 @@
         android:icon="@drawable/folder"
         app:showAsAction="always"
         android:title=""/>
-
+|
     <item
         android:id="@+id/NotesFragment"
         android:icon="@drawable/notes"
@@ -22,13 +22,13 @@
         android:title=""/>
 
     <item
-        android:id="@+id/mapFragment"
+        android:id="@+id/MapFragment"
         android:icon="@drawable/map_location"
         app:showAsAction="always"
         android:title=""/>
 
     <item
-        android:id="@+id/closeFragment"
+        android:id="@+id/ExitSettingsFragment"
         android:icon="@drawable/close_circle_svgrepo_com"
         app:showAsAction="always"
         android:title=""/>

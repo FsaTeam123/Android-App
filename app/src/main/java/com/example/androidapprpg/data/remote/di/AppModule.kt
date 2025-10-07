@@ -3,11 +3,13 @@ package com.example.androidapprpg.data.remote.di
 import com.example.androidapprpg.BuildConfig
 import com.example.androidapprpg.data.remote.authInterceptor.AuthInterceptor
 import com.example.androidapprpg.data.remote.services.AuthService
+import com.example.androidapprpg.data.remote.services.FakeMapService
 import com.example.androidapprpg.data.remote.services.FakeNotesService
 import com.example.androidapprpg.data.remote.services.ForgotPasswordService
 import com.example.androidapprpg.data.remote.services.GameLobbyService
 import com.example.androidapprpg.data.remote.services.HomeService
 import com.example.androidapprpg.data.remote.services.JoinGameService
+import com.example.androidapprpg.data.remote.services.MapService
 import com.example.androidapprpg.data.remote.services.MyGamesService
 import com.example.androidapprpg.data.remote.services.NewGameService
 import com.example.androidapprpg.data.remote.services.NotesService
@@ -16,6 +18,8 @@ import com.example.androidapprpg.data.remote.services.spinners.CardMagiasService
 import com.example.androidapprpg.data.remote.services.spinners.CardMasterService
 import com.example.androidapprpg.data.remote.services.spinners.CardPlayerService
 import com.example.androidapprpg.data.remote.services.spinners.CardPoderService
+import com.example.androidapprpg.data.repository.MapRepository
+import com.example.androidapprpg.data.repository.MapRepositoryImpl
 import com.example.androidapprpg.data.repository.NotesRepository
 import com.example.androidapprpg.data.repository.NotesRepositoryImpl
 import com.example.androidapprpg.data.repository.SessionManager
@@ -148,10 +152,21 @@ object AppModule {
     @Singleton
     fun provideNotesService(): NotesService = FakeNotesService()
 
+    //--------------------ATUALIZAR QUANDO A API ESTIVER PRONTA-------------------//
+
+    //atualizar o NOTAS
     @Provides
     @Singleton
     fun provideNotesRepository(service: NotesService): NotesRepository =
         NotesRepositoryImpl(service)
 
+    @Provides
+    @Singleton
+    fun provideMapService() : MapService = FakeMapService()
+
+    @Provides
+    @Singleton
+    fun provideMapRepository(service: MapService): MapRepository =
+        MapRepositoryImpl(service)
 
 }

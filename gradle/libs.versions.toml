@@ -26,6 +26,9 @@ fragmentTesting = "1.8.8"
 gridlayout = "1.0.0"
 circleimageview = "3.1.0"
 scenecore = "1.0.0-alpha06"
+scenecoreVersion = "1.0.0-alpha07"
+lottie = "6.4.0"
+dyn4j = "5.0.2"
 
 
 [libraries]
@@ -44,6 +47,7 @@ javapoet = {group = "com.squareup", name = "javapoet", version.ref = "javapoet"}
 androidx-gridlayout = { module = "androidx.gridlayout:gridlayout", version.ref = "gridlayout" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+dyn4j = { group = "org.dyn4j", name = "dyn4j", version.ref = "dyn4j" }
 
 
 
@@ -65,6 +69,8 @@ androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", vers
 androidx-navigation-testing-android = { group = "androidx.navigation", name = "navigation-testing-android", version.ref = "navigationTestingAndroid" }
 androidx-fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
 androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
+scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecoreVersion" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

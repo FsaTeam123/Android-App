@@ -42,6 +42,19 @@
         android:label="fragment_chat"
         tools:layout="@layout/fragment_notes" />
 
+    <fragment
+        android:id="@+id/ExitSettingsFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.ExitSettingsFragment"
+        android:label="fragment_exit_settings"
+        tools:layout="@layout/fragment_exit_settings" />
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+
+
 
 
 

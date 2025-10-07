@@ -22,43 +22,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnDice"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/dice_twenty_faces"
-            android:contentDescription="@string/dice"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <ImageView
-            android:id="@+id/btnChat"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/chat_icon"
-            android:contentDescription="@string/fechar"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/settingsTitle"
-            android:layout_width="0dp"
+            android:id="@+id/notesFragmentTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/cinzel_font_bold"
-            android:text="@string/rpg"
+            android:text="@string/notas"
             android:textColor="@color/DouradoEspecial"
             android:textSize="23sp"
-            android:textAlignment="center"
-            app:layout_constraintStart_toEndOf="@id/btnDice"
-            app:layout_constraintEnd_toStartOf="@id/btnChat"
+            android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Separador dourado logo abaixo da TopBar -->

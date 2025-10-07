@@ -106,6 +106,28 @@
     <string name="titulo">titulo</string>
     <string name="excluir">excluir</string>
     <string name="apagar">Apagar</string>
+    <string name="exit_session">Sair</string>
+    <string name="confirm_exit">Deseja encerrar a sessão?</string>
+    <string name="opções">Opções</string>
+    <string name="biografia">Biografia</string>
+    <string name="arma">Armas</string>
+    <string name="poder">Poderes</string>
+    <string name="magia">Magias</string>
+    <string name="habilidade">Habilidades</string>
+    <string name="mochila">Mochila</string>
+    <string name="cartas">Cartas</string>
+    <string name="descricao">Descricao</string>
+    <string name="mapa">Mapas</string>
+    <string name="preview">Preview</string>
+    <string name="novo_mapa">Novo Mapa</string>
+    <string name="renomear_mapa">Renomear Mapa</string>
+    <string name="nome_do_mapa">Nome do Mapa</string>
+    <string name="nome_obrigatorio">Nome obrigatório</string>
+    <string name="nenhuma_alteracao">Nenhuma alteração</string>
+    <string name="desmarque_para_excluir">Desmarque para Excluir</string>
+    <string name="desmarque_para_editar">Desmarque para Editar</string>
+    <string name="desmarque_para_visualizar">Desmarque para visualizar</string>
+
 
     <string-array name="mock_spinner_values">
         <item>Humano</item>
