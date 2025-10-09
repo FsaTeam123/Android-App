@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.os.BundleCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -21,7 +23,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.MapDataModel.MapDataModel
 import com.example.androidapprpg.databinding.FragmentGameBinding
-import com.example.androidapprpg.ui.bottomsheet.DiceBottomSheet
+import com.example.androidapprpg.dicecore.DiceSpec
 import com.example.androidapprpg.ui.viewmodel.MapViewModel
 import com.example.androidapprpg.ui.widget.GridCanvasView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -45,7 +47,11 @@ class GameFragment : Fragment() {
     private var currentTextSize    = 28f
     private val canvasBg           = Color.parseColor("#121212")
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -64,14 +70,16 @@ class GameFragment : Fragment() {
             setTextSize(currentTextSize)
 
             requestTextListener = object : GridCanvasView.OnRequestTextListener {
-                override fun onRequestText(x: Float, y: Float) { showTextDialog { typed -> commitText(typed) } }
+                override fun onRequestText(x: Float, y: Float) {
+                    showTextDialog { typed -> commitText(typed) }
+                }
             }
         }
 
         setupTopBar()
         setupSideToolbar()
 
-        // >>> Coleta apenas o mapa selecionado para renderizar no Canvas
+        // Renderiza o mapa selecionado
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.selectedMap.collect { selected ->
@@ -114,7 +122,7 @@ class GameFragment : Fragment() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 binding.gridCanvas.setMapBitmap(resource)
                 binding.gridCanvas.mapAlpha = 255
-                binding.gridCanvas.refitMapToView() // garante centralização/visibilidade
+                binding.gridCanvas.refitMapToView()
             }
             override fun onLoadCleared(placeholder: Drawable?) {
                 binding.gridCanvas.setMapBitmap(null)
@@ -198,7 +206,10 @@ class GameFragment : Fragment() {
     private fun showStrokeQuickActions(onPickColor: () -> Unit, onPickWidth: () -> Unit) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Traço")
-            .setItems(arrayOf("Cor", "Espessura")) { d, which -> when (which) { 0 -> onPickColor(); 1 -> onPickWidth() }; d.dismiss() }
+            .setItems(arrayOf("Cor", "Espessura")) { d, which ->
+                when (which) { 0 -> onPickColor(); 1 -> onPickWidth() }
+                d.dismiss()
+            }
             .show()
     }
 
@@ -214,7 +225,10 @@ class GameFragment : Fragment() {
     private fun showTextQuickActions(onPickColor: () -> Unit, onPickSize: () -> Unit) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Texto")
-            .setItems(arrayOf("Cor", "Tamanho")) { d, which -> when (which) { 0 -> onPickColor(); 1 -> onPickSize() }; d.dismiss() }
+            .setItems(arrayOf("Cor", "Tamanho")) { d, which ->
+                when (which) { 0 -> onPickColor(); 1 -> onPickSize() }
+                d.dismiss()
+            }
             .show()
     }
 
@@ -244,7 +258,8 @@ class GameFragment : Fragment() {
     private fun pickStrokeWidth(current: Float, onPick: (Float) -> Unit) {
         val widths = floatArrayOf(2f, 4f, 6f, 8f, 12f)
         val labels = arrayOf("2 px", "4 px", "6 px", "8 px", "12 px")
-        val sel = widths.indexOfFirst { kotlin.math.abs(it - current) < 0.001f }.let { if (it >= 0) it else 1 }
+        val sel = widths.indexOfFirst { kotlin.math.abs(it - current) < 0.001f }
+            .let { if (it >= 0) it else 1 }
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Espessura do traço")
@@ -256,7 +271,8 @@ class GameFragment : Fragment() {
     private fun pickTextSize(current: Float, onPick: (Float) -> Unit) {
         val sizes = floatArrayOf(18f, 22f, 26f, 28f, 32f, 36f, 42f)
         val labels = arrayOf("18", "22", "26", "28", "32", "36", "42")
-        val sel = sizes.indexOfFirst { kotlin.math.abs(it - current) < 0.001f }.let { if (it >= 0) it else 3 }
+        val sel = sizes.indexOfFirst { kotlin.math.abs(it - current) < 0.001f }
+            .let { if (it >= 0) it else 3 }
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Tamanho do texto")
@@ -266,16 +282,21 @@ class GameFragment : Fragment() {
     }
 
     private fun showTextDialog(onConfirm: (String) -> Unit) {
-        val input = EditText(requireContext()).apply { hint = "Digite o texto"; setTextColor(Color.WHITE) }
+        val input = EditText(requireContext()).apply {
+            hint = "Digite o texto"
+            setTextColor(Color.WHITE)
+        }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Novo texto")
             .setView(input)
-            .setPositiveButton("OK") { d, _ -> input.text?.toString()?.let { if (it.isNotBlank()) onConfirm(it) }; d.dismiss() }
+            .setPositiveButton("OK") { d, _ ->
+                input.text?.toString()?.let { if (it.isNotBlank()) onConfirm(it) }
+                d.dismiss()
+            }
             .setNegativeButton("Cancelar") { d, _ -> d.dismiss() }
             .show()
     }
 
-    // IMPORTANTE: não limpar o target no onStop()
     override fun onDestroyView() {
         super.onDestroyView()
         mapTarget?.let { Glide.with(this).clear(it) }

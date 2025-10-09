@@ -38,7 +38,8 @@
 
             navController!!.addOnDestinationChangedListener { _, dest, _ ->
                 val isChat = dest.id == R.id.ChatFragment
-                binding.bottomNavigation.isVisible = !isChat
+                val isDice = dest.id == R.id.dicePlayFragment
+                binding.bottomNavigation.isVisible = !isChat && !isDice
                 enterImmersive()  // mantém imersivo em qualquer destino
             }
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dicePanelRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:padding="16dp"
+    android:paddingBottom="24dp"
+    android:background="@drawable/retangulo_arredondado">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:animateLayoutChanges="true">
+
+        <!-- Ícone central com borda circular dourada -->
+        <FrameLayout
+            android:id="@+id/diceIconWrap"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/retangulo_borda_fundo_transparente"
+            android:elevation="6dp">
+
+            <ImageView
+                android:id="@+id/ivDiceIcon"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/dice_twenty_faces"
+                app:tint="@color/DouradoEspecial"/>
+        </FrameLayout>
+
+        <!-- Frase temática -->
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Role os dados e faça história."
+            android:fontFamily="@font/cinzel_font_bold"
+            android:textColor="@color/cinza_claro"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:letterSpacing="0.02" />
+
+        <!-- Botão principal -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRollNow"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:minHeight="52dp"
+            android:text="Rolar  Dados"
+            android:fontFamily="@font/cinzel_font_bold"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/vermelho_metalico"
+            app:cornerRadius="28dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

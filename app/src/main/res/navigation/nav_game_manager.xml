@@ -20,7 +20,10 @@
         <action
             android:id="@+id/action_gameManager_to_CardFragment"
             app:destination="@id/CardFragment" />
-
+        <action
+            android:id="@+id/action_gameManager_to_dicePlayFragment"
+            app:destination="@id/dicePlayFragment"
+            />
 
     </fragment>
 
@@ -54,8 +57,18 @@
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
 
+    <fragment
+        android:id="@+id/dicePlayFragment"
+        android:name="com.example.androidapprpg.ui.fragment.GameManager.DicePlayFragment"
+        android:label="fragment_dice_game"
+        tools:layout="@layout/fragment_dice_game">
 
 
+        <argument
+            android:name="spec"
+            app:argType="com.example.androidapprpg.dicecore.DiceSpec"
+             />
+    </fragment>
 
 
 
