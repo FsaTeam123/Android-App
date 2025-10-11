@@ -24,17 +24,11 @@ class DicePlayFragment : Fragment(R.layout.fragment_dice_game) {
 
         // Configuração "turbo" do DicePhysicsView
         binding.dicePhysicsView.apply {
-            sizeFactor = 0.16f
-            gravityY = 380.0
-            impulseScale = 3.2
-            torqueScale  = 2.4
-            linearDamping = 0.05
-            angularDamping = 0.05
-            timeScale = 2.0
-            targetFps = 60
-            settleLinVel2 = 24.0
-            settleAngVel  = 0.9
-            settleFrames  = 6
+            presetRapido()
+            simSpeed   = 3.8
+            gravityY   = 700.0
+            impulseScale = 4.2
+
         }
 
         // 1) Recebe spec via argumentos (opcional)

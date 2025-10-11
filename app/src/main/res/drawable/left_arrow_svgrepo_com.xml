@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="30dp"
+    android:viewportWidth="504.8"
+    android:viewportHeight="504.8">
+
+    <!-- Fora -->
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M272.4,384.42l228,0l0,-260l-228,0l0,-84.8l-268.4,212.8l268.4,212.8z"/>
+
+    <!-- Miolo -->
+    <path
+        android:fillColor="@color/BordasDouradas"
+        android:pathData="M41.2,252.42l211.2,-165.6l0,57.6l228,0l0,220l-228,0l0,53.6z"/>
+
+    <!-- Contornos/traços -->
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M272.4,469.22c-0.8,0 -1.6,-0.4 -2.4,-0.8L1.6,255.62c-0.8,-0.8 -1.6,-2 -1.6,-3.2s0.4,-2.4 1.6,-3.2L270,36.42c1.2,-0.8 2.8,-1.2 4.4,-0.4c1.2,0.8 2.4,2 2.4,3.6v80.8h224c2.4,0 4,1.6 4,4v260c0,2.4 -1.6,4 -4,4h-224v76.8c0,1.6 -0.8,2.8 -2.4,3.6C273.6,469.22 272.8,469.22 272.4,469.22zM10.4,252.42l258,204.4v-72.4c0,-2.4 1.6,-4 4,-4h224v-252h-224c-2.4,0 -4,-1.6 -4,-4v-76.4L10.4,252.42z"/>
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M480.4,368.42h-228c-2.4,0 -4,-1.6 -4,-4s1.6,-4 4,-4h224v-212h-224c-2.4,0 -4,-1.6 -4,-4s1.6,-4 4,-4h228c2.4,0 4,1.6 4,4v220C484.4,366.82 482.8,368.42 480.4,368.42z"/>
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M252.4,422.02c-0.8,0 -1.6,-0.4 -2.4,-0.8l-166.4,-130.4c-1.6,-1.2 -2,-4 -0.8,-5.6s4,-2 5.6,-0.8l166.4,130.4c1.6,1.2 2,4 0.8,5.6C254.8,421.62 253.6,422.02 252.4,422.02z"/>
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M53.6,266.02c-0.8,0 -1.6,-0.4 -2.4,-0.8l-12,-9.6c-0.8,-0.8 -1.6,-2 -1.6,-3.2s0.4,-2.4 1.6,-3.2L250,83.62c1.6,-1.2 4.4,-1.2 5.6,0.8s1.2,4.4 -0.8,5.6L48,252.82l8,6.4c1.6,1.2 2,4 0.8,5.6C56,265.62 54.8,266.02 53.6,266.02z"/>
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M252.4,148.42c-2.4,0 -4,-1.6 -4,-4v-57.6c0,-2.4 1.6,-4 4,-4s4,1.6 4,4v57.6C256.4,146.82 254.8,148.42 252.4,148.42z"/>
+    <path
+        android:fillColor="@color/DouradoEspecial"
+        android:pathData="M252.4,422.02c-2.4,0 -4,-1.6 -4,-4v-53.6c0,-2.4 1.6,-4 4,-4s4,1.6 4,4v53.6C256.4,420.42 254.8,422.02 252.4,422.02z"/>
+</vector>

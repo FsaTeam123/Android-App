@@ -23,7 +23,12 @@ import com.example.androidapprpg.data.repository.MapRepositoryImpl
 import com.example.androidapprpg.data.repository.NotesRepository
 import com.example.androidapprpg.data.repository.NotesRepositoryImpl
 import com.example.androidapprpg.data.repository.SessionManager
+import com.example.androidapprpg.utils.websocket.ChatSocket
+import com.example.androidapprpg.utils.websocket.StompChatSocket
 import com.example.androidapprpg.webClient.services.RegisterService
+import com.example.androidapprpg.utils.websocket.WsEventListener
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +38,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -169,4 +175,57 @@ object AppModule {
     fun provideMapRepository(service: MapService): MapRepository =
         MapRepositoryImpl(service)
 
+
+    // ---------------------- WEB SOCKET ---------------------- //
+    /**
+     * Cliente OkHttp específico para WebSocket:
+     * - readTimeout(0) para WS
+     * - pingInterval para manter a conexão
+     * Mantém os MESMOS interceptors (Auth + Logging) do cliente REST,
+     * pois clonamos a instância base.
+     */
+
+    // ---------------------- WEB SOCKET ---------------------- //
+    @Provides @Singleton fun provideGson(): Gson = Gson()
+
+    @Provides @Singleton @Named("ws")
+    fun provideWsOkHttp(
+        base: OkHttpClient,
+        @Named("wsBase") baseHttps: String
+    ): OkHttpClient =
+        base.newBuilder()
+            .readTimeout(0, java.util.concurrent.TimeUnit.MILLISECONDS)
+            .pingInterval(25, java.util.concurrent.TimeUnit.SECONDS)
+            .eventListenerFactory { WsEventListener(baseHttps.toHttpUrl().host) } // 👈 LOG DNS/IP do ALB
+            .build()
+
+    // Sempre com HTTP para virar ws:// no socket:
+    @Provides @Singleton @Named("wsBase")
+    fun provideWsBase(): String =
+        "http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com"
+
+    // COMO VOCÊ TEM UM STAGE "ws" NO BALANCEADOR/ROTEADOR:
+    @Provides @Singleton @Named("wsStage")
+    fun provideWsStage(): String? = "ws"
+
+    // Para não duplicar /ws/ws, deixe o endpoint vazio:
+    @Provides @Singleton @Named("wsEndpoint")
+    fun provideWsEndpoint(): String = ""    // <<<< importante
+
+    // Use true se o backend for SockJS (.withSockJS()) e precisar de /websocket:
+    @Provides @Singleton @Named("wsSockJs")
+    fun provideWsSockJs(): Boolean = false  // mude para true se necessário
+
+    @Provides @Singleton
+    fun provideStompChatSocket(
+        @Named("ws") wsClient: OkHttpClient,
+        gson: Gson,
+        @Named("wsBase") baseHttps: String,
+        @Named("wsStage") stage: String?,
+        @Named("wsEndpoint") endpoint: String,
+        @Named("wsSockJs") sockJs: Boolean
+    ): StompChatSocket = StompChatSocket(wsClient, gson, baseHttps, stage, endpoint, sockJs)
+
+    @Provides @Singleton
+    fun provideChatSocket(impl: StompChatSocket): ChatSocket = impl
 }

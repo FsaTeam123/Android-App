@@ -18,19 +18,19 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
 import com.example.androidapprpg.R
-import com.example.androidapprpg.databinding.FragmentCharactersBinding
+import com.example.androidapprpg.databinding.FragmentPowerBinding
 import kotlinx.coroutines.launch
 
-class CharactersFragment : Fragment() {
+class PowerFragment : Fragment() {
 
-    private var _binding: FragmentCharactersBinding? = null
+    private var _binding: FragmentPowerBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
+        _binding = FragmentPowerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,13 +42,19 @@ class CharactersFragment : Fragment() {
 
     //-----------SET UP UI-----------//
     private fun setUpUi() = with(binding) {
-        // Close → só dialog de confirmação
-        btnClose.setOnClickListener { showCloseSessionDialog() }
 
+        btnClose.setOnClickListener {
+            showCloseSessionDialog()
+        }
+
+
+        btnAnterior.setOnClickListener{
+            findNavController().navigate(R.id.action_poderes_to_personagens)
+        }
 
 
         btnProximo.setOnClickListener {
-            findNavController().navigate(R.id.action_personagens_to_poderes)
+            findNavController().navigate(R.id.action_poderes_to_magias)
         }
     }
 
@@ -91,7 +97,6 @@ class CharactersFragment : Fragment() {
             show()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -18,6 +18,7 @@ import com.example.androidapprpg.data.model.NewGameDataModel.NewGamesDataModelRe
 import com.example.androidapprpg.databinding.FragmentNewGameBinding
 import com.example.androidapprpg.ui.viewmodel.NewGameViewModel
 import com.example.androidapprpg.ui.activity.ActivityGameMaster
+import com.example.androidapprpg.ui.activity.ActivityMainCard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -124,7 +125,7 @@ class NewGameFragment : Fragment() {
 
             //viewModel.criarJogo(request)
 
-            val intent = Intent(requireContext(), ActivityGameMaster::class.java)
+            val intent = Intent(requireContext(), ActivityMainCard::class.java)
             startActivity(intent)
         }
     }

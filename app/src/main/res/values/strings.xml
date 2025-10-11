@@ -110,7 +110,8 @@
     <string name="confirm_exit">Deseja encerrar a sessão?</string>
     <string name="opções">Opções</string>
     <string name="biografia">Biografia</string>
-    <string name="arma">Armas</string>
+    <string name="Personagem">Personagem</string>
+    <string name="arma">Armamento</string>
     <string name="poder">Poderes</string>
     <string name="magia">Magias</string>
     <string name="habilidade">Habilidades</string>
@@ -127,6 +128,25 @@
     <string name="desmarque_para_excluir">Desmarque para Excluir</string>
     <string name="desmarque_para_editar">Desmarque para Editar</string>
     <string name="desmarque_para_visualizar">Desmarque para visualizar</string>
+    <string name="criar_perssonagem">Criar Personagem</string>
+    <string name="selecione_personagem">Selecione seu personagem</string>
+    <string name="selecione_armamento">Selecione seu armamento</string>
+    <string name="selecione_poder">Selecione seu poder</string>
+    <string name="selecione_magia">Selecione sua magia</string>
+    <string name="selecione_mochila">Selecione seus itens</string>
+    <string name="proximo">Proximo</string>
+    <string name="anterior">Anterior</string>
+    <string name="subtitulo_nova_carta">Se prepare para a batalha</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="voltar">Voltar</string>
+    <string name="iniciar_sessão">Iniciar sessão</string>
+    <string name="confirm_message_rpg_destino">Forja teu destino, aventureiro. Confirmar a jornada?</string>
+    <string name="confirm_message_rpg_dados">Que os dados rolem a teu favor. Confirmar a ação?</string>
+    <string name="confirm_message_rpg_portal">O portal pulsa energia — atravessar agora?</string>
+    <string name="confirmar_message_oraculo">Os oráculos aguardam teu sinal. Desejas prosseguir?</string>
+    <string name="confirmar_messag_feitiço">Feitiço pronto. Lançar agora?</string>
+    <string name="confirmar_message_lamina">A lâmina está afiada e o mapa traçado. Confirmar a missão?</string>
+
 
 
     <string-array name="mock_spinner_values">

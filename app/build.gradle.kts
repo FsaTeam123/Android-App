@@ -46,12 +46,19 @@ android {
             versionNameSuffix = "-mock"
             buildConfigField("boolean", "MOCK_MODE", "true")
             buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
+            buildConfigField("String", "WS_BASE", "\"https://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\"")
+            buildConfigField("String", "WS_ENDPOINT", "\"ws\"")
+            buildConfigField("boolean", "WS_SOCKJS", "false")
+
 
         }
         create("prod") {
             dimension = "env"
             buildConfigField("boolean", "MOCK_MODE", "false")
             buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
+            buildConfigField("String", "WS_BASE", "\"https://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\"")
+            buildConfigField("String", "WS_ENDPOINT", "\"ws\"")
+            buildConfigField("boolean", "WS_SOCKJS", "false")
 
         }
     }

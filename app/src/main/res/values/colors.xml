@@ -38,6 +38,7 @@
     <color name="opaco_80">#CC000000</color>
     <color name="vermelho_metalico">#3f0503</color>
     <color name="fundo_preto_claro">#121212</color>
+    <color name="SurfaceGlass">#CC121212</color>
 
 
 </resources>

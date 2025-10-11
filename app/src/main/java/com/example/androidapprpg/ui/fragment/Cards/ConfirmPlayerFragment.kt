@@ -1,6 +1,7 @@
 package com.example.androidapprpg.ui.fragment.Cards
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,24 +14,24 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
 import com.example.androidapprpg.R
-import com.example.androidapprpg.databinding.FragmentCharactersBinding
+import com.example.androidapprpg.databinding.FragmentConfirmPlayerBinding
+import com.example.androidapprpg.databinding.FragmentMochila2Binding
+import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import kotlinx.coroutines.launch
 
-class CharactersFragment : Fragment() {
+class ConfirmPlayerFragment : Fragment() {
 
-    private var _binding: FragmentCharactersBinding? = null
+    private var _binding: FragmentConfirmPlayerBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
+        _binding = FragmentConfirmPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,17 +43,22 @@ class CharactersFragment : Fragment() {
 
     //-----------SET UP UI-----------//
     private fun setUpUi() = with(binding) {
-        // Close → só dialog de confirmação
-        btnClose.setOnClickListener { showCloseSessionDialog() }
 
+        btnClose.setOnClickListener {
+            showCloseSessionDialog()
+        }
 
+        btnBack.setOnClickListener{
+            findNavController().navigate(R.id.action_confirmar_to_mochila)
+        }
 
-        btnProximo.setOnClickListener {
-            findNavController().navigate(R.id.action_personagens_to_poderes)
+        btnConfirm.setOnClickListener {
+            val intent = Intent(requireContext(), ActivityGameMaster::class.java)
+            startActivity(intent)
         }
     }
 
-    /** Dialog de confirmação de saída */
+
     private fun showCloseSessionDialog() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_exit_game, null, false)
@@ -75,7 +81,7 @@ class CharactersFragment : Fragment() {
             dialog.dismiss()
 
             viewLifecycleOwner.lifecycleScope.launch {
-                // aqui só finaliza a activity atual (sem animação)
+
                 requireActivity().finish()
             }
         }
@@ -91,7 +97,6 @@ class CharactersFragment : Fragment() {
             show()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

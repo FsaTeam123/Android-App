@@ -22,29 +22,34 @@ class DicePhysicsView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
 ) : SurfaceView(ctx, attrs), SurfaceHolder.Callback {
 
-    // ----------------------------- Parâmetros tunáveis
+    // ----------------------------- Parâmetros tunáveis (public)
     /** Fração do menor lado da view usada como raio base. */
-    var sizeFactor: Float = 0.16f
+    var sizeFactor: Float = 0.15f
 
-    /** Gravidade vertical. (9 ≈ Terra; 160+ cai bem rápido) */
-    var gravityY: Double = 280.00
+    /** Gravidade vertical (unidade = px/s²). */
+    var gravityY: Double = 520.0
         set(value) { field = value; world.gravity = Vector2(0.0, value) }
 
     /** Escala da força/impulso inicial horizontal/vertical. */
-    var impulseScale: Double = 3.0
-    var torqueScale:  Double = 2.2
+    var impulseScale: Double = 3.6
+    var torqueScale:  Double = 2.6
 
     /** Menor damping = menos freio (mais velocidade). */
-    var linearDamping:  Double = 0.06
-    var angularDamping: Double = 0.06
+    var linearDamping:  Double = 0.04
+    var angularDamping: Double = 0.04
 
     /** Critérios para considerar “parado”. */
-    var settleLinVel2: Double = 24.0   // (velocidade linear)^2
-    var settleAngVel:  Double = 0.9
-    var settleFrames:  Int    = 6
+    var settleLinVel2: Double = 36.0   // (vel linear)^2
+    var settleAngVel:  Double = 1.1
+    var settleFrames:  Int    = 5
 
-    /** Aceleração global do tempo e FPS alvo da simulação. */
-    var timeScale: Double = 1.8
+    /** Velocidade global da simulação (1.0 = normal). */
+    var simSpeed: Double = 3.0
+
+    /** Step fixo da física (s). 120 Hz é um bom equilíbrio. */
+    var fixedStepSeconds: Double = 1.0 / 120.0
+
+    /** FPS alvo do desenho (não afeta a física). */
     var targetFps: Int = 60
 
     // ----------------------------- API
@@ -54,6 +59,20 @@ class DicePhysicsView @JvmOverloads constructor(
     fun isRolling(): Boolean = rolling
     fun lastResult(): DiceResult? = currentResult
     fun stop() { loop?.running = false; loop = null }
+
+    /** Preset pronto para “queda rápida” */
+    fun presetRapido() {
+        sizeFactor     = 0.14f
+        gravityY       = 600.0
+        impulseScale   = 4.0
+        torqueScale    = 3.0
+        linearDamping  = 0.035
+        angularDamping = 0.035
+        simSpeed       = 3.2
+        settleLinVel2  = 40.0
+        settleAngVel   = 1.25
+        settleFrames   = 5
+    }
 
     /** Inicia a rolagem (sorteio determinístico + cena física). */
     fun roll(spec: DiceSpec) {
@@ -72,18 +91,17 @@ class DicePhysicsView @JvmOverloads constructor(
             repeat(qtd) {
                 val (body, lados2d, radius) = makeDieBody(tipo)
                 world.addBody(body)
-
                 body.linearDamping = linearDamping
                 body.angularDamping = angularDamping
 
-                // impulsos iniciais mais fortes
+                // impulsos iniciais
                 body.applyImpulse(
                     Vector2(
-                        rng.nextDouble(-15.0, 15.0) * impulseScale,
-                        rng.nextDouble(-42.0, -28.0) * impulseScale
+                        rng.nextDouble(-18.0, 18.0) * impulseScale,
+                        rng.nextDouble(-46.0, -30.0) * impulseScale
                     )
                 )
-                body.applyTorque(rng.nextDouble(-12.0, 12.0) * torqueScale)
+                body.applyTorque(rng.nextDouble(-14.0, 14.0) * torqueScale)
 
                 val valor = iters[tipo]?.next() ?: 1
                 dice += DiceBody(body, tipo, lados2d, radius.toFloat(), valor)
@@ -155,12 +173,12 @@ class DicePhysicsView @JvmOverloads constructor(
     private fun buildBounds() {
         val w = width.coerceAtLeast(1).toDouble()
         val h = height.coerceAtLeast(1).toDouble()
-        val thick = (min(width, height) * 0.08).coerceAtLeast(16.0) // proporcional
+        val thick = (min(width, height) * 0.09).coerceAtLeast(18.0) // um pouco mais grosso ajuda na estabilidade
 
         fun wall(cx: Double, cy: Double, rw: Double, rh: Double) {
             val b = Body()
             b.addFixture(BodyFixture(Rectangle(rw, rh)).apply {
-                restitution = 0.18; friction = 0.75; density = 0.0
+                restitution = 0.16; friction = 0.80; density = 0.0
             })
             b.setMass(MassType.INFINITE)
             b.linearDamping = 1.0
@@ -175,17 +193,17 @@ class DicePhysicsView @JvmOverloads constructor(
     }
 
     private fun makeDieBody(kind: TipoDado): Triple<Body, Int, Double> {
-        val baseR = (min(width, height) * sizeFactor).coerceAtLeast(24f)
+        val baseR = (min(width, height) * sizeFactor).coerceAtLeast(22f)
 
         val (n, radius) = when (kind) {
-            TipoDado.D4   -> 3  to baseR * 1.10f
-            TipoDado.D6   -> 4  to baseR * 1.25f
-            TipoDado.D8   -> 8  to baseR * 1.20f
-            TipoDado.D10  -> 10 to baseR * 1.20f
-            TipoDado.D12  -> 12 to baseR * 1.20f
-            TipoDado.D20  -> 20 to baseR * 1.20f
-            TipoDado.D100 -> 10 to baseR * 1.30f
-            TipoDado.FUDGE-> 6  to baseR * 1.15f
+            TipoDado.D4   -> 3  to baseR * 1.08f
+            TipoDado.D6   -> 4  to baseR * 1.22f
+            TipoDado.D8   -> 8  to baseR * 1.18f
+            TipoDado.D10  -> 10 to baseR * 1.18f
+            TipoDado.D12  -> 12 to baseR * 1.18f
+            TipoDado.D20  -> 20 to baseR * 1.18f
+            TipoDado.D100 -> 10 to baseR * 1.26f
+            TipoDado.FUDGE-> 6  to baseR * 1.12f
         }
 
         val verts = Array(n) { i ->
@@ -195,31 +213,48 @@ class DicePhysicsView @JvmOverloads constructor(
 
         val body = Body().apply {
             addFixture(BodyFixture(Geometry.createPolygon(*verts)).apply {
-                restitution = 0.18; friction = 0.65; density = 2.5
+                restitution = 0.18; friction = 0.65; density = 2.6
             })
             setMass(MassType.NORMAL)
-            // solta de mais alto para ganhar velocidade
+
+            // solta um pouco mais baixo → menos “tempo no ar”
             val x = (width * 0.20 + Math.random() * width * 0.60)
-            translate(x, height * 0.16)
+            translate(x, height * 0.12)
         }
         return Triple(body, n, radius.toDouble())
     }
 
-    // ----------------------------- Game loop (timeScale + FPS)
+    // ----------------------------- Game loop (fixed-step + simSpeed)
     private inner class Loop(private val sh: SurfaceHolder) : Thread("DiceLoop") {
         @Volatile var running = true
         override fun run() {
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_DISPLAY)
 
             var last = System.nanoTime()
+            var acc = 0.0
+            val maxStepsPerFrame = 12  // segurança p/ não “explodir” em devices lentos
+
             while (running) {
                 val now  = System.nanoTime()
                 val dtRaw = (now - last) / 1_000_000_000.0
                 last = now
 
-                val dt = dtRaw.coerceAtMost(1.0 / targetFps) * timeScale
-                world.update(dt)
+                // acumula tempo escalado (acelera a simulação de verdade)
+                acc += dtRaw * simSpeed
 
+                var steps = 0
+                val step = fixedStepSeconds
+                while (acc >= step && steps < maxStepsPerFrame) {
+                    world.update(step)
+                    acc -= step
+                    steps++
+                }
+
+                // desenha
+                val c = sh.lockCanvas() ?: continue
+                try { drawFrame(c) } finally { sh.unlockCanvasAndPost(c) }
+
+                // checa parada
                 var allSettled = true
                 dice.forEach { d ->
                     val lv = d.body.linearVelocity
@@ -229,17 +264,14 @@ class DicePhysicsView @JvmOverloads constructor(
                     if (d.settledFrames < settleFrames) allSettled = false
                 }
 
-                val c = sh.lockCanvas() ?: continue
-                try { drawFrame(c) } finally { sh.unlockCanvasAndPost(c) }
-
                 if (rolling && allSettled && !notified) {
                     currentResult?.let { result -> post { onAllDiceSettled?.invoke(result) } }
                     notified = true
                     rolling = false
                 }
 
-                // manter FPS alvo
-                val frameMs = 1000.0 / targetFps
+                // manter FPS alvo do DRAW (não influencia física)
+                val frameMs = (1000.0 / targetFps)
                 val spentMs = (System.nanoTime() - now) / 1_000_000.0
                 val remain  = (frameMs - spentMs).toLong()
                 if (remain > 0) try { sleep(remain) } catch (_: InterruptedException) {}
