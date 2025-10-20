@@ -18,7 +18,6 @@ class AddNoteDialog : DialogFragment() {
 
     private var mode: String = MODE_CREATE
     private var noteId: Long = -1L
-    private var initialTitle: String? = null
     private var initialText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,12 +25,18 @@ class AddNoteDialog : DialogFragment() {
         val a = arguments
         mode = a?.getString(ARG_MODE, MODE_CREATE) ?: MODE_CREATE
         noteId = a?.getLong(ARG_ID, -1L) ?: -1L
-        initialTitle = a?.getString(ARG_TITLE)
         initialText = a?.getString(ARG_TEXT)
-        setStyle(STYLE_NORMAL, android.R.style.Theme_Material_Light_NoActionBar_TranslucentDecor)
+        setStyle(
+            STYLE_NORMAL,
+            android.R.style.Theme_Material_Light_NoActionBar_TranslucentDecor
+        )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = DialogAddNoteBinding.inflate(inflater, container, false)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return b.root
@@ -39,26 +44,21 @@ class AddNoteDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Preenche se for edição
-        initialTitle?.let { b.inputTitle.editText?.setText(it) }
         initialText?.let { b.inputNote.editText?.setText(it) }
         b.tvHeader.text = if (mode == MODE_EDIT) "EDITAR NOTA" else "NOVA NOTA"
 
-        // Validação: pelo menos um dos campos
+        // limpar erro ao digitar
         fun TextInputLayout.clearIfTyping() {
             editText?.doAfterTextChanged { error = null }
         }
-        b.inputTitle.clearIfTyping()
         b.inputNote.clearIfTyping()
 
         b.btnCancel.setOnClickListener { dismiss() }
         b.btnSave.setOnClickListener {
-            val title = b.inputTitle.editText?.text?.toString()?.trim().orEmpty()
-            val text  = b.inputNote.editText?.text?.toString()?.trim().orEmpty()
+            val text = b.inputNote.editText?.text?.toString()?.trim().orEmpty()
 
-            if (title.isBlank() && text.isBlank()) {
-                // feedback simples
-                b.inputTitle.error = "Informe título ou texto"
-                b.inputNote.error  = "Informe título ou texto"
+            if (text.isBlank()) {
+                b.inputNote.error = "Informe o conteúdo da nota"
                 return@setOnClickListener
             }
 
@@ -68,7 +68,6 @@ class AddNoteDialog : DialogFragment() {
                 bundleOf(
                     RESULT_ACTION to action,
                     RESULT_NOTE_ID to noteId,
-                    RESULT_TITLE to title,
                     RESULT_TEXT to text
                 )
             )
@@ -95,7 +94,6 @@ class AddNoteDialog : DialogFragment() {
         // Result API
         const val REQUEST_KEY = "add_edit_note_result"
         const val RESULT_ACTION = "result_action"
-        const val RESULT_TITLE = "result_title"
         const val RESULT_TEXT = "result_text"
         const val RESULT_NOTE_ID = "result_note_id"
 
@@ -108,18 +106,16 @@ class AddNoteDialog : DialogFragment() {
         // Args
         private const val ARG_MODE = "mode"
         private const val ARG_ID = "id"
-        private const val ARG_TITLE = "title"
         private const val ARG_TEXT = "text"
 
         fun newCreate(): AddNoteDialog = AddNoteDialog().apply {
             arguments = bundleOf(ARG_MODE to MODE_CREATE)
         }
 
-        fun newEdit(id: Long, title: String, text: String): AddNoteDialog = AddNoteDialog().apply {
+        fun newEdit(id: Long, text: String): AddNoteDialog = AddNoteDialog().apply {
             arguments = bundleOf(
                 ARG_MODE to MODE_EDIT,
                 ARG_ID to id,
-                ARG_TITLE to title,
                 ARG_TEXT to text
             )
         }

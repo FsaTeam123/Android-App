@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.navigation.safe.args)
     id("org.jetbrains.kotlin.kapt")
     id("kotlin-parcelize")
-
 }
 
 hilt {
@@ -22,8 +21,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,6 +34,7 @@ android {
         }
     }
 
+    // ---- Flavors (KTS) ----
     flavorDimensions += "env"
 
     productFlavors {
@@ -44,33 +42,46 @@ android {
             dimension = "env"
             applicationIdSuffix = ".mock"
             versionNameSuffix = "-mock"
+
             buildConfigField("boolean", "MOCK_MODE", "true")
-            buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
-            buildConfigField("String", "WS_BASE", "\"https://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\"")
+            buildConfigField(
+                "String",
+                "BASE_URL_GAME",
+                "\"http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com/\""
+            )
+            buildConfigField(
+                "String",
+                "WS_BASE",
+                "\"http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\""
+            )
             buildConfigField("String", "WS_ENDPOINT", "\"ws\"")
             buildConfigField("boolean", "WS_SOCKJS", "false")
-
-
         }
+
         create("prod") {
             dimension = "env"
+
             buildConfigField("boolean", "MOCK_MODE", "false")
-            buildConfigField("String", "BASE_URL_GAME", "\"https://t7tsd4gbsd.execute-api.sa-east-1.amazonaws.com/\"")
-            buildConfigField("String", "WS_BASE", "\"https://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\"")
+            buildConfigField(
+                "String",
+                "BASE_URL_GAME",
+                "\"http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com/\""
+            )
+            buildConfigField(
+                "String",
+                "WS_BASE",
+                "\"http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com\""
+            )
             buildConfigField("String", "WS_ENDPOINT", "\"ws\"")
             buildConfigField("boolean", "WS_SOCKJS", "false")
-
         }
     }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlinOptions { jvmTarget = "11" }
 
     buildFeatures {
         viewBinding = true
@@ -80,7 +91,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.gson)
@@ -93,15 +103,16 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.smoothbottombar)
     implementation(libs.picasso)
-    //implementation(libs.spinkit)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.okhttp)
+    implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
     implementation(libs.dyn4j)
     implementation(libs.javapoet)
+    implementation(libs.okhttp.urlconnection)
     implementation(libs.circleimageview)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.ui.android)
@@ -109,6 +120,9 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.androidx.fragment.testing)
     implementation(libs.androidx.scenecore)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.media3.datasource)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.scenecore)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
