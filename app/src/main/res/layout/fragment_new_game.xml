@@ -112,7 +112,7 @@
                     android:textColorHint="@color/BordasDouradas" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- História -->
+            <!-- História do Jogo (descrição) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -237,136 +237,138 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/BordasDouradas" />
 
-            <!-- Estilo de Campanha -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:text="Estilo de Campanha"
-                android:textColor="@color/BordasDouradas"
-                android:textSize="16sp" />
+            <!-- ====== SPINNERS NO FORMATO DO EXEMPLO ====== -->
 
+            <!-- Estilo de Campanha -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="start"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <CheckBox
-                    android:id="@+id/campanhaOneShot"
-                    android:layout_width="wrap_content"
+                <TextView
+                    style="@style/Atributo"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="One Shot"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:text="Estilo de Campanha"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold" />
 
-                <CheckBox
-                    android:id="@+id/campanhaEstendida"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spEstiloCampanha"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Estendida"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
+            <!-- Separador -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/BordasDouradas" />
 
             <!-- Geração de Mundo -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:text="Geração de Mundo"
-                android:textColor="@color/BordasDouradas"
-                android:textSize="16sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="start"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <CheckBox
-                    android:id="@+id/seedTormenta"
-                    android:layout_width="wrap_content"
+                <TextView
+                    style="@style/Atributo"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Tormenta"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:text="Geração de Mundo"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold" />
 
-                <CheckBox
-                    android:id="@+id/seedAutoral"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spGeracaoMundo"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Autoral"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
+            <!-- Separador -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/BordasDouradas" />
 
-            <!-- Tema -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:text="Tema"
-                android:textColor="@color/BordasDouradas"
-                android:textSize="16sp" />
-
+            <!-- História -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="start"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <CheckBox
-                    android:id="@+id/temaTerror"
-                    android:layout_width="wrap_content"
+                <TextView
+                    style="@style/Atributo"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Terror"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:text="História"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold" />
 
-                <CheckBox
-                    android:id="@+id/temaInvestigacao"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spHistoria"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Investigação"
-                    android:textColor="@color/BordasDouradas" />
-
-                <CheckBox
-                    android:id="@+id/temaRomance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/BordasDouradas"
-                    android:fontFamily="@font/cinzel_font_bold"
-                    android:text="Romance"
-                    android:textColor="@color/BordasDouradas" />
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/BordasDouradas" />
+
+            <!-- Tema -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/Atributo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tema"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold" />
+
+                <Spinner
+                    android:id="@+id/spTema"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DouradoEspecial"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <!-- ====== /SPINNERS ====== -->
 
             <!-- ======== SENHA: AGRUPADO ======== -->
             <LinearLayout

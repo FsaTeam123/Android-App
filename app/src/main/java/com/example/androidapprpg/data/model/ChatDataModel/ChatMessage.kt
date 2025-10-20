@@ -1,7 +1,21 @@
 package com.example.androidapprpg.data.model.ChatDataModel
 
+import com.google.gson.annotations.SerializedName
+
 data class ChatMessage(
-    val from: String? = null,
-    val text: String,
-    val ts: Long? = null
+    @SerializedName("senderId")
+    val senderId: Long?,
+
+    @SerializedName("senderNick")
+    val senderNick: String?,
+
+    @SerializedName("text")
+    val text: String?,
+
+    @SerializedName("ts")
+    val tsMillis: Long = System.currentTimeMillis(),
+
+
+    @SerializedName("scope")
+    val scope: String?
 )

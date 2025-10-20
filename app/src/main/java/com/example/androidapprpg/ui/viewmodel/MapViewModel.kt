@@ -19,7 +19,7 @@ class MapViewModel @Inject constructor(
     private val repo: MapRepository
 ) : ViewModel() {
 
-    // Repo -> sempre com replay do último valor
+    // Sempre replays o último valor vindo do repo
     private val maps: StateFlow<List<MapDataModel>> =
         repo.maps.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -38,7 +38,7 @@ class MapViewModel @Inject constructor(
         return n.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "").lowercase()
     }
 
-    // Estado para telas de listagem/pesquisa
+    // Estado para listagem/pesquisa
     val state: StateFlow<MapUiState> =
         combine(maps, selectedIdFlow, queryFlow.debounce(150)) { list, selected, query ->
             val filtered = if (query.isBlank()) list else {
@@ -52,33 +52,57 @@ class MapViewModel @Inject constructor(
             MapUiState(result = Result.Loading)
         )
 
-    // Mapa selecionado (sempre a partir da lista completa)
+    // Mapa selecionado
     val selectedMap: StateFlow<MapDataModel?> =
         combine(maps, selectedIdFlow) { list, selectedId ->
-            list.firstOrNull { it.id == selectedId }
+            list.firstOrNull { it.id == selectedId } ?: list.firstOrNull()
         }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    // Ações
-    fun refresh() = viewModelScope.launch { try { repo.refresh() } catch (_: Exception) {} }
-    fun addMap(name: String, uri: Uri) = viewModelScope.launch { repo.add(name, uri) }
+    /* ============== Ações ============== */
 
-    fun rename(id: String, newName: String) = viewModelScope.launch {
-        if (selectedIdFlow.value == id) {
-            _events.tryEmit(UiEvent.ShowMessage(R.string.desmarque_para_editar))
-            return@launch
-        }
-        repo.rename(id, newName)
+    /** Defina o jogo atual e faça o primeiro refresh. */
+    fun attachGameAndRefresh(idJogo: Long) = viewModelScope.launch {
+        repo.setGame(idJogo)
+        refresh()
     }
 
-    fun delete(id: String) = viewModelScope.launch {
-        if (selectedIdFlow.value == id) {
+    fun refresh() = viewModelScope.launch {
+        try {
+            repo.refresh()
+            // garante seleção após popular a lista
+            val first = maps.value.firstOrNull()
+            if (selectedIdFlow.value == null && first != null) {
+                selectedIdFlow.value = first.id
+            }
+        } catch (_: Exception) { /* opcional: evento de erro */ }
+    }
+
+    /** Envia uma imagem da galeria para o mapa informado. */
+    fun uploadImage(mapId: String, uri: Uri) = viewModelScope.launch {
+        try { repo.uploadImage(mapId.toLong(), uri) } catch (_: Exception) { }
+    }
+
+    /** Remove a imagem do mapa informado. */
+    fun deleteMap(mapId: String) = viewModelScope.launch {
+        if (selectedIdFlow.value == mapId) {
             _events.tryEmit(UiEvent.ShowMessage(R.string.desmarque_para_excluir))
             return@launch
         }
-        repo.delete(id)
-        if (selectedIdFlow.value == id) selectedIdFlow.value = null
+        try { repo.deleteMap(mapId.toLong()) } catch (_: Exception) { }
+        if (selectedIdFlow.value == mapId) selectedIdFlow.value = null
+    }
+
+    /** Renomeia o mapa (PUT completo no backend). */
+    fun rename(mapId: String, newName: String) = viewModelScope.launch {
+        if (selectedIdFlow.value == mapId) {
+            _events.tryEmit(UiEvent.ShowMessage(R.string.desmarque_para_editar))
+            return@launch
+        }
+        try { repo.renameMap(mapId.toLong(), newName) } catch (_: Exception) { }
     }
 
     fun setSelected(id: String?) { selectedIdFlow.value = id }
     fun setQuery(q: String) { queryFlow.value = q }
+    fun createMapWithImage(name: String, uri: Uri) =
+        viewModelScope.launch { repo.createMapWithImage(name, uri) }
 }

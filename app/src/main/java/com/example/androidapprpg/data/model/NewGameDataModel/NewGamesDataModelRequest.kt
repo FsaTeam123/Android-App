@@ -4,41 +4,41 @@ import com.google.gson.annotations.SerializedName
 
 data class NewGamesDataModelRequest(
 
-    @SerializedName("sistema")
-    val sistema: String?,
-
-    @SerializedName("id")
-    val id: Int? = null,
-
-    @SerializedName("idMaster")
-    val idMaster: Int?,
+    @SerializedName("masterId")
+    val masterId: Int,
 
     @SerializedName("titulo")
-    val titulo: String?,
-
-    @SerializedName("idHistoria")
-    val idHistoria: Int?,
+    val titulo: String,
 
     @SerializedName("qtdPessoas")
-    val qtdPessoas: Int?,
+    val qtdPessoas: Int,
 
-    @SerializedName("dificuldade") //isso aqui deveria ser de 0 a 20?
-    val dificuldade: Int?,
+    @SerializedName("isEspecificClass")
+    val isEspecificClass: Int, // 0/1
 
-    @SerializedName("idTipoJogo")
-    val idTipoJogo: Int?,
+    @SerializedName("nivelInicial")
+    val nivelInicial: Int,
 
-    @SerializedName("idEstiloCampanha")
-    val idEstiloCampanha: Int?,
+    @SerializedName("tipoJogoId")
+    val tipoJogoId: Int,
 
-    @SerializedName("idGeracaoMundo")
-    val idGeracaoMundo: Int?,
+    @SerializedName("geracaoMundoId")
+    val geracaoMundoId: Int,
 
-    @SerializedName("idTema")
-    val idTema: Int?,
+    @SerializedName("estiloCampanhaId")
+    val estiloCampanhaId: Int,
+
+    @SerializedName("historiaId")
+    val historiaId: Int,
+
+    @SerializedName("temaId")
+    val temaId: Int,
 
     @SerializedName("senha")
     val senha: String?,
+
+    @SerializedName("ativo")
+    val ativo: Int // 0/1
 
 )
 

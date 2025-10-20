@@ -3,11 +3,14 @@ package com.example.androidapprpg.ui.widget
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import kotlin.math.*
+
+private val TAG = "GridCanvasView"
 
 class GridCanvasView @JvmOverloads constructor(
     context: Context,
@@ -33,6 +36,25 @@ class GridCanvasView @JvmOverloads constructor(
     private var maxScale = 5.0f
     private var offsetX = 0f
     private var offsetY = 0f
+
+    // =================== Persistência do Canvas ===================
+    data class CanvasStyleDTO(
+        val strokeColor: Int,
+        val strokeWidth: Float,
+        val fillColor: Int,
+        val textColor: Int,
+        val textSize: Float
+    )
+    data class Pt(val x: Float, val y: Float)
+
+    sealed class ShapeDTO {
+        data class Pen(val points: List<Pt>, val style: CanvasStyleDTO): ShapeDTO()
+        data class Line(val x1: Float, val y1: Float, val x2: Float, val y2: Float, val style: CanvasStyleDTO): ShapeDTO()
+        data class Rect(val left: Float, val top: Float, val right: Float, val bottom: Float, val style: CanvasStyleDTO): ShapeDTO()
+        data class Circle(val cx: Float, val cy: Float, val r: Float, val style: CanvasStyleDTO): ShapeDTO()
+        data class Text(val x: Float, val y: Float, val text: String, val style: CanvasStyleDTO): ShapeDTO()
+    }
+    data class CanvasState(val shapes: List<ShapeDTO>)
 
     // =================== Camada de MAPA ===================
     private var mapBitmap: Bitmap? = null
@@ -103,7 +125,7 @@ class GridCanvasView @JvmOverloads constructor(
         open fun translate(dx: Float, dy: Float) {}
         open fun getBounds(out: RectF): Boolean = false
 
-        data class PenPath(val path: Path, val style: Style) : Shape() {
+        data class PenPath(val path: Path, val style: Style, val points: MutableList<Pt>) : Shape() {
             private val bounds = RectF()
             override fun draw(c: Canvas, stroke: Paint, fill: Paint, tPaint: Paint) {
                 style.applyTo(stroke, fill, tPaint); c.drawPath(path, stroke)
@@ -211,7 +233,9 @@ class GridCanvasView @JvmOverloads constructor(
                 val fx = detector.focusX; val fy = detector.focusY
                 offsetX = (offsetX - fx) * (scale / prev) + fx
                 offsetY = (offsetY - fy) * (scale / prev) + fy
+                Log.d(TAG, "onScale() scale=$scale off=($offsetX,$offsetY)")
                 invalidate()
+                notifyTransform()
                 return true
             }
         })
@@ -222,7 +246,9 @@ class GridCanvasView @JvmOverloads constructor(
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
                 if (tool == Tool.PAN) {
                     offsetX -= distanceX; offsetY -= distanceY
-                    invalidate(); return true
+                    invalidate()
+                    Log.d(TAG, "onScroll() off=($offsetX,$offsetY)")
+                    notifyTransform(); return true
                 }
                 return false
             }
@@ -237,9 +263,9 @@ class GridCanvasView @JvmOverloads constructor(
         scale = targetScale
         offsetX = (offsetX - focusX) * (scale / prev) + focusX
         offsetY = (offsetY - focusY) * (scale / prev) + focusY
+        Log.d(TAG, "zoomTo() scale=$scale off=($offsetX,$offsetY)")
         invalidate()
-        // Se quiser que o mapa reencaixe quando der zoom programático:
-        // refitMapToView()
+        notifyTransform()
     }
 
     // ================= Touch =================
@@ -261,7 +287,7 @@ class GridCanvasView @JvmOverloads constructor(
                 when (tool) {
                     Tool.PEN -> {
                         currentPath = Path().apply { moveTo(wx, wy) }
-                        tempShape = Shape.PenPath(currentPath!!, currentStyle())
+                        tempShape = Shape.PenPath(currentPath!!, currentStyle(), mutableListOf(Pt(wx, wy)))
                         selectedIndex = null
                     }
                     Tool.LINE   -> { tempShape = Shape.Line(wx, wy, wx, wy, currentStyle()); selectedIndex = null }
@@ -299,6 +325,7 @@ class GridCanvasView @JvmOverloads constructor(
                         val mx = (lastX + wx) / 2f
                         val my = (lastY + wy) / 2f
                         currentPath?.quadTo(lastX, lastY, mx, my)
+                        t.points.add(Pt(wx, wy))
                         lastX = wx; lastY = wy
                     }
                     is Shape.Line   -> { t.x2 = wx; t.y2 = wy }
@@ -322,8 +349,7 @@ class GridCanvasView @JvmOverloads constructor(
                         tempShape = null
                         currentPath = null
                     }
-                    Tool.SELECT -> Unit
-                    Tool.ERASER -> Unit
+                    Tool.SELECT, Tool.ERASER -> Unit
                     else -> Unit
                 }
                 invalidate()
@@ -403,7 +429,9 @@ class GridCanvasView @JvmOverloads constructor(
 
     fun resetView() {
         scale = 1f; offsetX = 0f; offsetY = 0f
+        Log.d(TAG, "resetView()")
         invalidate()
+        notifyTransform()
     }
 
     fun setTool(t: Tool) { tool = t; invalidate() }
@@ -417,11 +445,11 @@ class GridCanvasView @JvmOverloads constructor(
 
     /** Define/atualiza o bitmap do mapa e calcula um fit centralizado no viewport atual. */
     fun setMapBitmap(bmp: Bitmap?) {
+        Log.d(TAG, "setMapBitmap() hasBmp=${bmp!=null}, view=$width x $height")
         mapBitmap = bmp
         if (bmp == null) { invalidate(); return }
 
         if (width == 0 || height == 0) {
-            // aguarda medir para calcular a matrix corretamente
             post { setMapBitmap(bmp) }
             return
         }
@@ -441,10 +469,7 @@ class GridCanvasView @JvmOverloads constructor(
         val worldLeft = -offsetX / scale
         val worldTop  = -offsetY / scale
 
-        // escala que faz caber inteiro
         val s = min(worldW / bmp.width, worldH / bmp.height).coerceAtLeast(0f)
-
-        // centraliza no viewport atual
         val drawW = bmp.width * s
         val drawH = bmp.height * s
         val cx = worldLeft + worldW / 2f
@@ -503,5 +528,106 @@ class GridCanvasView @JvmOverloads constructor(
             if (shapes[i].hit(wx, wy, tol)) return i
         }
         return null
+    }
+
+    /** Encaixa o mapa na tela com a ORIGEM DO MUNDO (0,0) no CENTRO do bitmap. */
+    fun fitMapCenteredOrigin() {
+        val bmp = mapBitmap ?: return
+        if (width == 0 || height == 0) {
+            post { fitMapCenteredOrigin() }
+            return
+        }
+
+        val s = min(width.toFloat() / bmp.width, height.toFloat() / bmp.height).coerceAtLeast(0.0001f)
+        scale = s
+        offsetX = width  / 2f
+        offsetY = height / 2f
+
+        mapMatrix.reset()
+        mapMatrix.postTranslate(-bmp.width / 2f, -bmp.height / 2f)
+        Log.d(TAG, "fitMapCenteredOrigin() scale=$scale off=($offsetX,$offsetY)")
+        invalidate()
+        notifyTransform()
+    }
+
+    /** Define o bitmap e já posiciona com a origem do mundo no centro do mapa. */
+    fun setMapBitmapCenteredOrigin(bmp: Bitmap?) {
+        Log.d(TAG, "setMapBitmapCenteredOrigin() hasBmp=${bmp!=null}, view=$width x $height")
+        mapBitmap = bmp
+        if (bmp == null) { invalidate(); return }
+        if (width == 0 || height == 0) {
+            post { setMapBitmapCenteredOrigin(bmp) }
+            return
+        }
+        fitMapCenteredOrigin()
+    }
+
+    // --- listener de transform ---
+    interface OnTransformChangedListener {
+        fun onTransformChanged(scale: Float, offsetX: Float, offsetY: Float)
+    }
+    var transformListener: OnTransformChangedListener? = null
+
+    private fun notifyTransform() {
+        Log.d(TAG, "notifyTransform() scale=$scale, off=($offsetX,$offsetY)")
+        transformListener?.onTransformChanged(scale, offsetX, offsetY)
+    }
+
+    // --- aplicar transform programaticamente (opcional notificar) ---
+    fun setTransform(newScale: Float, ox: Float, oy: Float, notify: Boolean = false) {
+        Log.d(TAG, "setTransform(newScale=$newScale, ox=$ox, oy=$oy, notify=$notify)")
+        scale = newScale.coerceIn(minScale, maxScale)
+        offsetX = ox
+        offsetY = oy
+        invalidate()
+        if (notify) notifyTransform()
+    }
+
+    // ===== persistência: export/import =====
+    private fun Style.toDTO() = CanvasStyleDTO(strokeColor, strokeWidth, fillColor, textColor, textSize)
+    private fun CanvasStyleDTO.toStyle() = Style(strokeColor, strokeWidth, fillColor, textColor, textSize)
+
+    fun exportState(): CanvasState {
+        val list = shapes.map { s ->
+            when (s) {
+                is Shape.PenPath -> ShapeDTO.Pen(s.points.toList(), s.style.toDTO())
+                is Shape.Line    -> ShapeDTO.Line(s.x1, s.y1, s.x2, s.y2, s.style.toDTO())
+                is Shape.RectBox -> ShapeDTO.Rect(s.left, s.top, s.right, s.bottom, s.style.toDTO())
+                is Shape.Circle  -> ShapeDTO.Circle(s.cx, s.cy, s.r, s.style.toDTO())
+                is Shape.TextRun -> ShapeDTO.Text(s.x, s.y, s.text, s.style.toDTO())
+            }
+        }
+        Log.d(TAG, "exportState() shapes=${list.size}")
+        return CanvasState(list)
+    }
+
+    fun importState(state: CanvasState?) {
+        shapes.clear()
+        redoStack.clear()
+        tempShape = null
+        currentPath = null
+        selectedIndex = null
+
+        state?.shapes?.forEach { dto ->
+            when (dto) {
+                is ShapeDTO.Pen -> {
+                    val p = Path()
+                    if (dto.points.isNotEmpty()) {
+                        p.moveTo(dto.points.first().x, dto.points.first().y)
+                        for (i in 1 until dto.points.size) {
+                            val pt = dto.points[i]
+                            p.lineTo(pt.x, pt.y)
+                        }
+                    }
+                    shapes.add(Shape.PenPath(p, dto.style.toStyle(), dto.points.toMutableList()))
+                }
+                is ShapeDTO.Line   -> shapes.add(Shape.Line(dto.x1, dto.y1, dto.x2, dto.y2, dto.style.toStyle()))
+                is ShapeDTO.Rect   -> shapes.add(Shape.RectBox(dto.left, dto.top, dto.right, dto.bottom, dto.style.toStyle()))
+                is ShapeDTO.Circle -> shapes.add(Shape.Circle(dto.cx, dto.cy, dto.r, dto.style.toStyle()))
+                is ShapeDTO.Text   -> shapes.add(Shape.TextRun(dto.x, dto.y, dto.text, dto.style.toStyle()))
+            }
+        }
+        Log.d(TAG, "importState() shapes=${shapes.size}")
+        invalidate()
     }
 }

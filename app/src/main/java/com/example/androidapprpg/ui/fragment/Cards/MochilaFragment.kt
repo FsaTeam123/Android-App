@@ -1,29 +1,38 @@
 package com.example.androidapprpg.ui.fragment.Cards
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.databinding.FragmentMochila2Binding
+import com.example.androidapprpg.utils.activityGameId
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MochilaFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "CardsSession"
+
+    }
 
     private var _binding: FragmentMochila2Binding? = null
     private val binding get() = _binding!!
+
+    @Inject lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,27 +44,35 @@ class MochilaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logSessionInfo()
         setUpUi()
-
     }
 
-    //-----------SET UP UI-----------//
-    private fun setUpUi() = with(binding) {
+    private fun currentGameId(): Long = activityGameId()
 
-        btnClose.setOnClickListener {
-            showCloseSessionDialog()
+    private fun logSessionInfo() {
+        val idJogo = currentGameId()
+        val userId = sessionManager.getUserIdOrNull()
+        val hasToken = !sessionManager.getToken().isNullOrBlank()
+
+        Log.d(TAG, "MochilaFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
+
+        if (idJogo <= 0L) {
+            showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
         }
+    }
 
-
-        btnAnterior.setOnClickListener{
+    private fun setUpUi() = with(binding) {
+        btnClose.setOnClickListener { showCloseSessionDialog() }
+        btnAnterior.setOnClickListener {
             findNavController().navigate(R.id.action_mochila_to_armamento)
         }
-
         btnProximo.setOnClickListener {
             findNavController().navigate(R.id.action_mochila_to_confirmar)
         }
+        // opcional: travar próximo se id inválido
+        // btnProximo.isEnabled = currentGameId() > 0L
     }
-
 
     private fun showCloseSessionDialog() {
         val dialogView = LayoutInflater.from(requireContext())
@@ -69,20 +86,16 @@ class MochilaFragment : Fragment() {
                 show()
             }
 
-        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-            dialog.dismiss()
-        }
+        dialogView.findViewById<Button>(R.id.cancel_button)
+            .setOnClickListener { dialog.dismiss() }
 
-        dialogView.findViewById<Button>(R.id.confirm_button).setOnClickListener { btn ->
-            showCustomToast("Sessão encerrada com sucesso.", requireContext())
-            btn.isEnabled = false
-            dialog.dismiss()
-
-            viewLifecycleOwner.lifecycleScope.launch {
-
-                requireActivity().finish()
+        dialogView.findViewById<Button>(R.id.confirm_button)
+            .setOnClickListener { btn ->
+                showCustomToast("Sessão encerrada com sucesso.", requireContext())
+                btn.isEnabled = false
+                dialog.dismiss()
+                viewLifecycleOwner.lifecycleScope.launch { requireActivity().finish() }
             }
-        }
     }
 
     private fun showCustomToast(message: String, context: Context) {
@@ -96,7 +109,7 @@ class MochilaFragment : Fragment() {
         }
     }
 
-     override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

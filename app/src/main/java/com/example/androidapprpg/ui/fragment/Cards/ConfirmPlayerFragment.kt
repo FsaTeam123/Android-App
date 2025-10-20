@@ -5,27 +5,31 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.databinding.FragmentConfirmPlayerBinding
-import com.example.androidapprpg.databinding.FragmentMochila2Binding
 import com.example.androidapprpg.ui.activity.ActivityGameMaster
+import com.example.androidapprpg.utils.activityGameId
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConfirmPlayerFragment : Fragment() {
 
     private var _binding: FragmentConfirmPlayerBinding? = null
     private val binding get() = _binding!!
+
+    @Inject lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,27 +41,38 @@ class ConfirmPlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logSessionInfo()
         setUpUi()
-
     }
 
-    //-----------SET UP UI-----------//
-    private fun setUpUi() = with(binding) {
+    private fun logSessionInfo() {
+        val idJogo = activityGameId()
+        val userId = sessionManager.getUserIdOrNull()
+        val hasToken = !sessionManager.getToken().isNullOrBlank()
 
-        btnClose.setOnClickListener {
-            showCloseSessionDialog()
+        Log.d("CardsSession", "ConfirmPlayerFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
+
+        if (idJogo <= 0L) {
+            showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
         }
+    }
 
-        btnBack.setOnClickListener{
+    private fun setUpUi() = with(binding) {
+        btnClose.setOnClickListener { showCloseSessionDialog() }
+
+        btnBack.setOnClickListener {
+            // sem bundle — todos os fragments leem da Activity
             findNavController().navigate(R.id.action_confirmar_to_mochila)
         }
 
         btnConfirm.setOnClickListener {
-            val intent = Intent(requireContext(), ActivityGameMaster::class.java)
+            val id = activityGameId()
+            val intent = Intent(requireContext(), ActivityGameMaster::class.java).apply {
+                putExtra(ActivityGameMaster.EXTRA_ID_JOGO, id)
+            }
             startActivity(intent)
         }
     }
-
 
     private fun showCloseSessionDialog() {
         val dialogView = LayoutInflater.from(requireContext())
@@ -71,19 +86,12 @@ class ConfirmPlayerFragment : Fragment() {
                 show()
             }
 
-        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-            dialog.dismiss()
-        }
-
+        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener { dialog.dismiss() }
         dialogView.findViewById<Button>(R.id.confirm_button).setOnClickListener { btn ->
             showCustomToast("Sessão encerrada com sucesso.", requireContext())
             btn.isEnabled = false
             dialog.dismiss()
-
-            viewLifecycleOwner.lifecycleScope.launch {
-
-                requireActivity().finish()
-            }
+            viewLifecycleOwner.lifecycleScope.launch { requireActivity().finish() }
         }
     }
 

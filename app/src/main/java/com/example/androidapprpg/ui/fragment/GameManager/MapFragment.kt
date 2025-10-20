@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -21,6 +21,7 @@ import com.example.androidapprpg.R
 import com.example.androidapprpg.adapter.MapAdapter
 import com.example.androidapprpg.data.model.MapDataModel.MapDataModel
 import com.example.androidapprpg.databinding.FragmentMapBinding
+import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import com.example.androidapprpg.ui.dialogs.MapFragmentNomeDialog
 import com.example.androidapprpg.ui.viewmodel.MapViewModel
 import com.example.androidapprpg.utils.Result
@@ -33,14 +34,21 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-    private val vm: MapViewModel by viewModels()
+    private val vm: MapViewModel by  activityViewModels()
     private lateinit var adapter: MapAdapter
 
+    /** Abre a galeria; se houver mapa selecionado, troca a imagem;
+     *  senão, cria um novo mapa já com essa imagem. */
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
+        val selectedId = adapter.selectedId
         if (uri != null) {
-            vm.addMap(getString(R.string.novo_mapa), uri)
+            if (!selectedId.isNullOrBlank()) {
+                vm.uploadImage(selectedId, uri)               // troca imagem do selecionado
+            } else {
+                vm.createMapWithImage(getString(R.string.novo_mapa), uri) // cria novo mapa
+            }
         }
     }
 
@@ -52,7 +60,6 @@ class MapFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // resultado do diálogo de renomear
         childFragmentManager.setFragmentResultListener(
             MapFragmentNomeDialog.RESULT_KEY, viewLifecycleOwner
         ) { _, bundle ->
@@ -67,21 +74,25 @@ class MapFragment : Fragment() {
         collectState()
         collectEvents()
 
-        vm.refresh()
+        // inicializa com o jogo atual
+        val idJogo = requireActivity().intent.getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+        vm.attachGameAndRefresh(idJogo)
     }
 
     private fun setupRecycler() {
         adapter = MapAdapter(
             onPreview = { showPreview(it) },
-            onEdit = { item -> novoNomeDialog(item) },
-            onDelete = { item -> vm.delete(item.id) },
+            onEdit    = { item -> novoNomeDialog(item) },
+            onDelete  = { item -> vm.deleteMap(item.id) }, // lixeira remove imagem
             onChecked = { item, checked -> vm.setSelected(if (checked) item.id else null) }
         )
         binding.rvMaps.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MapFragment.adapter
             val extraBottom = (12 * resources.displayMetrics.density).toInt()
-            if (paddingBottom < extraBottom) setPadding(paddingLeft, paddingTop, paddingRight, extraBottom)
+            if (paddingBottom < extraBottom) {
+                setPadding(paddingLeft, paddingTop, paddingRight, extraBottom)
+            }
             clipToPadding = false
         }
     }
@@ -91,7 +102,10 @@ class MapFragment : Fragment() {
     }
 
     private fun setupClicks() {
-        binding.btnAddMap.setOnClickListener { pickImage.launch("image/*") }
+        binding.btnAddMap.setOnClickListener {
+            // sempre abre a galeria; a ação é decidida no callback (acima)
+            pickImage.launch("image/*")
+        }
     }
 
     private fun collectState() {
@@ -100,9 +114,9 @@ class MapFragment : Fragment() {
                 vm.state.collect { state ->
                     adapter.selectedId = state.selectedId
                     when (val r = state.result) {
-                        is Result.Loading -> adapter.submitList(emptyList())
-                        is Result.Success -> adapter.submitList(r.data)
-                        is Result.Error -> {
+                        is Result.Loading  -> adapter.submitList(emptyList())
+                        is Result.Success  -> adapter.submitList(r.data)
+                        is Result.Error    -> {
                             adapter.submitList(emptyList())
                             showCustomToast(r.message, requireContext())
                         }
@@ -126,7 +140,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    fun showCustomToast(message: String, context: Context) {
+    private fun showCustomToast(message: String, context: Context) {
         val layout = LayoutInflater.from(context).inflate(R.layout.toast_layout, null)
         layout.findViewById<TextView>(R.id.toast_message).text = message
         Toast(context).apply {

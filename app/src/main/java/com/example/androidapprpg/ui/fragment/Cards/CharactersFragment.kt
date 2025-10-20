@@ -4,27 +4,35 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.databinding.FragmentCharactersBinding
+import com.example.androidapprpg.utils.activityGameId
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CharactersFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "CardsSession"
+
+    }
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
+
+    @Inject lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,23 +44,29 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logSessionInfo()
         setUpUi()
-
     }
 
-    //-----------SET UP UI-----------//
+    private fun currentGameId(): Long = activityGameId()
+
+    private fun logSessionInfo() {
+        val idJogo = currentGameId()
+        val userId = sessionManager.getUserIdOrNull()
+        val hasToken = !sessionManager.getToken().isNullOrBlank()
+        Log.d(TAG, "CharactersFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
+
+        if (idJogo <= 0L) showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
+    }
+
     private fun setUpUi() = with(binding) {
-        // Close → só dialog de confirmação
         btnClose.setOnClickListener { showCloseSessionDialog() }
-
-
-
         btnProximo.setOnClickListener {
             findNavController().navigate(R.id.action_personagens_to_poderes)
         }
+        btnProximo.isEnabled = currentGameId() > 0L
     }
 
-    /** Dialog de confirmação de saída */
     private fun showCloseSessionDialog() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_exit_game, null, false)
@@ -65,19 +79,12 @@ class CharactersFragment : Fragment() {
                 show()
             }
 
-        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-            dialog.dismiss()
-        }
-
+        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener { dialog.dismiss() }
         dialogView.findViewById<Button>(R.id.confirm_button).setOnClickListener { btn ->
             showCustomToast("Sessão encerrada com sucesso.", requireContext())
             btn.isEnabled = false
             dialog.dismiss()
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                // aqui só finaliza a activity atual (sem animação)
-                requireActivity().finish()
-            }
+            viewLifecycleOwner.lifecycleScope.launch { requireActivity().finish() }
         }
     }
 
@@ -91,7 +98,6 @@ class CharactersFragment : Fragment() {
             show()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

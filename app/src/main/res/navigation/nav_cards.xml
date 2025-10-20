@@ -5,13 +5,15 @@
     android:id="@+id/nav_cards"
     app:startDestination="@id/cartasRoot">
 
-    <!-- PERSONAGENS (start) -->
+    <!-- PERSONAGENS -->
     <fragment
         android:id="@+id/cartasRoot"
         android:name="com.example.androidapprpg.ui.fragment.Cards.CharactersFragment"
         android:label="@string/Personagem"
         tools:layout="@layout/fragment_characters">
-            <action android:id="@+id/action_personagens_to_poderes"   app:destination="@id/powerRoot"/>
+        <action
+            android:id="@+id/action_personagens_to_poderes"
+            app:destination="@id/powerRoot" />
     </fragment>
 
     <!-- PODERES -->
@@ -20,8 +22,12 @@
         android:name="com.example.androidapprpg.ui.fragment.Cards.PowerFragment"
         android:label="@string/poder"
         tools:layout="@layout/fragment_power">
-                <action android:id="@+id/action_poderes_to_personagens" app:destination="@id/cartasRoot" />
-                <action android:id="@+id/action_poderes_to_magias" app:destination="@id/magiaRoot"/>
+        <action
+            android:id="@+id/action_poderes_to_personagens"
+            app:destination="@id/cartasRoot" />
+        <action
+            android:id="@+id/action_poderes_to_magias"
+            app:destination="@id/magiaRoot" />
     </fragment>
 
     <!-- MAGIAS -->
@@ -30,18 +36,26 @@
         android:name="com.example.androidapprpg.ui.fragment.Cards.MagiaFragment"
         android:label="@string/magia"
         tools:layout="@layout/fragment_magia">
-             <action android:id="@+id/action_magias_to_poderes"   app:destination="@id/powerRoot"/>
-             <action android:id="@+id/action_magias_to_armamento"   app:destination="@id/armasRoot"/>
+        <action
+            android:id="@+id/action_magias_to_poderes"
+            app:destination="@id/powerRoot" />
+        <action
+            android:id="@+id/action_magias_to_armamento"
+            app:destination="@id/armasRoot" />
     </fragment>
 
-    <!-- ARMAMENTO -->
+    <!-- ARMAS -->
     <fragment
         android:id="@+id/armasRoot"
         android:name="com.example.androidapprpg.ui.fragment.Cards.ArmasFragment"
         android:label="@string/arma"
         tools:layout="@layout/fragment_armas">
-            <action android:id="@+id/action_armamento_to_magias"   app:destination="@id/magiaRoot"/>
-            <action android:id="@+id/action_armamento_to_mochila" app:destination="@id/mochilaRoot"/>
+        <action
+            android:id="@+id/action_armamento_to_magias"
+            app:destination="@id/magiaRoot" />
+        <action
+            android:id="@+id/action_armamento_to_mochila"
+            app:destination="@id/mochilaRoot" />
     </fragment>
 
     <!-- MOCHILA -->
@@ -50,23 +64,29 @@
         android:name="com.example.androidapprpg.ui.fragment.Cards.MochilaFragment"
         android:label="@string/mochila"
         tools:layout="@layout/fragment_mochila2">
-        <action android:id="@+id/action_mochila_to_armamento"   app:destination="@id/armasRoot"/>
-        <action android:id="@+id/action_mochila_to_confirmar"   app:destination="@id/confirmarRoot"/>
+        <action
+            android:id="@+id/action_mochila_to_armamento"
+            app:destination="@id/armasRoot" />
+        <action
+            android:id="@+id/action_mochila_to_confirmar"
+            app:destination="@id/confirmPlayerFragment" />
     </fragment>
 
-    <!-- CONFIRMAR SESSÃO -->
+    <!-- CONFIRMAR -->
     <fragment
-        android:id="@+id/confirmarRoot"
+        android:id="@+id/confirmPlayerFragment"
         android:name="com.example.androidapprpg.ui.fragment.Cards.ConfirmPlayerFragment"
         android:label="@string/confirmar"
         tools:layout="@layout/fragment_confirm_player">
-        <action android:id="@+id/action_confirmar_to_mochila" app:destination="@+id/mochilaRoot"/>
 
+        <!-- ARGUMENTO necessário para gerar ConfirmPlayerFragmentArgs -->
+        <argument
+            android:name="idJogo"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_confirmar_to_mochila"
+            app:destination="@id/mochilaRoot" />
     </fragment>
-
-
-
-
-
 
 </navigation>

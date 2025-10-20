@@ -1,0 +1,148 @@
+@GET
+
+{
+        "idJogo": 25,
+        "master": {
+            "idUsuario": 19,
+            "nome": "Guilherme Cassiano",
+            "nickname": "El Mago",
+            "sexo": {
+                "idSexo": 1,
+                "nome": "Masculino",
+                "ativo": 1
+            },
+            "senha": "$2a$10$6sgyFAJeA.dmZCRNVixowelKPuPNnsQlNVDGwsI81kkeIzPAyKsEi",
+            "email": "guilherme.malfara@gmail.com",
+            "perfil": {
+                "idPerfil": 2,
+                "nome": "Admin",
+                "descricao": "usuário para Cadastro e Dev",
+                "ativo": 1
+            },
+            "dtcCriacao": "2025-08-19T20:30:42.342587",
+            "ativo": 1,
+            "online": 1
+        },
+        "titulo": "2",
+        "qtdPessoas": 11,
+        "isEspecificClass": 0,
+        "nivelInicial": 4,
+        "tipoJogo": {
+            "idTipoJogo": 2,
+            "nome": "Privado",
+            "ativo": 2
+        },
+        "geracaoMundo": {
+            "idGeracaoMundo": 1,
+            "nome": "Tormenta",
+            "descricao": "Teste",
+            "ativo": 1
+        },
+        "estiloCampanha": {
+            "idEstiloCampanha": 1,
+            "nome": "Estendida",
+            "descricao": "Teste",
+            "ativo": 1
+        },
+        "historia": {
+            "idHistoria": 1,
+            "nome": "Nenhuma",
+            "descricao": "Teste",
+            "ativo": 1
+        },
+        "tema": {
+            "idTema": 1,
+            "nome": "Aventura",
+            "descricao": "Teste",
+            "ativo": 1
+        },
+        "senha": "2222",
+        "dataCriacao": "2025-08-30T00:03:06.287157",
+        "ativo": 1,
+        "playerAtivos": null
+    }
+
+
+
+    ---------------------------------//------------------------------//---------------------------------------
+
+    @POST
+
+    REQUEST:
+    {
+      "masterId": 0,
+      "titulo": "string",
+      "qtdPessoas": 0,
+      "isEspecificClass": 0,
+      "nivelInicial": 0,
+      "tipoJogoId": 0,
+      "geracaoMundoId": 0,
+      "estiloCampanhaId": 0,
+      "historiaId": 0,
+      "temaId": 0,
+      "senha": "string",
+      "ativo": 0
+    }
+
+    RESPONSE:
+    {
+      "idJogo": 0,
+      "master": {
+        "idUsuario": 0,
+        "nome": "string",
+        "nickname": "string",
+        "email": "string",
+        "sexo": {
+          "idSexo": 0,
+          "nome": "string",
+          "ativo": 0
+        },
+        "perfil": {
+          "idPerfil": 0,
+          "nome": "string",
+          "descricao": "string",
+          "ativo": 0
+        },
+        "dtcCriacao": "2025-10-13T23:17:25.950Z",
+        "ativo": 0,
+        "online": 0
+      },
+      "titulo": "string",
+      "qtdPessoas": 0,
+      "isEspecificClass": 0,
+      "nivelInicial": 0,
+      "tipoJogo": {
+        "idTipoJogo": 0,
+        "nome": "string",
+        "ativo": 0
+      },
+      "geracaoMundo": {
+        "idGeracaoMundo": 0,
+        "nome": "string",
+        "descricao": "string",
+        "ativo": 0
+      },
+      "estiloCampanha": {
+        "idEstiloCampanha": 0,
+        "nome": "string",
+        "descricao": "string",
+        "ativo": 0
+      },
+      "historia": {
+        "idHistoria": 0,
+        "nome": "string",
+        "descricao": "string",
+        "ativo": 0
+      },
+      "tema": {
+        "idTema": 0,
+        "nome": "string",
+        "descricao": "string",
+        "ativo": 0
+      },
+      "senha": "string",
+      "dataCriacao": "2025-10-13T23:17:25.950Z",
+      "ativo": 0
+    }
+
+

@@ -8,7 +8,6 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Proxy
 
-
 class WsEventListener(private val albHost: String) : EventListener() {
 
     companion object { private const val TAG = "WS_EVT" }

@@ -2,7 +2,6 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addNotePanelRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,38 +28,7 @@
             android:letterSpacing="0.04"
             android:paddingBottom="8dp"/>
 
-        <!-- Título (sem borda; ícone editar à direita) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/titulo"
-            app:hintTextColor="@color/DouradoEspecial"
-            app:boxStrokeColor="@drawable/textinput_box_color"
-            app:counterTextColor="@color/DouradoEspecial"
-            app:counterEnabled="true"
-            app:counterMaxLength="80"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/edit_1_svgrepo_com"
-            app:endIconTint="@color/DouradoEspecial"
-            app:endIconContentDescription="@string/editar">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:maxLines="1"
-                android:textColor="@android:color/white"
-                android:textColorHint="#88FFFFFF"
-                tools:text="Título"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-
-
+        <!-- Campo Único: Anotação -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputNote"
             android:layout_width="match_parent"
@@ -82,8 +50,7 @@
                 android:gravity="top|start"
                 android:imeOptions="actionDone"
                 android:textColor="@android:color/white"
-                android:textColorHint="#88FFFFFF"
-                tools:text="Alguma anotação importante..."/>
+                android:textColorHint="#88FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Ações -->

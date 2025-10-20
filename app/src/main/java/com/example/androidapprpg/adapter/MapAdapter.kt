@@ -37,6 +37,7 @@ class MapAdapter(
             // imagem
             Glide.with(imgThumb)
                 .load(imageSource(item))
+                .signature(com.bumptech.glide.signature.ObjectKey("${item.id}:${item.imageVersion}"))
                 .centerCrop()
                 .placeholder(R.drawable.sample_map)
                 .error(R.drawable.sample_map)

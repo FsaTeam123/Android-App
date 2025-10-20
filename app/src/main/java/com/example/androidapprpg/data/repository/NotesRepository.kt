@@ -1,11 +1,10 @@
 package com.example.androidapprpg.data.repository
 
 import com.example.androidapprpg.data.model.NotesDataModel.Note
-import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {
-    val notes: Flow<List<Note>>
-    suspend fun add(title: String, text: String)
-    suspend fun update(id: Long, title: String, text: String)
-    suspend fun delete(id: Long)
+    suspend fun getByGame(jogoId: Long): List<Note>
+    suspend fun create(jogoId: Long, anotacao: String): Note
+    suspend fun update(idAnotacao: Long, jogoId: Long, anotacao: String): Note
+    suspend fun delete(idAnotacao: Long)
 }

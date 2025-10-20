@@ -140,4 +140,36 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Shape.LargeX" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="Shape.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Chip.Meta" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/DarkSiena</item>
+        <item name="chipStrokeColor">@color/BordasDouradas</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/DouradoEspecial</item>
+        <item name="rippleColor">@color/DouradoEspecial</item>
+        <item name="android:textSize">12sp</item>
+        <item name="chipMinHeight">28dp</item>
+        <item name="shapeAppearance">@style/Shape.LargeX</item>
+    </style>
+
+    <style name="Widget.IconButton.Ghost" parent="">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+
+
+
+
 </resources>

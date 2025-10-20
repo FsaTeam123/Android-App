@@ -1,127 +1,245 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="10dp"
-    app:cardBackgroundColor="@color/DarkSiena">
+    android:clickable="true"
+    android:layout_marginVertical="10dp"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    app:cardUseCompatPadding="false"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/BordasDouradas"
+    app:cardBackgroundColor="@color/VermelhoEscuro"
+    app:shapeAppearanceOverlay="@style/Shape.LargeX">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/retangulo_arredondado"
-        android:paddingStart="12dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="8dp">
+        android:layout_height="wrap_content">
 
-        <!-- Ícone -->
-        <ImageView
-            android:id="@+id/gameIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="Imagem_jogo"
-            android:paddingStart="5dp"
-            android:src="@drawable/baseline_sword"
+        <!-- HEADER -->
+        <FrameLayout
+            android:id="@+id/headerBg"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:background="@drawable/bg_card_header_gradient"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Nome do jogo -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/gameIcon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="14dp"
+            android:src="@drawable/baseline_sword"
+            app:shapeAppearanceOverlay="@style/Shape.Circle"
+            app:strokeColor="@color/DouradoEspecial"
+            app:strokeWidth="1dp"
+            app:tint="@color/DouradoEspecial"
+            app:layout_constraintTop_toTopOf="@id/headerBg"
+            app:layout_constraintBottom_toBottomOf="@id/headerBg"
+            app:layout_constraintStart_toStartOf="parent"/>
+
         <TextView
             android:id="@+id/gameNameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/cinzel_font_bold"
-            android:paddingStart="5dp"
-            android:paddingBottom="2dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="Ordem do Dragão"
-            android:textColor="@color/BordasDouradas"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@id/enterButton"
+            android:textColor="@color/DouradoEspecial"
+            android:textSize="18sp"
+            android:fontFamily="@font/cinzel_font_bold"
+            app:layout_constrainedWidth="true"
             app:layout_constraintStart_toEndOf="@id/gameIcon"
-            app:layout_constraintTop_toTopOf="@id/gameIcon" />
+            app:layout_constraintEnd_toStartOf="@id/actionsRow"
+            app:layout_constraintTop_toTopOf="@id/headerBg"
+            app:layout_constraintBottom_toBottomOf="@id/headerBg"/>
 
-        <!-- Mestre: -->
-        <TextView
-            android:id="@+id/mestreLabel"
+        <LinearLayout
+            android:id="@+id/actionsRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mestre:"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@id/gameNameTextView"
-            app:layout_constraintTop_toBottomOf="@id/gameNameTextView" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/headerBg"
+            app:layout_constraintBottom_toBottomOf="@id/headerBg">
 
-        <TextView
-            android:id="@+id/mestreValue"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/btnEditGame"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                style="@style/Widget.IconButton.Ghost"
+                android:contentDescription="@string/editar"
+                android:src="@drawable/edit_1_svgrepo_com"
+                app:tint="@color/DouradoEspecial"/>
+
+            <ImageButton
+                android:id="@+id/btnDeleteGame"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                style="@style/Widget.IconButton.Ghost"
+                android:contentDescription="@string/apagar"
+                android:src="@drawable/delete_filled_svgrepo_com"
+                app:tint="@color/DouradoEspecial"/>
+        </LinearLayout>
+
+        <!-- DETALHES (subiu para logo abaixo do header) -->
+        <LinearLayout
+            android:id="@+id/detailsCol"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Thrain"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/mestreLabel"
-            app:layout_constraintStart_toEndOf="@id/mestreLabel" />
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/headerBg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/enterButton">
 
-        <!-- Nível: -->
-        <TextView
-            android:id="@+id/nivelLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nível:"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@id/mestreLabel"
-            app:layout_constraintTop_toBottomOf="@id/mestreLabel" />
+            <!-- Mestre -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/nivelValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Difícil"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/nivelLabel"
-            app:layout_constraintStart_toEndOf="@id/nivelLabel" />
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/fire_svgrepo_com"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="@string/mestre" />
 
-        <!-- Jogadores: -->
-        <TextView
-            android:id="@+id/jogadoresLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Numero de Jogadores:"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@id/nivelLabel"
-            app:layout_constraintTop_toBottomOf="@id/nivelLabel" />
+                <TextView
+                    android:id="@+id/mestreLabelTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mestre"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:layout_marginEnd="6dp"/>
 
-        <TextView
-            android:id="@+id/jogadoresValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="3/5"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/jogadoresLabel"
-            app:layout_constraintStart_toEndOf="@id/jogadoresLabel" />
+                <TextView
+                    android:id="@+id/mestreValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Thrain"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/cinzel_regular"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
-        <!-- Botão Entrar -->
-        <Button
+            <!-- Nível -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/swords"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="@string/nivel" />
+
+                <TextView
+                    android:id="@+id/nivelLabelTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nivel"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/nivelValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/cinzel_regular"/>
+            </LinearLayout>
+
+            <!-- Jogadores -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/users_svgrepo_com__1_"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="@string/numero_de_jogadores" />
+
+                <TextView
+                    android:id="@+id/jogadoresLabelTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/numero_de_jogadores"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:textColor="@color/DouradoEspecial"
+                    android:fontFamily="@font/cinzel_font_bold"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/jogadoresValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3/5"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/cinzel_regular"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- CTA “Entrar” -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/enterButton"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/DouradoEspecial"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="137dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/cinzel_font_bold"
             android:text="entrar"
+            android:textAllCaps="false"
             android:textColor="@color/VermelhoEscuro"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:backgroundTint="@color/DouradoEspecial"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/login_bracket_svgrepo_com"
+            app:iconPadding="8dp"
+            app:iconTint="@color/VermelhoEscuro"
+            app:layout_constraintTop_toTopOf="@id/detailsCol"
+            app:layout_constraintBottom_toBottomOf="@id/detailsCol"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

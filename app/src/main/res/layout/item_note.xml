@@ -5,14 +5,15 @@
     android:id="@+id/cardNote"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="7dp"
     android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="18dp"
     app:cardElevation="4dp"
     app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
     app:cardBackgroundColor="@color/VermelhoEscuro"
     app:strokeColor="@color/BordasDouradas"
     app:strokeWidth="1dp"
@@ -22,83 +23,85 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp">
+        android:paddingTop="14dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="14dp">
 
-        <!-- Título -->
-        <TextView
-            android:id="@+id/noteTitle"
+        <!-- CABEÇALHO: título (opcional) + ações -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/titulo_notas"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/cinzel_font_bold"
-            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/actionsRow"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Ações (editar/apagar) -->
-        <LinearLayout
-            android:id="@+id/actionsRow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            <!-- Ações (editar / apagar) -->
+            <LinearLayout
+                android:id="@+id/actionsRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageButton
-                android:id="@+id/btnEdit"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                <ImageButton
+                    android:id="@+id/btnEdit"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    android:padding="6dp"
+                    android:src="@drawable/edit_1_svgrepo_com"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="@string/editar" />
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/retangulo_borda_fundo_transparente"
+                    android:padding="6dp"
+                    android:src="@drawable/delete_filled_svgrepo_com"
+                    app:tint="@color/DouradoEspecial"
+                    android:contentDescription="@string/apagar" />
+            </LinearLayout>
+
+            <!-- “Título-frase” (opcional) -->
+            <TextView
+                android:id="@+id/noteTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/retangulo_borda_fundo_transparente"
-                android:padding="6dp"
-                app:tint="@color/DouradoEspecial"
-                android:src="@drawable/edit_1_svgrepo_com"
-                android:contentDescription="@string/editar" />
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cinzel_font_bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/actionsRow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageButton
-                android:id="@+id/btnDelete"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/retangulo_borda_fundo_transparente"
-                android:padding="6dp"
-                app:tint="@color/DouradoEspecial"
-                android:src="@drawable/delete_filled_svgrepo_com"
-                android:contentDescription="@string/apagar" />
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/headerBottom"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="noteTitle,actionsRow"
-            app:barrierAllowsGoneWidgets="true" />
-
-        <!-- Conteúdo da nota -->
+        <!-- CONTEÚDO -->
         <TextView
             android:id="@+id/noteContent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/retangulo_borda_fundo_transparente"
-            android:padding="12dp"
-            android:text="@string/conteudo_nota"
+            android:layout_marginTop="10dp"
+            android:lineSpacingExtra="6dp"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:fontFamily="@font/cinzel_regular"
-            android:lineSpacingExtra="6dp"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/headerBottom"
+            android:maxLines="6"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toBottomOf="@id/header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

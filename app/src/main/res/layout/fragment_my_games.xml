@@ -5,62 +5,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_game_screen_background"
+    android:background="@color/fundo_preto_claro"
     tools:context=".ui.fragment.Home.MyGamesFragment">
 
-    <!-- Barra superior fixa -->
-
-    <!-- Linha dourada abaixo da barra -->
+    <!-- Top bar -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:background="@color/VermelhoEscuro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Título -->
+        <!-- Spacer com a MESMA largura do botão -->
+        <Space
+            android:id="@+id/leftSpacer"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Botão fechar ao lado do título -->
+        <!-- Botão fechar à direita -->
+        <ImageView
+            android:id="@+id/btnFechar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/fechar"
+            android:src="@drawable/close_circle_svgrepo_com"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
+        <!-- Título centralizado ENTRE spacer e botão -->
         <TextView
-            android:id="@+id/titleNewGame"
-            android:layout_width="254dp"
-            android:layout_height="49dp"
-            android:layout_marginStart="64dp"
+            android:id="@+id/titleMyGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/cinzel_font_bold"
             android:text="@string/Meus_Jogos"
             android:textColor="@color/DouradoEspecial"
-            android:textSize="35sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="28sp"
+            android:includeFontPadding="false"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintStart_toEndOf="@id/leftSpacer"
+            app:layout_constraintEnd_toStartOf="@id/btnFechar"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.516" />
-
-        <ImageView
-            android:id="@+id/btnFechar"
-            android:layout_width="56dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="16dp"
-            android:contentDescription="@string/fechar"
-            android:src="@drawable/close_circle_svgrepo_com"
-            app:layout_constraintBottom_toBottomOf="@id/titleNewGame"
-            app:layout_constraintStart_toEndOf="@id/titleNewGame"
-            app:layout_constraintTop_toTopOf="@id/titleNewGame" />
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Linha dourada -->
     <View
         android:id="@+id/separadorDourado"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginEnd="0dp"
         android:background="@color/DouradoEspecial"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Campo de busca -->
     <EditText
@@ -83,9 +89,9 @@
         android:textSize="17sp"
         app:layout_constraintTop_toBottomOf="@id/separadorDourado"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Lista de jogos -->
+    <!-- Recycler -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMyGames"
         android:layout_width="0dp"
@@ -96,6 +102,32 @@
         app:layout_constraintTop_toBottomOf="@id/searchEditText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Progress (usado no Fragment) -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/searchEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Empty (usado no Fragment) -->
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nada_encontrado"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/searchEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

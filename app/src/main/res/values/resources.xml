@@ -5,6 +5,8 @@
         <item>Selecione...</item>
     </string-array>
 
+    <integer name="neg1">-1</integer>
+
 
 
 

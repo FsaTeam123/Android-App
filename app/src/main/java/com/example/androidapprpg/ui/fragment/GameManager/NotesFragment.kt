@@ -1,6 +1,7 @@
 package com.example.androidapprpg.ui.fragment.GameManager
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.example.androidapprpg.databinding.FragmentNotesBinding
 import com.example.androidapprpg.adapter.NotesAdapter
 import com.example.androidapprpg.data.model.NotesDataModel.Note
 import com.example.androidapprpg.ui.dialogs.AddNoteDialog
+import com.example.androidapprpg.utils.gmActivityGameId
 import com.example.androidapprpg.ui.viewmodel.NotesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,6 +31,9 @@ class NotesFragment : Fragment() {
     private val viewModel: NotesViewModel by viewModels()
     private lateinit var adapter: NotesAdapter
 
+    // evita refresh duplicado ao recriar a View
+    private var didInit = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,10 +46,19 @@ class NotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // lê SEMPRE da Activity host (ActivityGameMaster)
+        val jogoId = gmActivityGameId()
+        Log.d("NotesFrag", "onViewCreated jogoId=$jogoId")
+
+        if (!didInit && jogoId > 0L) {
+            didInit = true
+            viewModel.setGameAndRefresh(jogoId) // mantém sua API como está (Long)
+        }
+
         // RecyclerView
         adapter = NotesAdapter(
-            onClick = { note -> openEditDialog(note) }, // toque curto abre edição
-            onEdit = { note -> openEditDialog(note) },
+            onClick  = { note -> openEditDialog(note) },
+            onEdit   = { note -> openEditDialog(note) },
             onDelete = { note -> confirmDelete(note) }
         )
         binding.rvNotes.layoutManager = LinearLayoutManager(requireContext())
@@ -58,59 +72,51 @@ class NotesFragment : Fragment() {
         // Observa fluxo de notas
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.notes.collect { list ->
-                    adapter.submitList(list)
-                }
+                viewModel.notes.collect { list -> adapter.submitList(list) }
             }
         }
 
         // Nova nota
         binding.fabAddNote.setOnClickListener { openCreateDialog() }
 
-        // Resultado do diálogo
+        // Resultado do diálogo (somente texto agora)
         childFragmentManager.setFragmentResultListener(
             AddNoteDialog.REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
             val action = bundle.getString(AddNoteDialog.RESULT_ACTION)
-            val title = bundle.getString(AddNoteDialog.RESULT_TITLE).orEmpty().trim()
-            val text  = bundle.getString(AddNoteDialog.RESULT_TEXT).orEmpty().trim()
+            val text   = bundle.getString(AddNoteDialog.RESULT_TEXT).orEmpty().trim()
+            val id     = bundle.getLong(AddNoteDialog.RESULT_NOTE_ID, -1L)
 
             when (action) {
-                AddNoteDialog.ACTION_CREATE -> {
-                    if (title.isNotEmpty() || text.isNotEmpty()) {
-                        viewModel.addNote(title, text)
-                    }
+                AddNoteDialog.ACTION_CREATE -> if (text.isNotEmpty()) {
+                    viewModel.addNote(text)           // POST
                 }
-                AddNoteDialog.ACTION_EDIT -> {
-                    val id = bundle.getLong(AddNoteDialog.RESULT_NOTE_ID, -1L)
-                    if (id > 0 && (title.isNotEmpty() || text.isNotEmpty())) {
-                        viewModel.updateNote(id, title, text)
-                    }
+                AddNoteDialog.ACTION_EDIT -> if (id > 0 && text.isNotEmpty()) {
+                    viewModel.updateNote(id, text)    // PUT
                 }
             }
         }
     }
 
     private fun openCreateDialog() {
-        AddNoteDialog.newCreate()
-            .show(childFragmentManager, AddNoteDialog.TAG)
+        AddNoteDialog.newCreate().show(childFragmentManager, AddNoteDialog.TAG)
     }
 
     private fun openEditDialog(note: Note) {
         AddNoteDialog.newEdit(
-            id = note.id,
-            title = note.title.orEmpty(),
-            text = note.text
+            id = note.idAnotacao,
+            text = note.anotacao
         ).show(childFragmentManager, AddNoteDialog.TAG)
     }
 
     private fun confirmDelete(note: Note) {
+        val preview = previewFrom(note.anotacao)
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Excluir nota?")
-            .setMessage("Tem certeza que deseja excluir \"${note.title.orEmpty()}\"?")
+            .setMessage("Tem certeza que deseja excluir \"$preview\"?")
             .setPositiveButton("Excluir") { d, _ ->
-                viewModel.deleteNote(note.id)
+                viewModel.deleteNote(note.idAnotacao)
                 d.dismiss()
             }
             .setNegativeButton("Cancelar") { d, _ -> d.dismiss() }
@@ -120,5 +126,13 @@ class NotesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    /* ===================== helpers ===================== */
+
+    private fun previewFrom(text: String, max: Int = 40): String {
+        val firstLine = text.lineSequence().firstOrNull().orEmpty().trim()
+        val base = if (firstLine.isNotEmpty()) firstLine else text.trim()
+        return if (base.length <= max) base else base.substring(0, max).trimEnd() + "…"
     }
 }

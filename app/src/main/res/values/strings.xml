@@ -146,6 +146,14 @@
     <string name="confirmar_message_oraculo">Os oráculos aguardam teu sinal. Desejas prosseguir?</string>
     <string name="confirmar_messag_feitiço">Feitiço pronto. Lançar agora?</string>
     <string name="confirmar_message_lamina">A lâmina está afiada e o mapa traçado. Confirmar a missão?</string>
+    <string name="nada_encontrado">Não encontramos nenhum jogo!</string>
+    <string name="mestre">Mestre</string>
+    <string name="numero_de_jogadores">Players</string>
+    <string name="editar_jogo">Editar Jogo</string>
+    <string name="senha_opcional">Senha Opcional</string>
+    <string name="atualizar">atualizar</string>
+    <string name="ativo">ativo</string>
+    <string name="selecione_um_mapa">Selecione um mapa</string>
 
 
 

@@ -1,65 +1,135 @@
 package com.example.androidapprpg.ui.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.androidapprpg.data.model.ChatDataModel.ChatMessage
-import com.example.androidapprpg.data.repository.SessionManager
+import com.example.androidapprpg.data.repository.AgenteRepository   // <-- injeta o REPOSITORY
 import com.example.androidapprpg.utils.websocket.ChatSocket
+import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor(private val socket: ChatSocket, private val session: SessionManager) : ViewModel() {
+class ChatViewModel @Inject constructor(
+    private val transport: ChatSocket,
+    private val agenteRepository: AgenteRepository        // <-- aqui
+    // Se quiser manter o service direto, troque a linha acima por:
+    // private val agente: AgenteService
+) : ViewModel() {
 
-    companion object { private const val TAG = "CHAT_VM" }
+    private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
+    val messages = _messages.asStateFlow()
 
-    val meId: String = "me" // troque se tiver identificação do user
+    fun subscribe(chatId: String) {
+        transport.connectIfNeeded()
+        transport.subscribe(chatId) { body ->
+            parseIncoming(body)?.let { append(it) }
+        }
+    }
 
-    private val _messages = MutableLiveData<List<ChatMessage>>(emptyList())
-    val messages: LiveData<List<ChatMessage>> = _messages
+    fun sendMessage(
+        chatId: String,
+        rawText: String,
+        scope: String? = "GLOBAL",
+        senderId: Long = currentUserId(),
+        senderNick: String = currentUserNick() ?: "Você"
+    ) {
+        val text = rawText.trim()
+        if (text.isEmpty()) return
 
-    private var listenJob: Job? = null
-    private var currentChatId: String? = null
+        // 1) mostra a mensagem do usuário
+        val userMsg = ChatMessage(senderId, senderNick, text, scope = scope)
+        append(userMsg)
 
-    fun connect(chatId: String) {
-        if (currentChatId == chatId) return
+        // 2) tenta mandar via STOMP (ok se WS estiver off; só não chega)
+        transport.send(chatId, userMsg)
 
-        val wasConnected = currentChatId != null
-        currentChatId = chatId
+        // 3) fallback HTTP quando mencionar @agente
+        if (mentionsAgent(text)) {
+            val idxPlaceholder = appendPlaceholder(scope)
 
-        if (wasConnected) socket.disconnect()
+            viewModelScope.launch {
+                val pergunta = extractAgentQuestion(text)
+                val answer = runCatching {
+                    agenteRepository.consultar(pergunta)
+                    // Se usar o service direto:
+                    // val resp = agente.consulta(pergunta)
+                    // if (!resp.isSuccessful) throw RuntimeException("Agente HTTP ${resp.code()}")
+                    // resp.body().orEmpty()
+                }.getOrElse {
+                    "Desculpa, não consegui falar com o agente agora."
+                }
 
-        val headers = emptyMap<String, String>()
-
-        Log.d(TAG, "connect(chatId=$chatId) headers=${headers.keys}")
-        socket.connect(chatId, headers)
-
-        listenJob?.cancel()
-        listenJob = viewModelScope.launch {
-            socket.messages().collectLatest { msg ->
-                Log.d(TAG, "recebido do socket: $msg")
-                _messages.postValue(_messages.value.orEmpty() + msg)
+                replacePlaceholder(
+                    idxPlaceholder,
+                    ChatMessage(
+                        senderId = -1L,
+                        senderNick = "Agente",
+                        text = answer,
+                        scope = scope
+                    )
+                )
             }
         }
     }
 
-    fun send(text: String, from: String? = meId) {
-        val chatId = currentChatId ?: return
-        val trimmed = text.trim()
-        if (trimmed.isEmpty()) return
+    // ---- helpers de estado/UI ----
+    private fun append(m: ChatMessage) { _messages.value = _messages.value + m }
 
-        val msg = ChatMessage(from = from, text = trimmed, ts = System.currentTimeMillis())
-        Log.d(TAG, "enviando: $msg")
-        // Sem append otimista: o broker devolve (evita duplicata)
-        socket.send(chatId, msg)
+    private fun appendPlaceholder(scope: String?): Int {
+        val list = _messages.value.toMutableList()
+        val ph = ChatMessage(
+            senderId = -1L,
+            senderNick = "Agente",
+            text = "⌛ consultando...",
+            scope = scope
+        )
+        list += ph
+        _messages.value = list
+        return list.lastIndex
     }
 
-    override fun onCleared() {
-        listenJob?.cancel()
-        socket.disconnect()
-        super.onCleared()
+    private fun replacePlaceholder(index: Int, msg: ChatMessage) {
+        val list = _messages.value.toMutableList()
+        if (index in list.indices && list[index].senderId == -1L) {
+            list[index] = msg
+            _messages.value = list
+        } else {
+            _messages.value = list + msg
+        }
     }
+
+    // ---- @agente ----
+    private fun mentionsAgent(text: String) =
+        text.contains("@agente", ignoreCase = true)
+
+    private fun extractAgentQuestion(text: String): String {
+        val i = text.indexOf("@agente", ignoreCase = true)
+        return if (i >= 0) text.substring(i + 7).trim(' ', ':', '-', '.', '?') else text
+    }
+
+    // ---- parse das mensagens vindas do servidor ----
+    private fun parseIncoming(json: String): ChatMessage? = runCatching {
+        val el = JsonParser.parseString(json).asJsonObject
+        val senderId   = el["senderId"]?.asLong ?: 0L
+        val senderNick = el["senderNick"]?.asString ?: "?"
+        val text       = el["text"]?.asString ?: ""
+        val scope      = el["scope"]?.asString
+        val tsMillis = when {
+            el.has("tsMillis") -> el["tsMillis"].asLong
+            el.has("ts") && el["ts"].isJsonPrimitive && el["ts"].asJsonPrimitive.isNumber -> el["ts"].asLong
+            el.has("ts") -> runCatching { Instant.parse(el["ts"].asString).toEpochMilli() }
+                .getOrElse { System.currentTimeMillis() }
+            else -> System.currentTimeMillis()
+        }
+        ChatMessage(senderId, senderNick, text, tsMillis, scope)
+    }.getOrNull()
+
+    // mocks de auth/identidade
+    fun currentUserId(): Long = 1L
+    fun currentUserNick(): String? = "Você"
 }

@@ -1,48 +1,34 @@
-package com.example.androidapprpg.adapter
+// app/src/main/java/com/example/androidapprpg/utils/websocket/ChatAdapter.kt
+package com.example.androidapprpg.utils.websocket
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.updateLayoutParams
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.ChatDataModel.ChatMessage
-import com.example.androidapprpg.databinding.ItemMessageBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 class ChatAdapter(
-    private val myIdProvider: () -> String?
-) : ListAdapter<ChatMessage, ChatAdapter.VH>(DIFF) {
+    private val currentUserId: () -> Long
+) : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(DIFF) {
 
     companion object {
-        /** HH:mm com ThreadLocal para evitar problemas de thread */
-        private val timeFmtTL = ThreadLocal.withInitial {
-            SimpleDateFormat("HH:mm", Locale.getDefault())
-        }
-
-        private fun Long?.toTime(): String =
-            this?.let { timeFmtTL.get().format(Date(it)) } ?: ""
-
-        /** Chave estável baseada em (from|text|ts) */
-        private fun ChatMessage.stableKey(): String =
-            buildString {
-                append(from ?: "?"); append('|')
-                append(text ?: ""); append('|')
-                append(ts?.toString() ?: "?")
-            }
+        private const val TYPE_ME = 1
+        private const val TYPE_OTHER = 2
 
         private val DIFF = object : DiffUtil.ItemCallback<ChatMessage>() {
             override fun areItemsTheSame(old: ChatMessage, new: ChatMessage): Boolean {
-
-                if (old.ts == null || new.ts == null) return false
-                return old.from == new.from &&
-                        old.text == new.text &&
-                        old.ts == new.ts
+                return old.tsMillis == new.tsMillis &&
+                        old.senderId == new.senderId &&
+                        old.text == new.text
             }
             override fun areContentsTheSame(old: ChatMessage, new: ChatMessage): Boolean = old == new
         }
@@ -50,43 +36,64 @@ class ChatAdapter(
 
     init { setHasStableIds(true) }
 
-    override fun getItemId(position: Int): Long =
-        getItem(position).stableKey().hashCode().toLong()
+    override fun getItemId(position: Int): Long {
+        val m = getItem(position)
 
-    inner class VH(val b: ItemMessageBinding) : RecyclerView.ViewHolder(b.root) {
-        fun bind(m: ChatMessage) {
-            val isMine = !m.from.isNullOrBlank() && m.from == myIdProvider()
-
-            b.tvMessage.text = m.text
-            b.tvTimestamp.text = m.ts.toTime()
-
-            // Padding lateral
-            val leftPad = if (isMine) dp(48) else dp(8)
-            val rightPad = if (isMine) dp(8) else dp(48)
-            b.messageItemRoot.setPadding(leftPad, dp(4), rightPad, dp(4))
-
-            // Alinhamento da bolha
-            b.messageBubble.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                if (isMine) {
-                    endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                    startToStart = ConstraintLayout.LayoutParams.UNSET
-                } else {
-                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    endToEnd = ConstraintLayout.LayoutParams.UNSET
-                }
-            }
-
-            // Fundo da bolha
-            val bgRes = if (isMine) R.drawable.bg_message_out else R.drawable.bg_message_in
-            b.messageBubble.background = ContextCompat.getDrawable(b.root.context, bgRes)
+        // trata nulos e Int vs Long
+        val ts: Long = (m.tsMillis ?: 0L)
+        val sender: Long = when (val s = m.senderId) {
+            is Long -> s
+            is Long  -> s.toLong()
+            null    -> 0L
+            else    -> 0L
         }
-        private fun dp(v: Int) = (v * b.root.resources.displayMetrics.density).toInt()
+
+        val mix = (ts xor (sender shl 11)) + m.text.hashCode().toLong()
+        return abs(mix)  // garante id >= 0
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val binding = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(binding)
+    override fun getItemViewType(position: Int): Int {
+        val m = getItem(position)
+        return if (m.senderId == currentUserId()) TYPE_ME else TYPE_OTHER
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(getItem(position))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inf = LayoutInflater.from(parent.context)
+        return if (viewType == TYPE_ME) {
+            val v = inf.inflate(R.layout.item_message, parent, false) // seu layout “eu”
+            MeVH(v)
+        } else {
+            val v = inf.inflate(R.layout.item_agente_others, parent, false) // o que você acabou de criar
+            OtherVH(v)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        when (holder) {
+            is MeVH -> holder.bind(item)
+            is OtherVH -> holder.bind(item)
+        }
+    }
+
+    private fun formatTime(ts: Long): String =
+        SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(ts))
+
+    inner class MeVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvMessage: TextView = itemView.findViewById(R.id.tvMessage)
+        private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+        fun bind(m: ChatMessage) {
+            tvMessage.text = m.text
+            tvTimestamp.text = formatTime(m.tsMillis)
+        }
+    }
+
+    inner class OtherVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvMessage: TextView = itemView.findViewById(R.id.tvMessage)
+        private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+        fun bind(m: ChatMessage) {
+            tvMessage.text = m.text
+            tvTimestamp.text = formatTime(m.tsMillis)
+        }
+    }
 }

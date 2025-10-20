@@ -2,37 +2,84 @@ package com.example.androidapprpg.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidapprpg.R
 import com.example.androidapprpg.data.model.MyGamesDataModel.MyGamesDataModelResponse
 import com.example.androidapprpg.databinding.ItemGameCardBinding
+import kotlin.math.abs
 
-class MyGamesAdapter(private var gamesList: List<MyGamesDataModelResponse>, private val onEnterClick: (MyGamesDataModelResponse) -> Unit) : RecyclerView.Adapter<MyGamesAdapter.MyGamesViewHolder>() {
+private val GAME_ICONS = intArrayOf(
+    R.drawable.fire_svgrepo_com,
+    R.drawable.wizard_face_svgrepo_com,
+    R.drawable.swords,
+    R.drawable.bolt_svgrepo_com,
+    R.drawable.spell_book_svgrepo_com,
+    R.drawable.crown_2_svgrepo_com,
+    R.drawable.bullseye_svgrepo_com,
+    R.drawable.crystal_ball_future_svgrepo_com,
+    R.drawable.dice_twenty_faces,
+    R.drawable.dragon_head_evil_legend_myth_svgrepo_com
+)
 
-    inner class MyGamesViewHolder(val binding: ItemGameCardBinding) : RecyclerView.ViewHolder(binding.root)
+class MyGamesAdapter(
+    private var gamesList: List<MyGamesDataModelResponse>,
+    private val onEnterClick: (MyGamesDataModelResponse) -> Unit,
+    private val onEditClick: (MyGamesDataModelResponse) -> Unit,
+    private val onDeleteClick: (MyGamesDataModelResponse) -> Unit
+) : RecyclerView.Adapter<MyGamesAdapter.MyGamesViewHolder>() {
+
+    init { setHasStableIds(true) }
+
+    inner class MyGamesViewHolder(val binding: ItemGameCardBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyGamesViewHolder {
-        val binding = ItemGameCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemGameCardBinding.inflate(inflater, parent, false)
         return MyGamesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyGamesViewHolder, position: Int) {
         val game = gamesList[position]
         with(holder.binding) {
-            gameNameTextView.text = game.titulo
-            mestreValue.text = "Mestre #${game.id}" // Ideal: substituir por nome do mestre
-            nivelValue.text = game.dificuldade?.toString() ?: "N/A"
-            jogadoresValue.text = "${game.qtdPessoas}/X" // Ideal: trazer o total de jogadores permitido
+            // textos
+            gameNameTextView.text = game.titulo ?: "—"
+            mestreValue.text = game.master.nome ?: game.master.nickname ?: "—"
+            nivelValue.text = game.nivelInicial?.toString() ?: "—"
+            jogadoresValue.text = "${game.playerAtivos ?: 0}/${game.qtdPessoas ?: 0}"
 
-            enterButton.setOnClickListener {
-                onEnterClick(game)
-            }
+            // ícone determinístico por id
+            gameIcon.setImageResource(iconForGameId(game.idJogo))
+
+
+            // ações
+            enterButton.setOnClickListener { onEnterClick(game) }
+            root.setOnClickListener { onEditClick(game) }
+            btnEditGame.setOnClickListener { onEditClick(game) }
+            btnDeleteGame.setOnClickListener { onDeleteClick(game) }
         }
     }
 
     override fun getItemCount() = gamesList.size
 
+    override fun getItemId(position: Int): Long = gamesList[position].idJogo
+
     fun updateData(newList: List<MyGamesDataModelResponse>) {
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = gamesList.size
+            override fun getNewListSize() = newList.size
+            override fun areItemsTheSame(o: Int, n: Int) =
+                gamesList[o].idJogo == newList[n].idJogo
+            override fun areContentsTheSame(o: Int, n: Int) =
+                gamesList[o] == newList[n]
+        })
         gamesList = newList
-        notifyDataSetChanged()
+        diff.dispatchUpdatesTo(this)
+    }
+
+    private fun iconForGameId(id: Long): Int {
+        val idx = abs(id.hashCode()) % GAME_ICONS.size
+        return GAME_ICONS[idx]
     }
 }
