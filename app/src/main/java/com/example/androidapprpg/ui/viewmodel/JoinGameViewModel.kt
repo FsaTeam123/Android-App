@@ -12,25 +12,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class JoinGameViewModel @Inject constructor(private val repository: JoinGameRepository) : ViewModel() {
+class JoinGameViewModel @Inject constructor(
+    private val repository: JoinGameRepository
+) : ViewModel() {
 
     private val _joinGameResult = MutableLiveData<Result<JoinGameApiResponse>>()
     val joinGameResult: LiveData<Result<JoinGameApiResponse>> = _joinGameResult
 
-    fun joinGame(id: Int) {
+    fun joinGame(idJogo: Long) {
+        // avisa a UI que começou (pode mostrar "carregando...")
         _joinGameResult.value = Result.Loading
 
         viewModelScope.launch {
-            try {
-                val response = repository.joinGame(id)
-                if (response.isSuccessful && response.body() != null) {
-                    _joinGameResult.value = Result.Success(response.body()!!)
-                } else {
-                    _joinGameResult.value = Result.Error("Erro: ${response.code()} - ${response.message()}")
-                }
-            } catch (e: Exception) {
-                _joinGameResult.value = Result.Error("Erro inesperado: ${e.localizedMessage}")
-            }
+            val result = repository.joinGame(idJogo)
+            _joinGameResult.value = result
         }
     }
 }

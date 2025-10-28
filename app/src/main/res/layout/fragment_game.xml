@@ -61,7 +61,6 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <com.example.androidapprpg.ui.widget.GridCanvasView
         android:id="@+id/gridCanvas"
         android:layout_width="0dp"
@@ -70,7 +69,30 @@
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- BOTÃO "JOGADORES" SOBRE O CANVAS (CANTO ESQUERDO SUPERIOR) -->
+    <FrameLayout
+        android:id="@+id/btnPlayers"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/player_marker_bg"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="@id/gridCanvas"
+        app:layout_constraintTop_toTopOf="@id/gridCanvas">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnPlayersIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/table_svgrepo_com"
+            app:tint="@color/DouradoEspecial"/>
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/sideToolbar"
@@ -109,7 +131,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:background="#40FFFFFF" />
-
 
         <!-- Ferramentas -->
         <androidx.appcompat.widget.AppCompatImageButton

@@ -4,11 +4,27 @@ import com.google.gson.annotations.SerializedName
 
 data class PericiasDataModel(
 
-    @SerializedName("id")
-    val id: Int?,
+    @SerializedName("idPericia")
+    val idPericia: Int? = null,
 
+    @SerializedName("nome")
+    val nome : String? = null,
 
-    @SerializedName("pericia")
-    val pericias : String?
+    @SerializedName("descricao")
+    val descricao : String? = null,
 
+    @SerializedName("atributo")
+    val atributo : AtributosDataModel? = null,
+
+    @SerializedName("ativo")
+    val ativo : Int? = null,
+
+    @SerializedName("imagem")
+    val imagem : String? = null,
+
+    @SerializedName("imagemContentType")
+    val imagemContentType : String? = null,
+
+    @SerializedName("imagemFilename")
+    val imagemFilename : String? = null,
 )

@@ -1,33 +1,31 @@
 package com.example.androidapprpg.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.androidapprpg.data.model.ChatDataModel.ChatMessage
-import com.example.androidapprpg.data.repository.AgenteRepository   // <-- injeta o REPOSITORY
 import com.example.androidapprpg.utils.websocket.ChatSocket
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val transport: ChatSocket,
-    private val agenteRepository: AgenteRepository        // <-- aqui
-    // Se quiser manter o service direto, troque a linha acima por:
-    // private val agente: AgenteService
+    private val transport: ChatSocket
 ) : ViewModel() {
 
     private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
     val messages = _messages.asStateFlow()
 
+    private var agentThinkingPending = false
+
     fun subscribe(chatId: String) {
         transport.connectIfNeeded()
         transport.subscribe(chatId) { body ->
-            parseIncoming(body)?.let { append(it) }
+            parseIncoming(body)?.let { incoming ->
+                handleIncomingFromServer(incoming)
+            }
         }
     }
 
@@ -41,95 +39,139 @@ class ChatViewModel @Inject constructor(
         val text = rawText.trim()
         if (text.isEmpty()) return
 
-        // 1) mostra a mensagem do usuário
-        val userMsg = ChatMessage(senderId, senderNick, text, scope = scope)
-        append(userMsg)
+        // 1. monta msg do usuário
+        val localMsg = ChatMessage(
+            senderId = senderId,
+            senderNick = senderNick,
+            text = text,
+            scope = scope,
+            tsMillis = System.currentTimeMillis(), // carimbo local temporário
+            pending = false
+        )
 
-        // 2) tenta mandar via STOMP (ok se WS estiver off; só não chega)
-        transport.send(chatId, userMsg)
+        // 2. coloca MINHA mensagem imediatamente na UI
+        appendLocalUserMessage(localMsg)
 
-        // 3) fallback HTTP quando mencionar @agente
-        if (mentionsAgent(text)) {
-            val idxPlaceholder = appendPlaceholder(scope)
+        // 3. manda pro servidor
+        transport.send(chatId, localMsg)
 
-            viewModelScope.launch {
-                val pergunta = extractAgentQuestion(text)
-                val answer = runCatching {
-                    agenteRepository.consultar(pergunta)
-                    // Se usar o service direto:
-                    // val resp = agente.consulta(pergunta)
-                    // if (!resp.isSuccessful) throw RuntimeException("Agente HTTP ${resp.code()}")
-                    // resp.body().orEmpty()
-                }.getOrElse {
-                    "Desculpa, não consegui falar com o agente agora."
-                }
-
-                replacePlaceholder(
-                    idxPlaceholder,
-                    ChatMessage(
-                        senderId = -1L,
-                        senderNick = "Agente",
-                        text = answer,
-                        scope = scope
-                    )
-                )
-            }
+        // 4. se chamou agente, coloca o placeholder AGORA
+        if (text.contains("@agente", ignoreCase = true)) {
+            addAgentThinkingPlaceholder()
         }
     }
 
-    // ---- helpers de estado/UI ----
-    private fun append(m: ChatMessage) { _messages.value = _messages.value + m }
+    // ========== quando chega algo do servidor ==========
+    private fun handleIncomingFromServer(m: ChatMessage) {
+        // se for resposta do agente, remover placeholder antes
+        if (m.senderId == -1L) {
+            removeAgentThinkingPlaceholderIfAny()
+        }
 
-    private fun appendPlaceholder(scope: String?): Int {
-        val list = _messages.value.toMutableList()
-        val ph = ChatMessage(
+        appendFromServerDedup(m)
+    }
+
+    // ---- UI helpers ----
+
+    private fun appendLocalUserMessage(m: ChatMessage) {
+        _messages.value = _messages.value + m
+    }
+
+    private fun addAgentThinkingPlaceholder() {
+        if (agentThinkingPending) return
+
+        val placeholder = ChatMessage(
             senderId = -1L,
             senderNick = "Agente",
-            text = "⌛ consultando...",
-            scope = scope
+            text = "⌛ Agente está pensando...",
+            tsMillis = System.currentTimeMillis(),
+            scope = "GLOBAL",
+            pending = true
         )
-        list += ph
-        _messages.value = list
-        return list.lastIndex
+
+        agentThinkingPending = true
+        _messages.value = _messages.value + placeholder
     }
 
-    private fun replacePlaceholder(index: Int, msg: ChatMessage) {
+    private fun removeAgentThinkingPlaceholderIfAny() {
+        if (!agentThinkingPending) return
+        agentThinkingPending = false
+
         val list = _messages.value.toMutableList()
-        if (index in list.indices && list[index].senderId == -1L) {
-            list[index] = msg
-            _messages.value = list
-        } else {
-            _messages.value = list + msg
+        for (i in list.size - 1 downTo 0) {
+            val msg = list[i]
+            if (msg.senderId == -1L && msg.pending) {
+                list.removeAt(i)
+                break
+            }
         }
+        _messages.value = list
     }
 
-    // ---- @agente ----
-    private fun mentionsAgent(text: String) =
-        text.contains("@agente", ignoreCase = true)
+    /**
+     * Adiciona mensagem vinda do servidor,
+     * mas evita duplicar se ela for idêntica à última mensagem local
+     * (mesmo senderId e mesmo texto).
+     */
+    private fun appendFromServerDedup(m: ChatMessage) {
+        val current = _messages.value
 
-    private fun extractAgentQuestion(text: String): String {
-        val i = text.indexOf("@agente", ignoreCase = true)
-        return if (i >= 0) text.substring(i + 7).trim(' ', ':', '-', '.', '?') else text
+        // 1. se NÃO é mensagem minha, não precisa dedupe
+        //    (ex.: agente, outro jogador, resposta final etc)
+        if (m.senderId != currentUserId()) {
+            _messages.value = current + m
+            return
+        }
+
+        // 2. achar da cauda pra trás a ÚLTIMA mensagem minha que não era placeholder,
+        //    ignorando o "Agente está pensando..." que veio depois
+        val lastRealMine: ChatMessage? = current
+            .asReversed()
+            .firstOrNull { it.senderId == currentUserId() && !it.pending }
+
+        // 3. se eu já tenho uma mensagem minha igual (mesmo texto),
+        //    então esse 'eco' do servidor é duplicado -> ignora
+        val isDuplicateOfMyLocal =
+            lastRealMine != null &&
+                    lastRealMine.text == m.text
+
+        if (isDuplicateOfMyLocal) {
+            // já renderizei essa mensagem localmente, então não adiciono de novo
+            return
+        }
+
+        // 4. caso contrário, adiciona normalmente
+        _messages.value = current + m
     }
 
-    // ---- parse das mensagens vindas do servidor ----
+
+    // ---------- parse incoming WS ----------
     private fun parseIncoming(json: String): ChatMessage? = runCatching {
         val el = JsonParser.parseString(json).asJsonObject
         val senderId   = el["senderId"]?.asLong ?: 0L
         val senderNick = el["senderNick"]?.asString ?: "?"
         val text       = el["text"]?.asString ?: ""
         val scope      = el["scope"]?.asString
+
         val tsMillis = when {
             el.has("tsMillis") -> el["tsMillis"].asLong
-            el.has("ts") && el["ts"].isJsonPrimitive && el["ts"].asJsonPrimitive.isNumber -> el["ts"].asLong
+            el.has("ts") && el["ts"].isJsonPrimitive && el["ts"].asJsonPrimitive.isNumber ->
+                el["ts"].asLong
             el.has("ts") -> runCatching { Instant.parse(el["ts"].asString).toEpochMilli() }
                 .getOrElse { System.currentTimeMillis() }
             else -> System.currentTimeMillis()
         }
-        ChatMessage(senderId, senderNick, text, tsMillis, scope)
+
+        ChatMessage(
+            senderId = senderId,
+            senderNick = senderNick,
+            text = text,
+            tsMillis = tsMillis,
+            scope = scope,
+            pending = false
+        )
     }.getOrNull()
 
-    // mocks de auth/identidade
     fun currentUserId(): Long = 1L
     fun currentUserNick(): String? = "Você"
 }

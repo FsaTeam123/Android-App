@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/androidapprpg/utils/websocket/ChatAdapter.kt
 package com.example.androidapprpg.utils.websocket
 
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 class ChatAdapter(
     private val currentUserId: () -> Long
@@ -25,75 +23,91 @@ class ChatAdapter(
         private const val TYPE_OTHER = 2
 
         private val DIFF = object : DiffUtil.ItemCallback<ChatMessage>() {
-            override fun areItemsTheSame(old: ChatMessage, new: ChatMessage): Boolean {
-                return old.tsMillis == new.tsMillis &&
-                        old.senderId == new.senderId &&
-                        old.text == new.text
+            override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
+                // critério de identidade:
+                // - mesmo senderId
+                // - mesmo texto
+                // - mesmo tsMillis (se o servidor já mandou)
+                // - mesmo "pending" (placeholder X resposta real contam como itens diferentes)
+                return oldItem.senderId == newItem.senderId &&
+                        oldItem.text == newItem.text &&
+                        oldItem.tsMillis == newItem.tsMillis &&
+                        oldItem.pending == newItem.pending
             }
-            override fun areContentsTheSame(old: ChatMessage, new: ChatMessage): Boolean = old == new
+
+            override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
+                return oldItem == newItem
+            }
         }
-    }
-
-    init { setHasStableIds(true) }
-
-    override fun getItemId(position: Int): Long {
-        val m = getItem(position)
-
-        // trata nulos e Int vs Long
-        val ts: Long = (m.tsMillis ?: 0L)
-        val sender: Long = when (val s = m.senderId) {
-            is Long -> s
-            is Long  -> s.toLong()
-            null    -> 0L
-            else    -> 0L
-        }
-
-        val mix = (ts xor (sender shl 11)) + m.text.hashCode().toLong()
-        return abs(mix)  // garante id >= 0
     }
 
     override fun getItemViewType(position: Int): Int {
-        val m = getItem(position)
-        return if (m.senderId == currentUserId()) TYPE_ME else TYPE_OTHER
+        val msg = getItem(position)
+        return if (msg.senderId == currentUserId()) TYPE_ME else TYPE_OTHER
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inf = LayoutInflater.from(parent.context)
         return if (viewType == TYPE_ME) {
-            val v = inf.inflate(R.layout.item_message, parent, false) // seu layout “eu”
+            // sua bolha "eu"
+            val v = inf.inflate(R.layout.item_message, parent, false)
             MeVH(v)
         } else {
-            val v = inf.inflate(R.layout.item_agente_others, parent, false) // o que você acabou de criar
+            // bolha "outros" (inclui agente)
+            val v = inf.inflate(R.layout.item_agente_others, parent, false)
             OtherVH(v)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = getItem(position)
+        val msg = getItem(position)
         when (holder) {
-            is MeVH -> holder.bind(item)
-            is OtherVH -> holder.bind(item)
+            is MeVH -> holder.bind(msg)
+            is OtherVH -> holder.bind(msg)
         }
     }
 
-    private fun formatTime(ts: Long): String =
-        SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(ts))
+    // ---- helpers de formatação ----
 
+    private fun formatTimeOrWaiting(ts: Long?, waiting: Boolean): String {
+        return if (waiting) {
+            "..." // placeholder enquanto o agente "pensa"
+        } else {
+            val millis = ts ?: System.currentTimeMillis()
+            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            sdf.format(Date(millis))
+        }
+    }
+
+    // ---- ViewHolder da minha mensagem ----
     inner class MeVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val tvMessage: TextView = itemView.findViewById(R.id.tvMessage)
         private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+
         fun bind(m: ChatMessage) {
+            // texto da minha bolha
             tvMessage.text = m.text
-            tvTimestamp.text = formatTime(m.tsMillis)
+
+            // horário: minha mensagem nunca deve ser pending=true
+            tvTimestamp.text = formatTimeOrWaiting(m.tsMillis, waiting = false)
         }
     }
 
+    // ---- ViewHolder mensagens de outros (inclusive agente) ----
     inner class OtherVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val tvMessage: TextView = itemView.findViewById(R.id.tvMessage)
         private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+
         fun bind(m: ChatMessage) {
+            // se for placeholder do agente, você pode exibir um texto fixo aqui.
+            // mas eu prefiro usar m.text mesmo, porque já vamos montar isso no ViewModel
+            // ("⌛ Agente está pensando...").
             tvMessage.text = m.text
-            tvTimestamp.text = formatTime(m.tsMillis)
+
+            // se pending = true, mostramos "..." no horário
+            tvTimestamp.text = formatTimeOrWaiting(m.tsMillis, waiting = m.pending)
         }
     }
 }

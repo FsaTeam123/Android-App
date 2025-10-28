@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/androidapprpg/adapter/ChatSocketStompAdapter.kt
 package com.example.androidapprpg.adapter
 
 import com.example.androidapprpg.utils.websocket.ChatSocket
@@ -12,21 +11,27 @@ class ChatSocketStompAdapter @Inject constructor(
     private val stomp: StompChatSocket
 ) : ChatSocket {
 
+    // garante que a conexão SockJS/STOMP está iniciada
     override fun connectIfNeeded() {
-        stomp.connect()
+        stomp.connectIfNeeded()
     }
 
     override fun disconnect() {
         stomp.disconnect()
     }
 
+    // assina /topic/chat.<chatId> no broker
+    // o próprio StompChatSocket cuida de:
+    //  - registrar callback
+    //  - enfileirar SUBSCRIBE se ainda não recebeu CONNECTED
+    //  - mandar SUBSCRIBE real assim que CONNECTED chegar
     override fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
-        stomp.onMessage(onMessage)
-        return stomp.subscribeTopicChat(chatId)
+        return stomp.subscribe(chatId, onMessage)
     }
 
+    // publica no destino /app/chat.<chatId>.message
+    // o servidor ecoa em /topic/chat.<chatId> e manda resposta do Agente
     override fun send(chatId: String, msg: ChatMessage) {
-        // o StompChatSocket já serializa o objeto para JSON
         stomp.sendChat(chatId, msg)
     }
 }

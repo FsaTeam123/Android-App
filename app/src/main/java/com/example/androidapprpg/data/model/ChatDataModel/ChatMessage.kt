@@ -17,5 +17,7 @@ data class ChatMessage(
 
 
     @SerializedName("scope")
-    val scope: String?
+    val scope: String?,
+
+    val pending: Boolean = false
 )

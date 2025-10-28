@@ -2,7 +2,6 @@ package com.example.androidapprpg.data.remote.services
 
 import com.example.androidapprpg.data.model.MyGamesDataModel.MyGamesDataModelResponse
 import com.example.androidapprpg.data.model.MyGamesDataModel.MyGamesUpdateRequest
-import com.example.androidapprpg.data.model.MyGamesDataModelRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -20,6 +19,5 @@ interface MyGamesService {
 
     @PUT("jogos/{id}")
     suspend fun updateGame(@Path("id") id : Long, @Body body : MyGamesUpdateRequest) : MyGamesDataModelResponse
-
 
 }

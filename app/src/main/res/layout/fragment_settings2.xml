@@ -59,14 +59,13 @@
     <!-- Card centralizado -->
     <LinearLayout
         android:id="@+id/settingsContainer"
-        android:layout_width="361dp"
-        android:layout_height="392dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="359dp"
+        android:layout_height="272dp"
+        android:layout_marginTop="108dp"
         android:background="@drawable/retangulo_borda_fundo_transparente"
         android:orientation="vertical"
         android:padding="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separadorDourado"
         app:layout_constraintWidth_percent="0.9">
@@ -93,63 +92,6 @@
                 android:id="@+id/switchAudio"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
-                android:thumbTint="@color/BordasDouradas"
-                android:trackTint="@color/OleYeller" />
-        </LinearLayout>
-
-        <!-- Sons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/retangulo_arredondado"
-
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:text="@string/Som"
-                android:textColor="@color/BordasDouradas"
-                android:textSize="15sp" />
-
-            <Switch
-                android:id="@+id/switchSons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:thumbTint="@color/BordasDouradas"
-                android:trackTint="@color/OleYeller" />
-        </LinearLayout>
-
-
-        <!-- Configuração de notificações -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/retangulo_arredondado"
-
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/cinzel_font_bold"
-                android:text="@string/notifications"
-                android:textColor="@color/BordasDouradas"
-                android:textSize="15sp" />
-
-            <Switch
-                android:id="@+id/switchNotificacoes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:thumbTint="@color/BordasDouradas"
                 android:trackTint="@color/OleYeller" />
         </LinearLayout>

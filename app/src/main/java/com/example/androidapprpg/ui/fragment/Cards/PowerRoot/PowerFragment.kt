@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment.Cards
+package com.example.androidapprpg.ui.fragment.Cards.PowerRoot
 
 import android.content.Context
 import android.graphics.Color
@@ -10,12 +10,15 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.databinding.FragmentPowerBinding
+import com.example.androidapprpg.ui.fragment.Cards.CartasRoot.CharactersFragment
+import com.example.androidapprpg.ui.fragment.Cards.CartasRoot.CharactersFragment.Companion
 import com.example.androidapprpg.utils.activityGameId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -64,13 +67,21 @@ class PowerFragment : Fragment() {
     private fun setUpUi() = with(binding) {
         btnClose.setOnClickListener { showCloseSessionDialog() }
         btnAnterior.setOnClickListener {
-            findNavController().navigate(R.id.action_poderes_to_personagens)
+            findNavController().navigate(R.id.action_powers_to_characters)
         }
         btnProximo.setOnClickListener {
-            findNavController().navigate(R.id.action_poderes_to_magias)
+            findNavController().navigate(R.id.action_powers_to_spells)
         }
-        // opcional:
-        // btnProximo.isEnabled = currentGameId() > 0L
+        btnComecar.setOnClickListener {
+            val idJogo = currentGameId()
+            if (idJogo > 0L) {
+                val args = bundleOf("jogoId" to idJogo.toInt())
+                findNavController().navigate( R.id.action_powers_to_nav_cards_power, args)
+                Log.d(PowerFragment.TAG, "PowerFragment -> Seção Cartas Poderes (jogoId=$idJogo)")
+            } else {
+                showCustomToast("Sessão inválida: não foi possível iniciar.", requireContext())
+            }
+        }
     }
 
     private fun showCloseSessionDialog() {

@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment.Cards
+package com.example.androidapprpg.ui.fragment.Cards.CartasRoot
 
 import android.content.Context
 import android.graphics.Color
@@ -10,36 +10,36 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.repository.SessionManager
-import com.example.androidapprpg.databinding.FragmentArmasBinding
+import com.example.androidapprpg.databinding.FragmentCharactersBinding
 import com.example.androidapprpg.utils.activityGameId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ArmasFragment : Fragment() {
+class CharactersFragment : Fragment() {
 
     companion object {
         private const val TAG = "CardsSession"
 
     }
 
-    private var _binding: FragmentArmasBinding? = null
+    private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
 
     @Inject lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentArmasBinding.inflate(inflater, container, false)
+        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,31 +49,34 @@ class ArmasFragment : Fragment() {
         setUpUi()
     }
 
-    /** Lê o idJogo do argumento GLOBAL do grafo; arguments é nullable -> usar ?. */
     private fun currentGameId(): Long = activityGameId()
 
     private fun logSessionInfo() {
         val idJogo = currentGameId()
         val userId = sessionManager.getUserIdOrNull()
         val hasToken = !sessionManager.getToken().isNullOrBlank()
+        Log.d(TAG, "CharactersFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
 
-        Log.d(TAG, "ArmasFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
-
-        if (idJogo <= 0L) {
-            showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
-        }
+        if (idJogo <= 0L) showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
     }
 
     private fun setUpUi() = with(binding) {
         btnClose.setOnClickListener { showCloseSessionDialog() }
-        btnAnterior.setOnClickListener {
-            findNavController().navigate(R.id.action_armamento_to_magias)
-        }
         btnProximo.setOnClickListener {
-            findNavController().navigate(R.id.action_armamento_to_mochila)
+            findNavController().navigate(R.id.action_characters_to_powers)
         }
-        // opcional:
-        // btnProximo.isEnabled = currentGameId() > 0L
+        btnProximo.isEnabled = currentGameId() > 0L
+
+        btnComecar.setOnClickListener {
+            val idJogo = currentGameId()
+            if (idJogo > 0L) {
+                val args = bundleOf("jogoId" to idJogo.toInt())
+                findNavController().navigate( R.id.action_characters_to_nav_cards_characters, args)
+                Log.d(TAG, "CharactersFragment -> Seção Cartas Personagem (jogoId=$idJogo)")
+            } else {
+                showCustomToast("Sessão inválida: não foi possível iniciar.", requireContext())
+            }
+        }
     }
 
     private fun showCloseSessionDialog() {
@@ -88,16 +91,13 @@ class ArmasFragment : Fragment() {
                 show()
             }
 
-        dialogView.findViewById<Button>(R.id.cancel_button)
-            .setOnClickListener { dialog.dismiss() }
-
-        dialogView.findViewById<Button>(R.id.confirm_button)
-            .setOnClickListener { btn ->
-                showCustomToast("Sessão encerrada com sucesso.", requireContext())
-                btn.isEnabled = false
-                dialog.dismiss()
-                viewLifecycleOwner.lifecycleScope.launch { requireActivity().finish() }
-            }
+        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<Button>(R.id.confirm_button).setOnClickListener { btn ->
+            showCustomToast("Sessão encerrada com sucesso.", requireContext())
+            btn.isEnabled = false
+            dialog.dismiss()
+            viewLifecycleOwner.lifecycleScope.launch { requireActivity().finish() }
+        }
     }
 
     private fun showCustomToast(message: String, context: Context) {

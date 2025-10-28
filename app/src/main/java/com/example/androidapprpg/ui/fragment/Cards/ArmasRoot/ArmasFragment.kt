@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment.Cards
+package com.example.androidapprpg.ui.fragment.Cards.ArmasRoot
 
 import android.content.Context
 import android.graphics.Color
@@ -10,35 +10,38 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.data.repository.SessionManager
-import com.example.androidapprpg.databinding.FragmentMochila2Binding
+import com.example.androidapprpg.databinding.FragmentArmasBinding
+import com.example.androidapprpg.ui.fragment.Cards.MagiaRoot.MagiaFragment
 import com.example.androidapprpg.utils.activityGameId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MochilaFragment : Fragment() {
+class ArmasFragment : Fragment() {
 
     companion object {
         private const val TAG = "CardsSession"
 
     }
 
-    private var _binding: FragmentMochila2Binding? = null
+    private var _binding: FragmentArmasBinding? = null
     private val binding get() = _binding!!
 
     @Inject lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMochila2Binding.inflate(inflater, container, false)
+        _binding = FragmentArmasBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,6 +51,7 @@ class MochilaFragment : Fragment() {
         setUpUi()
     }
 
+    /** Lê o idJogo do argumento GLOBAL do grafo; arguments é nullable -> usar ?. */
     private fun currentGameId(): Long = activityGameId()
 
     private fun logSessionInfo() {
@@ -55,7 +59,7 @@ class MochilaFragment : Fragment() {
         val userId = sessionManager.getUserIdOrNull()
         val hasToken = !sessionManager.getToken().isNullOrBlank()
 
-        Log.d(TAG, "MochilaFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
+        Log.d(TAG, "ArmasFragment -> idJogo=$idJogo, userId=$userId, hasToken=$hasToken")
 
         if (idJogo <= 0L) {
             showCustomToast("Sessão inválida (idJogo ausente).", requireContext())
@@ -65,13 +69,23 @@ class MochilaFragment : Fragment() {
     private fun setUpUi() = with(binding) {
         btnClose.setOnClickListener { showCloseSessionDialog() }
         btnAnterior.setOnClickListener {
-            findNavController().navigate(R.id.action_mochila_to_armamento)
+            findNavController().navigate(R.id.action_weapons_to_spells)
         }
         btnProximo.setOnClickListener {
-            findNavController().navigate(R.id.action_mochila_to_confirmar)
+            findNavController().navigate(R.id.action_weapons_to_confirm)
         }
-        // opcional: travar próximo se id inválido
-        // btnProximo.isEnabled = currentGameId() > 0L
+        btnComecar.setOnClickListener {
+            val idJogo = currentGameId()
+            if (idJogo > 0L) {
+                val args = bundleOf("jogoId" to idJogo.toInt())
+                findNavController().navigate( R.id.action_armas_to_card_armas, args)
+                Log.d(ArmasFragment.TAG, "ArmasFragment -> Seção Cartas Armas (jogoId=$idJogo)")
+            } else {
+                showCustomToast("Sessão inválida: não foi possível iniciar.", requireContext())
+            }
+        }
+
+
     }
 
     private fun showCloseSessionDialog() {

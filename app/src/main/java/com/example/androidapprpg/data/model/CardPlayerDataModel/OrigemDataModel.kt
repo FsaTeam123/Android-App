@@ -4,9 +4,24 @@ import com.google.gson.annotations.SerializedName
 
 data class OrigemDataModel(
 
-    @SerializedName("id")
-    val id : Int?,
+    @SerializedName("idOrigem")
+    val idOrigem : Int? = null,
 
-    @SerializedName("origem")
-    val origem : String?
+    @SerializedName("nome")
+    val nome : String? = null,
+
+    @SerializedName("descricao")
+    val descricao : String? = null,
+
+    @SerializedName("ativo")
+    val ativo : Int? = null,
+
+    @SerializedName("imagem")
+    val imagem : String? = null,
+
+    @SerializedName("imagemContentType")
+    val imagemContentType : String? = null,
+
+    @SerializedName("imagemFilename")
+    val imagemFilename : String? = null
 )

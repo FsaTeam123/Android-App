@@ -75,24 +75,32 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Digite o ID do Jogo:"
+            android:text="DIGITE O ID DO JOGO:"
             android:fontFamily="@font/cinzel_font_bold"
             android:textColor="@color/BordasDouradas"
             android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputIdJogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="ID do Jogo"
-            app:boxBackgroundMode="outline"
+
             android:textColorHint="@color/BordasDouradas"
+            app:hintTextColor="@color/BordasDouradas"
+
+            app:boxBackgroundMode="outline"
+            app:boxBackgroundColor="@color/Crowshead"
             app:boxStrokeColor="@color/BordasDouradas"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="2dp"
             app:boxCornerRadiusTopStart="20dp"
             app:boxCornerRadiusTopEnd="20dp"
             app:boxCornerRadiusBottomStart="20dp"
             app:boxCornerRadiusBottomEnd="20dp"
-            app:boxBackgroundColor="@color/Crowshead">
+
+            app:cursorColor="@color/BordasDouradas">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputIdJogo"
@@ -101,7 +109,7 @@
                 android:fontFamily="@font/cinzel_font_bold"
                 android:textColor="@color/BordasDouradas"
                 android:textColorHint="@color/BordasDouradas"
-                android:inputType="text"
+                android:inputType="number"
                 android:padding="12dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@drawable/btn1"
-            android:text="Entrar"
+            android:text="ENTRAR"
             android:textSize="18sp"
             android:textColor="@color/BordasDouradas"
             android:fontFamily="@font/cinzel_font_bold" />

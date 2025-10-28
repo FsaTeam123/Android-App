@@ -8,85 +8,105 @@
     <!-- PERSONAGENS -->
     <fragment
         android:id="@+id/cartasRoot"
-        android:name="com.example.androidapprpg.ui.fragment.Cards.CharactersFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Cards.CartasRoot.CharactersFragment"
         android:label="@string/Personagem"
         tools:layout="@layout/fragment_characters">
+
+        <!-- para o próximo passo do fluxo -->
         <action
-            android:id="@+id/action_personagens_to_poderes"
+            android:id="@+id/action_characters_to_powers"
             app:destination="@id/powerRoot" />
+
+        <!-- para o grafo incluído de personagens (lista/stack interna) -->
+        <action
+            android:id="@+id/action_characters_to_nav_cards_characters"
+            app:destination="@id/nav_cards_characters" />
     </fragment>
 
     <!-- PODERES -->
     <fragment
         android:id="@+id/powerRoot"
-        android:name="com.example.androidapprpg.ui.fragment.Cards.PowerFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Cards.PowerRoot.PowerFragment"
         android:label="@string/poder"
         tools:layout="@layout/fragment_power">
+
         <action
-            android:id="@+id/action_poderes_to_personagens"
+            android:id="@+id/action_powers_to_characters"
             app:destination="@id/cartasRoot" />
+
         <action
-            android:id="@+id/action_poderes_to_magias"
+            android:id="@+id/action_powers_to_spells"
             app:destination="@id/magiaRoot" />
+
+        <!-- subfluxo/stack de cartas de poderes -->
+        <action
+            android:id="@+id/action_powers_to_nav_cards_power"
+            app:destination="@id/nav_cards_power" />
     </fragment>
 
     <!-- MAGIAS -->
     <fragment
         android:id="@+id/magiaRoot"
-        android:name="com.example.androidapprpg.ui.fragment.Cards.MagiaFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Cards.MagiaRoot.MagiaFragment"
         android:label="@string/magia"
         tools:layout="@layout/fragment_magia">
+
         <action
-            android:id="@+id/action_magias_to_poderes"
+            android:id="@+id/action_spells_to_powers"
             app:destination="@id/powerRoot" />
+
         <action
-            android:id="@+id/action_magias_to_armamento"
+            android:id="@+id/action_spells_to_weapons"
             app:destination="@id/armasRoot" />
+
+        <action
+            android:id="@+id/action_magias_to_card_magias"
+            app:destination="@id/nav_cards_magia"/>
     </fragment>
 
     <!-- ARMAS -->
     <fragment
         android:id="@+id/armasRoot"
-        android:name="com.example.androidapprpg.ui.fragment.Cards.ArmasFragment"
+        android:name="com.example.androidapprpg.ui.fragment.Cards.ArmasRoot.ArmasFragment"
         android:label="@string/arma"
         tools:layout="@layout/fragment_armas">
+
         <action
-            android:id="@+id/action_armamento_to_magias"
+            android:id="@+id/action_weapons_to_spells"
             app:destination="@id/magiaRoot" />
-        <action
-            android:id="@+id/action_armamento_to_mochila"
-            app:destination="@id/mochilaRoot" />
-    </fragment>
 
-    <!-- MOCHILA -->
-    <fragment
-        android:id="@+id/mochilaRoot"
-        android:name="com.example.androidapprpg.ui.fragment.Cards.MochilaFragment"
-        android:label="@string/mochila"
-        tools:layout="@layout/fragment_mochila2">
+
         <action
-            android:id="@+id/action_mochila_to_armamento"
-            app:destination="@id/armasRoot" />
-        <action
-            android:id="@+id/action_mochila_to_confirmar"
+            android:id="@+id/action_weapons_to_confirm"
             app:destination="@id/confirmPlayerFragment" />
+
+        <action
+            android:id="@+id/action_armas_to_card_armas"
+            app:destination="@+id/nav_cards_armas"/>
+
     </fragment>
 
-    <!-- CONFIRMAR -->
+       <!-- CONFIRMAR -->
     <fragment
         android:id="@+id/confirmPlayerFragment"
         android:name="com.example.androidapprpg.ui.fragment.Cards.ConfirmPlayerFragment"
         android:label="@string/confirmar"
         tools:layout="@layout/fragment_confirm_player">
 
-        <!-- ARGUMENTO necessário para gerar ConfirmPlayerFragmentArgs -->
+        <!-- Necessário para Safe Args -->
         <argument
             android:name="idJogo"
             app:argType="integer" />
 
         <action
-            android:id="@+id/action_confirmar_to_mochila"
-            app:destination="@id/mochilaRoot" />
+            android:id="@+id/action_confirm_to_weapons"
+            app:destination="@id/armasRoot" />
     </fragment>
+
+    <!-- GRAFOS INCLUÍDOS-->
+    <include app:graph="@navigation/nav_cards_characters" />
+    <include app:graph="@navigation/nav_cards_power" />
+    <include app:graph="@navigation/nav_cards_magia" />
+    <include app:graph="@navigation/nav_cards_armas" />
 
 </navigation>

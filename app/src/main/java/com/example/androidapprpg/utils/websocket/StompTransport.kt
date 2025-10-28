@@ -14,17 +14,15 @@ class StompTransport @Inject constructor(
     }
 
     override fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
-        // callback “global” — ok se só houver uma tela ativa por vez
-        socket.onMessage(onMessage)
-        return socket.subscribeTopicChat(chatId)
+        // registra callback global e agenda subscribe
+        return socket.subscribe(chatId, onMessage)
     }
 
     override fun connectIfNeeded() {
-        // idempotente: só conecta se não estiver conectado
-        if (!socket.isConnected()) {
-            socket.connect()
-        }
+        socket.connectIfNeeded()
     }
 
-    override fun disconnect() = socket.disconnect()
+    override fun disconnect() {
+        socket.disconnect()
+    }
 }

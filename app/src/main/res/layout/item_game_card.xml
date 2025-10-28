@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- HEADER -->
+        <!-- HEADER GRADIENT BACKGROUND -->
         <FrameLayout
             android:id="@+id/headerBg"
             android:layout_width="0dp"
@@ -31,6 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- ÍCONE DO JOGO -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/gameIcon"
             android:layout_width="44dp"
@@ -46,6 +47,7 @@
             app:layout_constraintBottom_toBottomOf="@id/headerBg"
             app:layout_constraintStart_toStartOf="parent"/>
 
+        <!-- NOME DO JOGO -->
         <TextView
             android:id="@+id/gameNameTextView"
             android:layout_width="0dp"
@@ -60,10 +62,32 @@
             android:fontFamily="@font/cinzel_font_bold"
             app:layout_constrainedWidth="true"
             app:layout_constraintStart_toEndOf="@id/gameIcon"
+            app:layout_constraintEnd_toStartOf="@id/gameIdChip"
+            app:layout_constraintTop_toTopOf="@id/headerBg"
+            app:layout_constraintBottom_toBottomOf="@id/headerBg"/>
+
+        <!-- CHIP COM O ID DO JOGO (#159 etc) -->
+        <TextView
+            android:id="@+id/gameIdChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_chip_dourado"
+            android:drawableStart="@drawable/hash_02_svgrepo_com"
+            android:text="159"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:textColor="@color/VermelhoEscuro"
+            android:fontFamily="@font/cinzel_font_bold"
             app:layout_constraintEnd_toStartOf="@id/actionsRow"
             app:layout_constraintTop_toTopOf="@id/headerBg"
             app:layout_constraintBottom_toBottomOf="@id/headerBg"/>
 
+        <!-- BOTÕES (EDIT / DELETE) -->
         <LinearLayout
             android:id="@+id/actionsRow"
             android:layout_width="wrap_content"
@@ -94,7 +118,7 @@
                 app:tint="@color/DouradoEspecial"/>
         </LinearLayout>
 
-        <!-- DETALHES (subiu para logo abaixo do header) -->
+        <!-- COLUNA DETALHES (sem a linha ID agora) -->
         <LinearLayout
             android:id="@+id/detailsCol"
             android:layout_width="0dp"

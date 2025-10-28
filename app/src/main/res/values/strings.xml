@@ -154,8 +154,49 @@
     <string name="atualizar">atualizar</string>
     <string name="ativo">ativo</string>
     <string name="selecione_um_mapa">Selecione um mapa</string>
-
-
+    <string name="nome_personagem">Nome Personagem</string>
+    <string name="comecar">Começar</string>
+    <string name="atributos">Atributos</string>
+    <string name="forca">Força</string>
+    <string name="destreza">Destreza</string>
+    <string name="sabedoria">Sabedoria</string>
+    <string name="constituicao">Constituicao</string>
+    <string name="inteligencia">Inteligência</string>
+    <string name="carisma">Carisma</string>
+    <string name="pv_pm">Pontos de Vida e Mana</string>
+    <string name="pv">pv</string>
+    <string name="pv_max">pv_max</string>
+    <string name="pv_temp">pv_temp</string>
+    <string name="pm">pm</string>
+    <string name="pm_max">pm_max</string>
+    <string name="pm_temp">pm_temp</string>
+    <string name="personagem">Personagem</string>
+    <string name="trocar_imagem">Trocar Imagem</string>
+    <string name="seu_personagem">Seu Personagem</string>
+    <string name="classe">Classe</string>
+    <string name="raça">Raça</string>
+    <string name="divindade">Divindade</string>
+    <string name="origem">Origem</string>
+    <string name="riqueza">Riqueza</string>
+    <string name="Tamanho">Tamanho</string>
+    <string name="selecione_as_imagens">Selecione seus Cards para Batalha!</string>
+    <string name="escolha_uma_carta">Escolha uma carta</string>
+    <string name="selecionado">Selecionado</string>
+    <string name="escolha_poderes">Escolha seus poderes</string>
+    <string name="selecionar">Selecionar</string>
+    <string name="escolha_magias">Escolha suas magias</string>
+    <string name="tipo_de_poder">Selecione seu tipo de Poder</string>
+    <string name="sem_tipos_disponiveis">Sem Tipos disponiveis</string>
+    <string name="selecione_um_tipo">Selecione um tipo</string>
+    <string name="salvando">Salvando</string>
+    <string name="poder_adicionado_ao_deck">Poder adicionado ao deck</string>
+    <string name="tipo_poder_nome">Tipo Poder Nome</string>
+    <string name="sucesso">Sucesso</string>
+    <string name="escolha_armas">Escolha suas armas</string>
+    <string name="tipo_de_arma">Selecione seu tipo de arma</string>
+    <string name="id_do_jogo">ID JOGO</string>
+    <string name="player_icon">player_icon</string>
+    <string name="jogadores_na_mesa">Jogadores na mesa</string>
 
     <string-array name="mock_spinner_values">
         <item>Humano</item>

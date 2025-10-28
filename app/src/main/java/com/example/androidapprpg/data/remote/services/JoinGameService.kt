@@ -7,7 +7,7 @@ import retrofit2.http.GET
 
 interface JoinGameService {
 
-    @GET("/jogo/{id}")
-    suspend fun joinGame(@Path("id") id:Int) : Response<JoinGameApiResponse>
+    @GET("/jogos/{id}")
+    suspend fun joinGame(@Path("id") id:Long) : Response<JoinGameApiResponse>
 
 }

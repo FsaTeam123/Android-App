@@ -78,6 +78,10 @@ object AppModule {
         retrofit.create(RegisterService::class.java)
 
     @Provides @Singleton
+    fun provideCharactersService(@Named("api") retrofit: Retrofit) : CharactersService =
+        retrofit.create(CharactersService::class.java)
+
+    @Provides @Singleton
     fun provideNewGamesService(@Named("api") retrofit: Retrofit): NewGameService =
         retrofit.create(NewGameService::class.java)
 
@@ -104,10 +108,6 @@ object AppModule {
     @Provides @Singleton
     fun provideCardMagiasService(@Named("api") retrofit: Retrofit): CardMagiasService =
         retrofit.create(CardMagiasService::class.java)
-
-    @Provides @Singleton
-    fun provideCardPlayerService(@Named("api") retrofit: Retrofit): CardPlayerService =
-        retrofit.create(CardPlayerService::class.java)
 
     @Provides @Singleton
     fun provideForgotPasswordService(@Named("api") retrofit: Retrofit): ForgotPasswordService =
@@ -137,6 +137,19 @@ object AppModule {
     fun provideMapService(@Named("api") retrofit: Retrofit): MapService =
         retrofit.create(MapService::class.java)
 
+    @Provides @Singleton
+    fun provideArmasService(@Named("api") retrofit: Retrofit) : CardArmaService =
+        retrofit.create(CardArmaService::class.java)
+
+    @Provides @Singleton
+    fun provideDeleAccounService(@Named("api") retrofit: Retrofit) : DeleteAccountService=
+        retrofit.create(DeleteAccountService::class.java)
+
+    @Provides @Singleton
+    fun provideGameFragmentService(@Named("api") retrofit: Retrofit) : GameFragmentService =
+        retrofit.create(GameFragmentService::class.java)
+
+    // ==================== REPOSITORY ====================
 
     @Provides @Singleton @Named("gameBaseUrl")
     fun provideGameBaseUrl(): String = BuildConfig.BASE_URL_GAME
@@ -151,18 +164,21 @@ object AppModule {
     // ==================== WEBSOCKET / STOMP ====================
     @Provides @Singleton fun provideGson(): Gson = Gson()
 
-    @Provides @Singleton @Named("ws")
+    @Provides
+    @Singleton
+    @Named("ws")
     fun provideWsOkHttp(): OkHttpClient {
-        val cookieMgr = CookieManager().apply { setCookiePolicy(CookiePolicy.ACCEPT_ALL) }
+        // SockJS do Spring não depende mais estritamente de cookie JSESSIONID (setSessionCookieNeeded(false)),
+        // então podemos ir simples aqui.
         return OkHttpClient.Builder()
-            .cookieJar(JavaNetCookieJar(cookieMgr)) // JSESSIONID
-            .readTimeout(0, TimeUnit.MILLISECONDS)
-            .pingInterval(0, TimeUnit.SECONDS)
+            .readTimeout(0, TimeUnit.MILLISECONDS)   // streaming
+            .pingInterval(0, TimeUnit.SECONDS)       // vamos deixar heartbeat pro STOMP
             .build()
     }
 
     @Provides @Singleton @Named("wsBase")
-    fun provideWsBase(): String = "http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com"
+    fun provideWsBase(): String =
+        "http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com"
 
     @Provides @Singleton @Named("wsStage")
     fun provideWsStage(): String? = null
@@ -171,9 +187,10 @@ object AppModule {
     fun provideWsEndpoint(): String = "ws"
 
     @Provides @Singleton @Named("wsSockJs")
-    fun provideWsSockJs(): Boolean = true
+    fun provideWsSockJs(): Boolean = true // ISSO É CRÍTICO
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideStompChatSocket(
         @Named("ws") wsClient: OkHttpClient,
         gson: Gson,
@@ -181,7 +198,19 @@ object AppModule {
         @Named("wsStage") stage: String?,
         @Named("wsEndpoint") endpoint: String,
         @Named("wsSockJs") sockJs: Boolean
-    ): StompChatSocket = StompChatSocket(wsClient, gson, base, stage, endpoint, sockJs).apply {
-        setAuth(emptyMap())
+    ): StompChatSocket {
+        return StompChatSocket(
+            ok = wsClient,
+            gson = gson,
+            base = base,
+            stage = stage,
+            endpoint = endpoint,
+            useSockJs = sockJs,
+            logBodies = true
+        ).apply {
+            // se depois você usar auth:
+            // setAuth(mapOf("authorization" to "Bearer <token>"))
+            setAuth(emptyMap())
+        }
     }
 }

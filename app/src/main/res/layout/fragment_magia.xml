@@ -132,6 +132,37 @@
                 app:layout_constraintTop_toBottomOf="@id/tituloCard"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- BOTÃO COMEÇAR (centralizado no card) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnComecar"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/comecar"
+                android:textAllCaps="true"
+                android:fontFamily="@font/cinzel_font_bold"
+                android:textSize="16sp"
+                android:letterSpacing="0.03"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/play_svgrepo_com"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/DouradoEspecial"
+                app:backgroundTint="@color/VermelhoEscuro"
+                app:strokeColor="@color/DouradoEspecial"
+                app:strokeWidth="2dp"
+                app:rippleColor="@color/DouradoEspecial"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subtituloCard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.5"/>
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

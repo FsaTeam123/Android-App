@@ -4,10 +4,25 @@ import com.google.gson.annotations.SerializedName
 
 data class DivindadeDataModel(
 
-    @SerializedName("id")
-    val id : Int?,
+    @SerializedName("idDivindade")
+    val idDivindade : Int? = null,
 
-    @SerializedName("divindade")
-    val divindade : String?
+    @SerializedName("nome")
+    val nome : String? = null,
+
+    @SerializedName("descricao")
+    val descricao : String? = null,
+
+    @SerializedName("ativo")
+    val ativo : Int? = null,
+
+    @SerializedName(value = "imagemBase64", alternate = ["imagem"])
+    val imagemBase64: String? = null,
+
+    @SerializedName("imagemContentType")
+    val imagemContentType : String? = null,
+
+    @SerializedName("imagemFilename")
+    val imagemFilename : String? = null
 
 )

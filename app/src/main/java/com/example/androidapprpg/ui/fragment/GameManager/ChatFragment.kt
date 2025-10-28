@@ -1,4 +1,3 @@
-// app/src/main/java/.../ui/fragment/GameManager/ChatFragment.kt
 package com.example.androidapprpg.ui.fragment.GameManager
 
 import android.os.Bundle
@@ -39,7 +38,14 @@ class ChatFragment : Fragment() {
 
     private var chatId: String = "global"
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    // evita duplo disparo (botão + IME ao mesmo tempo)
+    private var sendingNow = false
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentChatBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -114,9 +120,7 @@ class ChatFragment : Fragment() {
 
     private fun setupButtons() = with(binding) {
         btnSend.setOnClickListener {
-            btnSend.isEnabled = false
             sendCurrentText()
-            btnSend.post { btnSend.isEnabled = true }
         }
         btnBackChat.setOnClickListener {
             val popped = findNavController().popBackStack(R.id.gameManager, false)
@@ -126,25 +130,46 @@ class ChatFragment : Fragment() {
 
     private fun setupImeActions() = with(binding) {
         etMessage.setOnEditorActionListener { _, actionId, event ->
-            val pressedEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
+            val pressedEnter =
+                event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
             if (actionId == EditorInfo.IME_ACTION_SEND || pressedEnter) {
                 sendCurrentText()
                 true
-            } else false
+            } else {
+                false
+            }
         }
     }
 
+    /**
+     * Função centralizada: só manda se não estiver mandando já.
+     * Também limpa o campo de texto imediatamente pra evitar repetir conteúdo.
+     */
     private fun sendCurrentText() = with(binding) {
+        if (sendingNow) return@with  // bloqueia duplo clique/duplo enter
+
         val text = etMessage.text?.toString().orEmpty().trim()
-        if (text.isNotEmpty()) {
-            vm.sendMessage(
-                chatId = chatId,
-                rawText = text,
-                scope = "GLOBAL",
-                senderId = vm.currentUserId(),
-                senderNick = vm.currentUserNick() ?: "Você"
-            )
-            etMessage.setText("")
+        if (text.isEmpty()) return@with
+
+        sendingNow = true
+        btnSend.isEnabled = false
+
+        // dispara pro ViewModel
+        vm.sendMessage(
+            chatId = chatId,
+            rawText = text,
+            scope = "GLOBAL",
+            senderId = vm.currentUserId(),
+            senderNick = vm.currentUserNick() ?: "Você"
+        )
+
+        // limpa a caixa ANTES que outro gatilho (IME/botão) tente mandar o mesmo texto
+        etMessage.setText("")
+
+        // libera envio de novo num pequeno post no próximo loop
+        btnSend.post {
+            sendingNow = false
+            btnSend.isEnabled = true
         }
     }
 

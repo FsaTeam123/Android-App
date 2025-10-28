@@ -1,14 +1,17 @@
 package com.example.androidapprpg.ui.fragment.Login_Register
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,7 +35,7 @@ class RegisterFragment : Fragment() {
     private val viewModel: RegisterViewModel by viewModels()
 
     private var selectedSexoId: Int? = null
-    private var selectedPerfilId: Int? = null
+    private var selectedPerfilId: Int? = null // se precisar futuramente
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,20 +55,26 @@ class RegisterFragment : Fragment() {
         applyImeInsetsForRegister()
         ensureFieldVisibleOnFocus()
 
+        // carrega opções de sexo etc.
         viewModel.loadCombos()
 
-        // Estado inicial dos bullets
+        // estado inicial das regras da senha
         updateRules(binding.password.text?.toString().orEmpty())
+
+        // abrir Termos & Privacidade
+        binding.termosEPrivacidadeRegister.setOnClickListener {
+            showTermsDialog()
+        }
     }
 
-    /** Fecha e retorna para LoginFragment dentro do mesmo gráfico */
+    /** Botão fechar (voltar pro login) */
     private fun setupCloseButton() = with(binding) {
         btnClose?.setOnClickListener {
             findNavController().popBackStack(R.id.login, false)
         }
     }
 
-    /** Combos de Sexo e Perfil */
+    /** Observa combos (Sexo) */
     private fun observarCombos() {
         viewModel.sexos.observe(viewLifecycleOwner) { list ->
             if (list.isNullOrEmpty()) return@observe
@@ -78,19 +87,22 @@ class RegisterFragment : Fragment() {
             }
         }
 
-
         viewModel.comboError.observe(viewLifecycleOwner) { msg ->
             msg?.let { toast(it) }
         }
     }
 
-    /** Validação: pinta bullets e limpa erros ao digitar */
+    /** Pinta bullets e limpa erros ao digitar */
     private fun setupValidation() = with(binding) {
-        password.doOnTextChanged { text, _, _, _ -> updateRules(text?.toString().orEmpty()) }
-        checkPassword.doOnTextChanged { _, _, _, _ -> clearInlineError() }
+        password.doOnTextChanged { text, _, _, _ ->
+            updateRules(text?.toString().orEmpty())
+        }
+        checkPassword.doOnTextChanged { _, _, _, _ ->
+            clearInlineError()
+        }
     }
 
-    /** Botões */
+    /** Clique dos botões principais */
     private fun setupClicks() = with(binding) {
         registerButton.setOnClickListener {
             val name = nome.text.toString().trim()
@@ -99,8 +111,9 @@ class RegisterFragment : Fragment() {
             val senha = password.text.toString()
             val confirmarSenha = checkPassword.text.toString()
 
-            if (name.isEmpty() || email.isEmpty() || nickname.isEmpty() ||
-                senha.isEmpty() || confirmarSenha.isEmpty()
+            // validações obrigatórias
+            if (name.isEmpty() || email.isEmpty() || nickname.isEmpty()
+                || senha.isEmpty() || confirmarSenha.isEmpty()
             ) {
                 showCustomToast("Preencha todos os campos", requireContext())
                 return@setOnClickListener
@@ -122,19 +135,29 @@ class RegisterFragment : Fragment() {
             }
 
             val sexoId = selectedSexoId ?: run {
-                toast("Selecione o Genêro"); return@setOnClickListener
+                toast("Selecione o Gênero")
+                return@setOnClickListener
             }
 
+            // precisa aceitar Termos
+            if (!isTermsAccepted(requireContext())) {
+                showCustomToast(
+                    "Você precisa aceitar os Termos e a Privacidade.",
+                    requireContext()
+                )
+                showTermsDialog()
+                return@setOnClickListener
+            }
 
             clearInlineError()
 
+            // chama cadastro
             viewModel.register(
                 name = name,
                 email = email,
                 nickname = nickname,
                 senha = senha,
                 idSexo = sexoId,
-
             )
         }
 
@@ -143,7 +166,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    /** Observa o resultado do cadastro */
+    /** Observa retorno do ViewModel do cadastro */
     private fun observarCadastro() {
         viewModel.registerResult.observe(viewLifecycleOwner) { result ->
             when (result) {
@@ -151,11 +174,10 @@ class RegisterFragment : Fragment() {
                 is Result.Success -> {
                     binding.registerButton.isEnabled = true
                     showCustomToast("Cadastro realizado com sucesso", requireContext())
-                     // Volta para o Login
                     findNavController().popBackStack(R.id.login, false)
                 }
                 is Result.StopViewModel -> {
-                    //StopViewModel
+                    // opcional
                 }
                 is Result.Error -> {
                     binding.registerButton.isEnabled = true
@@ -165,7 +187,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    // --------- Validação e UI helpers ---------
+    // ---------------------- UTIL: senha ----------------------
 
     private fun isPasswordValid(pw: String): Boolean {
         val hasMin = pw.length >= 8
@@ -193,20 +215,6 @@ class RegisterFragment : Fragment() {
         if (isPasswordValid(pw)) clearInlineError()
     }
 
-    fun showCustomToast(message: String, context: Context) {
-        val inflater = LayoutInflater.from(context)
-        val layout: View = inflater.inflate(R.layout.toast_layout, null)
-
-        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
-        toastMessage.text = message
-
-        val toast = Toast(context)
-        toast.duration = Toast.LENGTH_SHORT
-        toast.view = layout
-        toast.setGravity(Gravity.BOTTOM, 0, 200) // Ajusta a posição do toast (ex: 200px de distância do fundo)
-        toast.show()
-    }
-
     private fun showInlineError(message: String) = with(binding) {
         passwordInputLayout.error = message
         checkPasswordInputLayout.error = message
@@ -217,6 +225,25 @@ class RegisterFragment : Fragment() {
         checkPasswordInputLayout.error = null
     }
 
+    // ---------------------- Toast custom ----------------------
+
+    fun showCustomToast(message: String, context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.toast_layout, null)
+        val toastMessage: TextView = layout.findViewById(R.id.toast_message)
+        toastMessage.text = message
+
+        Toast(context).apply {
+            duration = Toast.LENGTH_SHORT
+            view = layout
+            setGravity(Gravity.BOTTOM, 0, 200)
+        }.show()
+    }
+
+    private fun toast(msg: String) =
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+
+    // ---------------------- Ajuste teclado / scroll ----------------------
 
     private fun applyImeInsetsForRegister() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.registerFragment) { v, insets ->
@@ -224,10 +251,9 @@ class RegisterFragment : Fragment() {
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val bottom = maxOf(sys.bottom, ime.bottom)
 
-            // top ajuda caso a status bar apareça temporariamente (gesto)
             v.updatePadding(
                 top = sys.top,
-                bottom = bottom + dp(16) // folga pro botão "Cadastrar"
+                bottom = bottom + dp(16) // deixa espaço pro botão
             )
             insets
         }
@@ -235,17 +261,19 @@ class RegisterFragment : Fragment() {
 
     private fun ensureFieldVisibleOnFocus() = with(binding) {
         fun View.scrollIntoView() {
-            // espera layout/IME estabilizar e rola suave até o campo
             post {
-                val y = this.bottom + dp(24)    // margem extra
+                val y = this.bottom + dp(24)
                 registerFragment.smoothScrollTo(0, y)
             }
         }
-        // quando focar, certifica que está visível acima do teclado
-        password.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) v.scrollIntoView() }
-        checkPassword.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) v.scrollIntoView() }
 
-        // também ao tocar (para casos sem "focusChange" disparar)
+        password.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) v.scrollIntoView()
+        }
+        checkPassword.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) v.scrollIntoView()
+        }
+
         password.setOnClickListener { it.scrollIntoView() }
         checkPassword.setOnClickListener { it.scrollIntoView() }
     }
@@ -253,13 +281,64 @@ class RegisterFragment : Fragment() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 
+    // ---------------------- Termos & Privacidade ----------------------
 
+    private fun showTermsDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_termos_privacidade, null, false)
 
-    private fun toast(msg: String) =
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        val checkAceito = dialogView.findViewById<CheckBox>(R.id.checkAceito)
+        val btnFechar   = dialogView.findViewById<TextView>(R.id.btnFechar)
+        val btnAceitar  = dialogView.findViewById<TextView>(R.id.btnAceitar)
+
+        val alert = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        alert.setOnShowListener {
+            alert.window?.setBackgroundDrawable(
+                ColorDrawable(android.graphics.Color.TRANSPARENT)
+            )
+        }
+
+        btnFechar.setOnClickListener {
+            alert.dismiss()
+        }
+
+        btnAceitar.setOnClickListener {
+            if (!checkAceito.isChecked) {
+                showCustomToast(
+                    "Marque que você aceita os Termos e a Privacidade.",
+                    requireContext()
+                )
+                return@setOnClickListener
+            }
+
+            saveTermsAccepted(requireContext())
+            showCustomToast("Termos aceitos.", requireContext())
+            alert.dismiss()
+        }
+
+        alert.show()
+    }
+
+    private fun saveTermsAccepted(ctx: Context) {
+        val prefs = ctx.getSharedPreferences("settings_prefs", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putBoolean("termsAccepted", true)
+            .apply()
+    }
+
+    private fun isTermsAccepted(ctx: Context): Boolean {
+        val prefs = ctx.getSharedPreferences("settings_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("termsAccepted", false)
+    }
+
+    // ---------------------- lifecycle cleanup ----------------------
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

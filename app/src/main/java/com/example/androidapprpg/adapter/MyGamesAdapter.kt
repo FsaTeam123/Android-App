@@ -43,17 +43,30 @@ class MyGamesAdapter(
     override fun onBindViewHolder(holder: MyGamesViewHolder, position: Int) {
         val game = gamesList[position]
         with(holder.binding) {
-            // textos
-            gameNameTextView.text = game.titulo ?: "—"
-            mestreValue.text = game.master.nome ?: game.master.nickname ?: "—"
-            nivelValue.text = game.nivelInicial?.toString() ?: "—"
-            jogadoresValue.text = "${game.playerAtivos ?: 0}/${game.qtdPessoas ?: 0}"
 
-            // ícone determinístico por id
+            // título da mesa
+            gameNameTextView.text = game.titulo ?: "—"
+
+            // ID da mesa
+            // (esse TextView precisa existir no XML com id @+id/gameIdValue)
+            gameIdChip.text = game.idJogo.toString()
+
+            // mestre / gm
+            mestreValue.text = game.master.nome
+                ?: game.master.nickname
+                        ?: "—"
+
+            // nível inicial
+            nivelValue.text = game.nivelInicial?.toString() ?: "—"
+
+            // jogadores ativos / total
+            jogadoresValue.text =
+                "${game.playerAtivos ?: 0}/${game.qtdPessoas ?: 0}"
+
+            // ícone temático pseudo-aleatório mas estável
             gameIcon.setImageResource(iconForGameId(game.idJogo))
 
-
-            // ações
+            // listeners
             enterButton.setOnClickListener { onEnterClick(game) }
             root.setOnClickListener { onEditClick(game) }
             btnEditGame.setOnClickListener { onEditClick(game) }

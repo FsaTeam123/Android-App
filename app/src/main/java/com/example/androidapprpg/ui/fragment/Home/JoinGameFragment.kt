@@ -1,9 +1,15 @@
 package com.example.androidapprpg.ui.fragment.Home
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -12,6 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.androidapprpg.R
 import com.example.androidapprpg.databinding.FragmentJoinGameBinding
+import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import com.example.androidapprpg.ui.viewmodel.JoinGameViewModel
 import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +31,9 @@ class JoinGameFragment : Fragment() {
 
     private val viewModel: JoinGameViewModel by viewModels()
 
+    // ---------------------------------
+    // ciclo de vida
+    // ---------------------------------
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,83 +46,191 @@ class JoinGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        ativarFullscreen()
-        //setupObservers()
-        setUpEnterGame()
-        setUpExitButton()
+        setupObservers()
+        setupEnterGameButton()
+        setupExitButton()
+        // ativarFullscreen() // se quiser esconder status bar depois
     }
 
-    /*private fun ativarFullscreen() {
-        val controller = requireActivity().window.decorView
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    // ---------------------------------
+    // fullscreen opcional
+    // ---------------------------------
+    private fun ativarFullscreen() {
+        val controllerView = requireActivity().window.decorView
         val insetsController =
-            WindowInsetsControllerCompat(requireActivity().window, controller)
+            WindowInsetsControllerCompat(requireActivity().window, controllerView)
 
         insetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }*/
+    }
 
-    private fun setUpExitButton() {
+    // ---------------------------------
+    // UI listeners
+    // ---------------------------------
+    private fun setupExitButton() {
         binding.btnFechar.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun setUpEnterGame() {
+    private fun setupEnterGameButton() {
         binding.btnEntrarJogo.setOnClickListener {
-            val idGameText = binding.inputIdJogo.text.toString()
+            val idGameText = binding.inputIdJogo.text.toString().trim()
 
             if (idGameText.isEmpty()) {
-                Toast.makeText(requireContext(), "Preencha o ID de Jogo", Toast.LENGTH_SHORT).show()
+                showCustomToast("Preencha o ID de Jogo", requireContext())
                 return@setOnClickListener
             }
 
-            val idGame = idGameText.toIntOrNull()
-            if (idGame == null) {
-                Toast.makeText(requireContext(), "ID de Jogo inválido", Toast.LENGTH_SHORT).show()
+            val idGameLong = idGameText.toLongOrNull()
+            if (idGameLong == null) {
+                showCustomToast("ID de Jogo inválido", requireContext())
                 return@setOnClickListener
             }
 
-            //viewModel.joinGame(idGame)
-            findNavController().navigate(R.id.action_joinGameFragment_to_nav_game_manager)
-
+            // dispara a chamada GET /jogos/{id}
+            viewModel.joinGame(idGameLong)
         }
     }
 
-    /*private fun setupObservers() {
+    // ---------------------------------
+    // Observer da resposta da ViewModel
+    // ---------------------------------
+    private fun setupObservers() {
         viewModel.joinGameResult.observe(viewLifecycleOwner) { result ->
             when (result) {
+
                 is Result.Loading -> {
-                    Toast.makeText(requireContext(), "Buscando jogo...", Toast.LENGTH_SHORT).show()
+                    showCustomToast("Buscando jogo...", requireContext())
                 }
 
                 is Result.Success -> {
                     val jogo = result.data
+                    val idJogo = jogo.idJogo
+                    val titulo = jogo.titulo
+                    val senha = jogo.senha  // pode ser null / "" / valor
 
-                    jogo.id?.let { idJogo ->
-                        Toast.makeText(requireContext(), "Entrou no jogo: ${jogo.titulo}", Toast.LENGTH_SHORT).show()
+                    if (idJogo == null) {
+                        showCustomToast(
+                            "Erro: servidor não retornou idJogo",
+                            requireContext()
+                        )
+                        return@observe
+                    }
 
-                        val bundle = Bundle().apply {
-                            putLong("idJogo", idJogo)
-                        }
-
-                        findNavController().navigate(R.id.navGameLobby, bundle)
-                    } ?: run {
-                        Toast.makeText(requireContext(), "Erro: ID do jogo não retornado", Toast.LENGTH_LONG).show()
+                    // Se jogo TEM senha -> pede senha antes de entrar
+                    if (!senha.isNullOrBlank()) {
+                        pedirSenhaEAbrirJogo(
+                            idJogo = idJogo,
+                            tituloJogo = titulo,
+                            senhaCorreta = senha
+                        )
+                    } else {
+                        // jogo sem senha -> entra direto
+                        abrirGameMaster(idJogo, titulo)
                     }
                 }
 
                 is Result.Error -> {
-                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    showCustomToast(result.message, requireContext())
+                }
+
+                is Result.StopViewModel -> {
+                    // se você tiver esse estado na sealed class,
+                    // não precisa fazer nada aqui.
                 }
             }
         }
-    }*/
+    }
 
+    // ---------------------------------
+    // Diálogo de senha (usando nosso layout custom)
+    // ---------------------------------
+    private fun pedirSenhaEAbrirJogo(
+        idJogo: Long,
+        tituloJogo: String?,
+        senhaCorreta: String
+    ) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_pedir_senha, null)
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        val etSenha = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(
+            R.id.etSenhaSala
+        )
+        val tvHint = dialogView.findViewById<TextView>(R.id.tvDialogHint)
+        val btnCancelar = dialogView.findViewById<TextView>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<TextView>(R.id.btnConfirmar)
+
+        tvHint.text = "Essa mesa é protegida.\nDigite a senha para entrar:"
+
+        val alert = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // tirar o fundo branco padrão do AlertDialog (aquela borda clara que estava vazando)
+        alert.setOnShowListener {
+            alert.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+            )
+        }
+
+        btnCancelar.setOnClickListener {
+            alert.dismiss()
+        }
+
+        btnConfirmar.setOnClickListener {
+            val digitada = etSenha.text?.toString()?.trim().orEmpty()
+
+            if (digitada == senhaCorreta) {
+                abrirGameMaster(idJogo, tituloJogo)
+                alert.dismiss()
+            } else {
+                showCustomToast("Senha incorreta", requireContext())
+            }
+        }
+
+        alert.show()
+    }
+
+    // ---------------------------------
+    // Abrir a Activity do jogo
+    // ---------------------------------
+    private fun abrirGameMaster(idJogo: Long, tituloJogo: String?) {
+        showCustomToast(
+            "Entrando em \"${tituloJogo ?: "Mesa"}\" (id=$idJogo)...",
+            requireContext()
+        )
+
+        val intent = Intent(requireContext(), ActivityGameMaster::class.java).apply {
+            putExtra(ActivityGameMaster.EXTRA_ID_JOGO, idJogo)
+        }
+        startActivity(intent)
+
+        // Se você quiser fechar essa tela depois de entrar no jogo:
+        // requireActivity().finish()
+    }
+
+    // ---------------------------------
+    // Toast customizado no estilo do app
+    // ---------------------------------
+    private fun showCustomToast(message: String, context: Context) {
+        val layout = LayoutInflater.from(context)
+            .inflate(R.layout.toast_layout, null, false)
+
+        layout.findViewById<TextView>(R.id.toast_message).text = message
+
+        Toast(context).apply {
+            duration = Toast.LENGTH_SHORT
+            view = layout
+            setGravity(Gravity.BOTTOM, 0, 200)
+        }.show()
     }
 }

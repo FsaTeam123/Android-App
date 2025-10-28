@@ -62,7 +62,7 @@ class ConfirmPlayerFragment : Fragment() {
 
         btnBack.setOnClickListener {
             // sem bundle — todos os fragments leem da Activity
-            findNavController().navigate(R.id.action_confirmar_to_mochila)
+            findNavController().navigate(R.id.action_confirm_to_weapons)
         }
 
         btnConfirm.setOnClickListener {

@@ -4,10 +4,16 @@ import com.google.gson.annotations.SerializedName
 
 data class RiquezaDataModel(
 
-    @SerializedName("id")
-    val id : Int?,
+    @SerializedName("idRiqueza")
+    val idRiqueza : Int? = null,
 
-    @SerializedName("riqueza")
-    val riqueza : String?
+    @SerializedName("tibarOuro")
+    val tibarOuro : Int? = null,
+
+    @SerializedName("tibarPrata")
+    val tibarPrata : Int? = null,
+
+    @SerializedName("tibarCobre")
+    val tibarCobre : Int? = null
 
 )

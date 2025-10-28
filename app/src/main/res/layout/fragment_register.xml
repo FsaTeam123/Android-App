@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:id="@+id/registerFragment"
     android:clipToPadding="false"
     android:descendantFocusability="afterDescendants"
     android:background="@drawable/login_background"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top bar -->
+        <!-- Barra de topo -->
         <RelativeLayout
             android:id="@+id/topBarContainer"
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:backgroundTint="@color/BordasDouradas" />
         </RelativeLayout>
 
-        <!-- Conteúdo com padding lateral padrão 22dp -->
+        <!-- Conteúdo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:paddingEnd="22dp"
             android:paddingBottom="22dp">
 
-            <!-- Divider igual ao da NewPassword -->
+            <!-- Divider dourado -->
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/topDivider"
                 android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:alpha="0.6"
                 app:dividerColor="@color/BordasDouradas" />
 
-            <!-- Card / Painel -->
+            <!-- Painel de cadastro -->
             <LinearLayout
                 android:id="@+id/painelCadastro"
                 android:layout_width="match_parent"
@@ -73,14 +73,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:fontFamily="@font/cinzel_font_bold"
                     android:text="@string/cadastro"
                     android:textAlignment="center"
                     android:textColor="@color/BordasDouradas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
-                <!-- Nome -->
+                <!-- Nome completo -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                         android:textColorHint="@color/BordasDouradas"
                         android:textSize="15sp"
                         android:imeOptions="actionNext"
-                        android:autofillHints="name"/>
+                        android:autofillHints="name" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Email -->
@@ -143,7 +143,7 @@
                         android:textSize="15sp"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionNext"
-                        android:autofillHints="emailAddress"/>
+                        android:autofillHints="emailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Nickname -->
@@ -175,10 +175,10 @@
                         android:textColor="@color/BordasDouradas"
                         android:textColorHint="@color/BordasDouradas"
                         android:textSize="15sp"
-                        android:imeOptions="actionNext"/>
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Sexo -->
+                <!-- Gênero / Sexo -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -206,10 +206,8 @@
                         android:padding="12dp"
                         android:inputType="none"
                         android:textColor="@color/BordasDouradas"
-                        android:textColorHint="@color/BordasDouradas"/>
+                        android:textColorHint="@color/BordasDouradas" />
                 </com.google.android.material.textfield.TextInputLayout>
-
-
 
                 <!-- Senha -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -245,7 +243,7 @@
                         android:textSize="15sp"
                         android:inputType="textPassword"
                         android:imeOptions="actionNext"
-                        android:autofillHints="newPassword"/>
+                        android:autofillHints="newPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Confirmar Senha -->
@@ -282,10 +280,10 @@
                         android:textSize="15sp"
                         android:inputType="textPassword"
                         android:imeOptions="actionDone"
-                        android:autofillHints="newPassword"/>
+                        android:autofillHints="newPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Regras (bullets) -->
+                <!-- Regras senha -->
                 <LinearLayout
                     android:id="@+id/regraSenhaLayout"
                     android:layout_width="match_parent"
@@ -330,7 +328,7 @@
                         android:textColor="@color/BordasDouradas" />
                 </LinearLayout>
 
-                <!-- Botão dentro do card -->
+                <!-- Botão cadastrar -->
                 <Button
                     android:id="@+id/registerButton"
                     android:layout_width="250dp"
@@ -341,7 +339,22 @@
                     android:textSize="18sp"
                     android:fontFamily="@font/cinzel_font_bold"
                     android:textColor="@color/BordasDouradas"
-                    android:backgroundTint="@color/DarkSiena"/>
+                    android:backgroundTint="@color/DarkSiena" />
+
+                <!-- Termos e Privacidade -->
+                <TextView
+                    android:id="@+id/termosEPrivacidadeRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Termos e Privacidade"
+                    android:textColor="@color/BordasDouradas"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/cinzel_font_bold" />
+
             </LinearLayout>
 
             <!-- Link Login -->
@@ -358,7 +371,7 @@
                     android:text="Já é um aventureiro?"
                     android:textColor="@color/BordasDouradas"
                     android:textSize="14sp"
-                    android:fontFamily="@font/cinzel_font_bold"/>
+                    android:fontFamily="@font/cinzel_font_bold" />
 
                 <TextView
                     android:id="@+id/backToLogin"
@@ -368,7 +381,7 @@
                     android:text="Faça Login"
                     android:textColor="@color/BordasDouradas"
                     android:textSize="18sp"
-                    android:fontFamily="@font/cinzel_font_bold"/>
+                    android:fontFamily="@font/cinzel_font_bold" />
             </LinearLayout>
 
         </LinearLayout>

@@ -1,13 +1,16 @@
 package com.example.androidapprpg.ui.fragment.Home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -28,6 +31,7 @@ import com.example.androidapprpg.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
+import android.app.AlertDialog
 
 @AndroidEntryPoint
 class MyGamesFragment : Fragment() {
@@ -105,14 +109,31 @@ class MyGamesFragment : Fragment() {
             onEnterClick = { jogo ->
                 Log.d(TAG_UI, "onEnterClick id=${jogo.idJogo}")
 
-                // >>> TROCA DE FLUXO: abre ActivityGameMaster
-                val intent = Intent(requireContext(), ActivityGameMaster::class.java).apply {
-                    putExtra(ActivityGameMaster.EXTRA_ID_JOGO,   jogo.idJogo)
-                    putExtra(ActivityGameMaster.EXTRA_TITULO,    jogo.titulo ?: "")
-                    putExtra(ActivityGameMaster.EXTRA_MASTER_ID, jogo.master.idUsuario ?: -1)
-                    putExtra(ActivityGameMaster.EXTRA_ATIVO,     jogo.ativo)
+                val idJogo   = jogo.idJogo
+                val titulo   = jogo.titulo
+                val senha    = jogo.senha // pode ser null/vazia
+                val masterId = (jogo.master.idUsuario ?: -1).toLong()
+                val ativo    = jogo.ativo
+
+                // se o jogo tiver senha -> pede senha primeiro
+                if (!senha.isNullOrBlank()) {
+                    Log.d(TAG_UI, "Jogo $idJogo tem senha, pedindo antes de entrar")
+                    pedirSenhaEAbrirJogo(
+                        idJogo       = idJogo,
+                        tituloJogo   = titulo,
+                        senhaCorreta = senha,
+                        masterId     = masterId,
+                        ativo        = ativo
+                    )
+                } else {
+                    Log.d(TAG_UI, "Jogo $idJogo sem senha, entrando direto")
+                    abrirGameMaster(
+                        idJogo     = idJogo,
+                        tituloJogo = titulo,
+                        masterId   = masterId,
+                        ativo      = ativo
+                    )
                 }
-                startActivity(intent)
             },
             onEditClick = { jogo ->
                 Log.d(TAG_UI, "onEditClick id=${jogo.idJogo}")
@@ -194,7 +215,9 @@ class MyGamesFragment : Fragment() {
 
         viewModel.myGamesResult.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Loading -> Log.d(TAG_UI, "myGamesResult=Loading")
+                is Result.Loading -> {
+                    Log.d(TAG_UI, "myGamesResult=Loading")
+                }
                 is Result.Success -> {
                     Log.d(TAG_UI, "myGamesResult=Success size=${it.data.size}")
                     listaCompleta = it.data
@@ -204,17 +227,23 @@ class MyGamesFragment : Fragment() {
                     Log.d(TAG_UI, "myGamesResult=Error msg=${it.message}")
                     toast(it.message)
                 }
-                is Result.StopViewModel -> Log.d(TAG_UI, "myGamesResult=StopViewModel")
+                is Result.StopViewModel -> {
+                    Log.d(TAG_UI, "myGamesResult=StopViewModel")
+                }
             }
         }
 
         viewModel.updateResult.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Loading -> Log.d(TAG_UI, "updateResult=Loading")
+                is Result.Loading -> {
+                    Log.d(TAG_UI, "updateResult=Loading")
+                }
                 is Result.Success -> {
                     val up = it.data
                     Log.d(TAG_UI, "updateResult=Success id=${up.idJogo} titulo=${up.titulo}")
-                    listaCompleta = listaCompleta.map { g -> if (g.idJogo == up.idJogo) up else g }
+                    listaCompleta = listaCompleta.map { g ->
+                        if (g.idJogo == up.idJogo) up else g
+                    }
                     updateRecycler()
                     toast("Jogo atualizado!")
                 }
@@ -222,13 +251,17 @@ class MyGamesFragment : Fragment() {
                     Log.d(TAG_UI, "updateResult=Error msg=${it.message}")
                     toast(it.message)
                 }
-                is Result.StopViewModel -> Log.d(TAG_UI, "updateResult=StopViewModel")
+                is Result.StopViewModel -> {
+                    Log.d(TAG_UI, "updateResult=StopViewModel")
+                }
             }
         }
 
         viewModel.deleteResult.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Loading -> Log.d(TAG_UI, "deleteResult=Loading")
+                is Result.Loading -> {
+                    Log.d(TAG_UI, "deleteResult=Loading")
+                }
                 is Result.Success -> {
                     val removedId = it.data
                     Log.d(TAG_UI, "deleteResult=Success removedId=$removedId")
@@ -240,7 +273,9 @@ class MyGamesFragment : Fragment() {
                     Log.d(TAG_UI, "deleteResult=Error msg=${it.message}")
                     toast(it.message)
                 }
-                is Result.StopViewModel -> Log.d(TAG_UI, "deleteResult=StopViewModel")
+                is Result.StopViewModel -> {
+                    Log.d(TAG_UI, "deleteResult=StopViewModel")
+                }
             }
         }
     }
@@ -253,10 +288,111 @@ class MyGamesFragment : Fragment() {
             else listaCompleta.filter {
                 (it.titulo ?: "").lowercase(Locale.getDefault()).contains(searchText)
             }
-        Log.d(TAG_UI, "updateRecycler() -> filtered=${filtered.size}/${listaCompleta.size}")
+        Log.d(
+            TAG_UI,
+            "updateRecycler() -> filtered=${filtered.size}/${listaCompleta.size}"
+        )
         adapter.updateData(filtered)
     }
 
     private fun toast(msg: String) =
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+
+    // ============================ PASSWORD DIALOG FLOW ============================
+
+    /**
+     * Mesmo comportamento do JoinGameFragment:
+     * se a mesa tiver senha -> mostra dialog custom pedindo senha.
+     * Só abre ActivityGameMaster se a senha bater.
+     */
+    private fun pedirSenhaEAbrirJogo(
+        idJogo: Long,
+        tituloJogo: String?,
+        senhaCorreta: String,
+        masterId: Long,
+        ativo: Int
+    ) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_pedir_senha, null)
+
+        val etSenha = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(
+            R.id.etSenhaSala
+        )
+        val tvHint = dialogView.findViewById<TextView>(R.id.tvDialogHint)
+        val btnCancelar = dialogView.findViewById<TextView>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<TextView>(R.id.btnConfirmar)
+
+        tvHint.text = "Essa mesa é protegida.\nDigite a senha para entrar:"
+
+        val alert = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        alert.setOnShowListener {
+            alert.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+            )
+        }
+
+        btnCancelar.setOnClickListener {
+            alert.dismiss()
+        }
+
+        btnConfirmar.setOnClickListener {
+            val digitada = etSenha.text?.toString()?.trim().orEmpty()
+            if (digitada == senhaCorreta) {
+                abrirGameMaster(
+                    idJogo     = idJogo,
+                    tituloJogo = tituloJogo,
+                    masterId   = masterId,
+                    ativo      = ativo
+                )
+                alert.dismiss()
+            } else {
+                showCustomToast("Senha incorreta", requireContext())
+            }
+        }
+
+        alert.show()
+    }
+
+    /**
+     * Abre a ActivityGameMaster com os mesmos extras que você já passava antes.
+     */
+    private fun abrirGameMaster(
+        idJogo: Long,
+        tituloJogo: String?,
+        masterId: Long,
+        ativo: Int
+    ) {
+        showCustomToast(
+            "Entrando em \"${tituloJogo ?: "Mesa"}\" (id=$idJogo)...",
+            requireContext()
+        )
+
+        val intent = Intent(requireContext(), ActivityGameMaster::class.java).apply {
+            putExtra(ActivityGameMaster.EXTRA_ID_JOGO,   idJogo)
+            putExtra(ActivityGameMaster.EXTRA_TITULO,    tituloJogo ?: "")
+            putExtra(ActivityGameMaster.EXTRA_MASTER_ID, masterId)
+            putExtra(ActivityGameMaster.EXTRA_ATIVO,     ativo)
+        }
+        startActivity(intent)
+    }
+
+    /**
+     * Toast estiloso igual JoinGameFragment.
+     */
+    private fun showCustomToast(message: String, context: Context) {
+        val layout = LayoutInflater.from(context)
+            .inflate(R.layout.toast_layout, null, false)
+
+        layout.findViewById<TextView>(R.id.toast_message).text = message
+
+        Toast(context).apply {
+            duration = Toast.LENGTH_SHORT
+            view = layout
+            setGravity(Gravity.BOTTOM, 0, 200)
+        }.show()
+    }
 }

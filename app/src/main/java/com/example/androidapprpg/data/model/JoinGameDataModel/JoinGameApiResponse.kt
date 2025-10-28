@@ -1,43 +1,57 @@
-    package com.example.androidapprpg.data.model.JoinGameDataModel
+package com.example.androidapprpg.data.model.JoinGameDataModel
 
-    import com.google.gson.annotations.SerializedName
+import com.example.androidapprpg.data.model.NewGameDataModel.EstiloCampanhaDataModel
+import com.example.androidapprpg.data.model.NewGameDataModel.GeracaoMundoDataModel
+import com.example.androidapprpg.data.model.NewGameDataModel.HistoriaDataModel
+import com.example.androidapprpg.data.model.NewGameDataModel.MasterDataModel
+import com.example.androidapprpg.data.model.NewGameDataModel.TemasDataModel
+import com.example.androidapprpg.data.model.NewGameDataModel.TipoJogoDataModel
+import com.google.gson.annotations.SerializedName
 
-    data class JoinGameApiResponse(
+data class JoinGameApiResponse(
 
-        @SerializedName("sistema")
-        val sistema: String?,
+    @SerializedName("idJogo")
+    val idJogo: Long? = null,
 
-        @SerializedName("id")
-        val id: Long? = null,
+    @SerializedName("master")
+    val master: MasterDataModel? = null,
 
-        @SerializedName("idMaster")
-        val idMaster: Int?,
+    @SerializedName("titulo")
+    val titulo: String? = null,
 
-        @SerializedName("titulo")
-        val titulo: String?,
+    @SerializedName("qtdPessoas")
+    val qtdPessoas: Int? = null,
 
-        @SerializedName("idHistoria")
-        val idHistoria: Int?,
+    @SerializedName("isEspecificClass")
+    val isEspecificClass: Int? = null, // parece ser 0/1 (boolzinho)
 
-        @SerializedName("qtdPessoas")
-        val qtdPessoas: Int?,
+    @SerializedName("nivelInicial")
+    val nivelInicial: Int? = null,
 
-        @SerializedName("dificuldade") //isso aqui deveria ser de 0 a 20?
-        val dificuldade: Int?,
+    @SerializedName("tipoJogo")
+    val tipoJogo: TipoJogoDataModel? = null,
 
-        @SerializedName("idTipoJogo")
-        val idTipoJogo: Int?,
+    @SerializedName("geracaoMundo")
+    val geracaoMundo: GeracaoMundoDataModel? = null,
 
-        @SerializedName("idEstiloCampanha")
-        val idEstiloCampanha: Int?,
+    @SerializedName("estiloCampanha")
+    val estiloCampanha: EstiloCampanhaDataModel? = null,
 
-        @SerializedName("idGeracaoMundo")
-        val idGeracaoMundo: Int?,
+    @SerializedName("historia")
+    val historia: HistoriaDataModel? = null,
 
-        @SerializedName("idTema")
-        val idTema: Int?,
+    @SerializedName("tema")
+    val tema: TemasDataModel? = null,
 
-        @SerializedName("senha")
-        val senha: String?
+    @SerializedName("senha")
+    val senha: String? = null,
 
-    )
+    @SerializedName("dataCriacao")
+    val dataCriacao: String? = null,
+
+    @SerializedName("ativo")
+    val ativo: Int? = null,
+
+    @SerializedName("playerAtivos")
+    val playerAtivos: Int? = null
+)

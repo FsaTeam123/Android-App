@@ -1,4 +1,4 @@
-package com.example.androidapprpg.ui.fragment.Cards
+package com.example.androidapprpg.ui.fragment.Cards.MagiaRoot
 
 import android.content.Context
 import android.graphics.Color
@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -61,8 +62,18 @@ class MagiaFragment : Fragment() {
 
     private fun setUpUi() = with(binding) {
         btnClose.setOnClickListener { showCloseSessionDialog() }
-        btnAnterior.setOnClickListener { findNavController().navigate(R.id.action_magias_to_poderes) }
-        btnProximo.setOnClickListener { findNavController().navigate(R.id.action_magias_to_armamento) }
+        btnAnterior.setOnClickListener { findNavController().navigate(R.id.action_spells_to_powers) }
+        btnProximo.setOnClickListener { findNavController().navigate(R.id.action_spells_to_weapons) }
+        btnComecar.setOnClickListener {
+            val idJogo = currentGameId()
+            if (idJogo > 0L) {
+                val args = bundleOf("jogoId" to idJogo.toInt())
+                findNavController().navigate( R.id.action_magias_to_card_magias, args)
+                Log.d(MagiaFragment.TAG, "MagiaFragment -> Seção Cartas Magia (jogoId=$idJogo)")
+            } else {
+                showCustomToast("Sessão inválida: não foi possível iniciar.", requireContext())
+            }
+        }
     }
 
     private fun showCloseSessionDialog() {

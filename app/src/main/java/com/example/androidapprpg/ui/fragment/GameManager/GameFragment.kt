@@ -9,23 +9,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.androidapprpg.BuildConfig
 import com.example.androidapprpg.R
+import com.example.androidapprpg.adapter.PlayersAdapter
 import com.example.androidapprpg.data.model.MapDataModel.MapDataModel
+import com.example.androidapprpg.data.model.UsersGameDataModel.UsersGameDataModel
 import com.example.androidapprpg.databinding.FragmentGameBinding
+import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import com.example.androidapprpg.ui.viewmodel.GameCanvasViewModel
+import com.example.androidapprpg.ui.viewmodel.GameFragmentViewModel
 import com.example.androidapprpg.ui.viewmodel.MapViewModel
 import com.example.androidapprpg.ui.widget.GridCanvasView
+import com.example.androidapprpg.utils.Result
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,15 +49,19 @@ class GameFragment : Fragment() {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
 
-    // Mapa compartilhado entre telas
+    // canvas/mapa
     private val vm: MapViewModel by activityViewModels()
-
-    // Estado do canvas com escopo da Activity (persiste entre telas)
     private val canvasVm: GameCanvasViewModel by activityViewModels()
+
+    // jogadores dessa mesa
+    private val playersVm: GameFragmentViewModel by viewModels()
+
+    // adapter reutilizável pros jogadores
+    private lateinit var playersAdapter: PlayersAdapter
 
     private var mapTarget: CustomTarget<Bitmap>? = null
 
-    // Estado visual local (se quiser persistir isso, mova pro VM)
+    // estilos atuais de desenho
     private var currentStrokeColor = Color.parseColor("#C8A24A")
     private var currentFillColor   = Color.parseColor("#33C8A24A")
     private var currentTextColor   = Color.parseColor("#EED7A1")
@@ -54,13 +69,16 @@ class GameFragment : Fragment() {
     private var currentTextSize    = 28f
     private val canvasBg           = Color.parseColor("#121212")
 
-    // snapshot do último transform recebido (pra salvar no onPause sem precisar de getters na View)
+    // último transform salvo
     private var lastScale = 1f
     private var lastOffX  = 0f
     private var lastOffY  = 0f
 
-    // último id de mapa aplicado no canvas
+    // último mapa aplicado
     private var lastAppliedMapId: String? = null
+
+    // vamos guardar a instância do diálogo atual pra conseguir fechar no botão "Fechar"
+    private var playersDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,11 +92,11 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // === canvas setup ===
         binding.gridCanvas.apply {
             setGridSize(24f)
             setScaleLimits(min = 0.5f, max = 5f)
 
-            // Preferências simples vindas do VM
             setTool(canvasVm.tool)
             mapAlpha = canvasVm.mapAlpha
             drawGridOnTop = canvasVm.drawGridOnTop
@@ -89,10 +107,11 @@ class GameFragment : Fragment() {
             setStrokeWidth(currentStrokeWidth)
             setTextSize(currentTextSize)
 
-            // Listener pra salvar transform por mapa
             transformListener = object : GridCanvasView.OnTransformChangedListener {
                 override fun onTransformChanged(scale: Float, offsetX: Float, offsetY: Float) {
-                    lastScale = scale; lastOffX = offsetX; lastOffY = offsetY
+                    lastScale = scale
+                    lastOffX = offsetX
+                    lastOffY = offsetY
                     val mapId = canvasVm.currentMapId
                     Log.d(TAG, "onTransformChanged s=$scale off=($offsetX,$offsetY) -> save mapId=$mapId")
                     canvasVm.saveTransform(mapId, scale, offsetX, offsetY)
@@ -109,7 +128,13 @@ class GameFragment : Fragment() {
         setupTopBar()
         setupSideToolbar()
 
-        // Observa seleção de mapa (com persistência de shapes)
+        // === botão "ver jogadores" ===
+        setupPlayersButton()
+
+        // carrega jogadores já agora (assim o diálogo já abre pronto)
+        loadPlayersFromGame()
+
+        // observar troca de mapa e renderizar bitmap + shapes
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.selectedMap.collect { selected ->
@@ -117,7 +142,6 @@ class GameFragment : Fragment() {
 
                     when (selected) {
                         null -> {
-                            // se vier null e não há nada aplicado ainda, limpa; senão mantém
                             if (lastAppliedMapId == null) {
                                 Log.d(TAG, "selectedMap is null, clearing canvas")
                                 binding.gridCanvas.setMapBitmap(null)
@@ -126,21 +150,21 @@ class GameFragment : Fragment() {
                                 Log.d(TAG, "selectedMap is null, keeping current canvas (mapId=$lastAppliedMapId)")
                             }
                         }
-
                         else -> {
                             val newId = mapIdOf(selected)
 
-                            // ⚠️ Só salva o estado atual se estamos trocando de mapa
                             if (lastAppliedMapId != null && lastAppliedMapId != newId) {
                                 Log.d(TAG, "switching maps: $lastAppliedMapId -> $newId, saving current canvas")
-                                canvasVm.saveCanvasState(lastAppliedMapId!!, binding.gridCanvas.exportState())
+                                canvasVm.saveCanvasState(
+                                    lastAppliedMapId!!,
+                                    binding.gridCanvas.exportState()
+                                )
                             } else {
                                 Log.d(TAG, "same map re-emitted (id=$newId) -> do NOT overwrite saved state")
                             }
 
-                            // Aplica novo mapa (ou re-aplica o mesmo) e restaura transform/estado
                             canvasVm.setCurrentMap(newId)
-                            loadBitmapIntoCanvas(selected) // onResourceReady vai setar lastAppliedMapId = newId
+                            loadBitmapIntoCanvas(selected)
                         }
                     }
                 }
@@ -148,16 +172,110 @@ class GameFragment : Fragment() {
         }
     }
 
-    // ---- Top bar ----
+    // top bar (dado e chat)
     private fun setupTopBar() = with(binding) {
-        btnDice.setOnClickListener { DiceBottomSheet().show(childFragmentManager, "DiceBottomSheet") }
+        btnDice.setOnClickListener {
+            DiceBottomSheet().show(childFragmentManager, "DiceBottomSheet")
+        }
         btnChat.setOnClickListener {
             val action = GameFragmentDirections.actionGameManagerToChatFragment()
             findNavController().navigate(action)
         }
     }
 
-    // ---- Estilo atual -> canvas ----
+    /**
+     * Configura o clique do botão redondo `btnPlayers` (aquele FrameLayout no canto do mapa).
+     * Ao clicar: abre um diálogo customizado com a lista de jogadores.
+     */
+    private fun setupPlayersButton() = with(binding) {
+        btnPlayers.setOnClickListener {
+            showPlayersDialog()
+        }
+    }
+
+    /**
+     * Cria e mostra o diálogo de jogadores.
+     * - Infla o layout players_dialog.xml
+     * - Pluga RecyclerView + Adapter
+     * - Observa playersVm.playersResult e atualiza loading/lista
+     */
+    private fun showPlayersDialog() {
+        // infla o layout customizado do diálogo
+        val dialogView = layoutInflater.inflate(R.layout.dialog_players, null)
+
+        val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerPlayers)
+        val fecharBtn    = dialogView.findViewById<TextView>(R.id.btnFecharPlayers)
+
+        // cria / seta adapter
+        playersAdapter = PlayersAdapter(emptyList())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = playersAdapter
+        recyclerView.setHasFixedSize(false)
+
+        // monta o AlertDialog
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        // botão fechar do próprio layout
+        fecharBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // Observador do LiveData. Ele atualiza a UI do diálogo.
+        val observer = object : Observer<Result<*>> {
+            @Suppress("UNCHECKED_CAST")
+            override fun onChanged(result: Result<*>) {
+                when (result) {
+                    is Result.Loading -> {
+
+                    }
+                    is Result.Success<*> -> {
+
+                        val lista = result.data as? List<*>
+                        @Suppress("UNCHECKED_CAST")
+                        playersAdapter.submitList(lista as? List<UsersGameDataModel> ?: emptyList())
+                    }
+                    is Result.Error -> {
+
+                        Log.e(TAG, "Erro carregando jogadores: ${result.message}")
+                    }
+
+                    is Result.StopViewModel -> {
+
+                    }
+                }
+            }
+        }
+
+        // começa a observar
+        playersVm.playersResult.observe(viewLifecycleOwner, observer)
+
+        // quando o diálogo fechar, remove o observer pra não vazar
+        dialog.setOnDismissListener {
+            playersVm.playersResult.removeObserver(observer)
+            playersDialog = null
+        }
+
+        playersDialog = dialog
+        dialog.show()
+    }
+
+    // pega o idJogo da ActivityGameMaster e dispara o load no ViewModel
+    private fun loadPlayersFromGame() {
+        val gameId = requireActivity()
+            .intent
+            .getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+
+        if (gameId <= 0L) {
+            Log.e(TAG, "Game ID inválido. Não foi possível carregar jogadores.")
+            return
+        }
+
+        playersVm.loadPlayers(gameId)
+    }
+
+    // aplica estilos atuais ao canvas
     private fun applyCurrentStyle() = with(binding.gridCanvas) {
         setStrokeColor(currentStrokeColor)
         setFillColor(currentFillColor)
@@ -166,7 +284,7 @@ class GameFragment : Fragment() {
         setTextSize(currentTextSize)
     }
 
-    // ---- Carrega bitmap e restaura transform+shapes por mapa ----
+    // carrega o bitmap do mapa atual e restaura estado/shapes
     private fun loadBitmapIntoCanvas(selected: MapDataModel) {
         val mapId = mapIdOf(selected)
 
@@ -186,11 +304,18 @@ class GameFragment : Fragment() {
                 // 1) seta o bitmap
                 binding.gridCanvas.setMapBitmap(resource)
 
-                // 2) restaura transform salvo (se houver)
+                // 2) restaura transform salvo
                 canvasVm.getTransform(mapId)?.let { saved ->
                     Log.d(TAG, "restoring transform for mapId=$mapId -> $saved")
-                    lastScale = saved.scale; lastOffX = saved.ox; lastOffY = saved.oy
-                    binding.gridCanvas.setTransform(saved.scale, saved.ox, saved.oy, notify = false)
+                    lastScale = saved.scale
+                    lastOffX = saved.ox
+                    lastOffY = saved.oy
+                    binding.gridCanvas.setTransform(
+                        saved.scale,
+                        saved.ox,
+                        saved.oy,
+                        notify = false
+                    )
                 } ?: run {
                     Log.d(TAG, "no transform saved for mapId=$mapId, centering origin")
                     binding.gridCanvas.setMapBitmapCenteredOrigin(resource)
@@ -199,17 +324,16 @@ class GameFragment : Fragment() {
                     lastOffY = binding.gridCanvas.height / 2f
                 }
 
-                // 3) restaura shapes salvas (se houver)
+                // 3) shapes salvos
                 canvasVm.getCanvasState(mapId)?.let { state ->
                     binding.gridCanvas.importState(state)
                 } ?: run {
-                    binding.gridCanvas.importState(null) // canvas vazio
+                    binding.gridCanvas.importState(null)
                 }
 
-                // 4) demais prefs
+                // 4) prefs extra
                 binding.gridCanvas.mapAlpha = canvasVm.mapAlpha
 
-                // marca como último mapa aplicado
                 lastAppliedMapId = mapId
             }
 
@@ -225,11 +349,14 @@ class GameFragment : Fragment() {
             .into(mapTarget!!)
     }
 
-    // ---- Side toolbar ----
+    // toolbar lateral (desenho / borracha / undo / cor etc.)
     private fun setupSideToolbar() = with(binding) {
         fun select(v: View) {
-            listOf(btnSelect, btnPan, btnPen, btnLine, btnRect, btnCircle, btnText, btnEraser, btnUndo, btnRedo)
-                .forEach { it.isSelected = false }
+            listOf(
+                btnSelect, btnPan, btnPen, btnLine,
+                btnRect, btnCircle, btnText, btnEraser,
+                btnUndo, btnRedo, btnColor
+            ).forEach { it.isSelected = false }
             v.isSelected = true
         }
 
@@ -274,13 +401,14 @@ class GameFragment : Fragment() {
             applyCurrentStyle(); select(it)
         }
 
-        // “Borracha” temporária (traço = cor do fundo)
+        // segurar a borracha => vira "pincel com cor do fundo" pra apagar
         btnEraser.setOnLongClickListener {
             gridCanvas.setTool(GridCanvasView.Tool.PEN)
             canvasVm.setTool(GridCanvasView.Tool.PEN)
             currentStrokeColor = canvasBg
             gridCanvas.setStrokeColor(currentStrokeColor)
-            applyCurrentStyle(); select(it); true
+            applyCurrentStyle(); select(it)
+            true
         }
 
         btnUndo.setOnClickListener { gridCanvas.undo() }
@@ -288,74 +416,97 @@ class GameFragment : Fragment() {
 
         btnPen.setOnLongClickListener {
             showStrokeQuickActions(
-                onPickColor = { pickColor(currentStrokeColor) { c ->
-                    currentStrokeColor = c
-                    gridCanvas.setStrokeColor(c)
-                    applyCurrentStyle()
-                }},
-                onPickWidth = { pickStrokeWidth(currentStrokeWidth) { w ->
-                    currentStrokeWidth = w
-                    gridCanvas.setStrokeWidth(w)
-                    applyCurrentStyle()
-                }}
-            ); true
+                onPickColor = {
+                    pickColor(currentStrokeColor) { c ->
+                        currentStrokeColor = c
+                        gridCanvas.setStrokeColor(c)
+                        applyCurrentStyle()
+                    }
+                },
+                onPickWidth = {
+                    pickStrokeWidth(currentStrokeWidth) { w ->
+                        currentStrokeWidth = w
+                        gridCanvas.setStrokeWidth(w)
+                        applyCurrentStyle()
+                    }
+                }
+            )
+            true
         }
         btnLine.setOnLongClickListener { btnPen.performLongClick() }
 
         val shapeLongClick = View.OnLongClickListener {
             showShapeQuickActions(
-                onPickStroke = { pickColor(currentStrokeColor) { c ->
-                    currentStrokeColor = c
-                    gridCanvas.setStrokeColor(c)
-                    applyCurrentStyle()
-                }},
-                onPickFill   = { pickColor(currentFillColor) { c ->
-                    currentFillColor = c
-                    gridCanvas.setFillColor(c)
-                    applyCurrentStyle()
-                }},
-                onPickWidth  = { pickStrokeWidth(currentStrokeWidth) { w ->
-                    currentStrokeWidth = w
-                    gridCanvas.setStrokeWidth(w)
-                    applyCurrentStyle()
-                }}
-            ); true
+                onPickStroke = {
+                    pickColor(currentStrokeColor) { c ->
+                        currentStrokeColor = c
+                        gridCanvas.setStrokeColor(c)
+                        applyCurrentStyle()
+                    }
+                },
+                onPickFill = {
+                    pickColor(currentFillColor) { c ->
+                        currentFillColor = c
+                        gridCanvas.setFillColor(c)
+                        applyCurrentStyle()
+                    }
+                },
+                onPickWidth = {
+                    pickStrokeWidth(currentStrokeWidth) { w ->
+                        currentStrokeWidth = w
+                        gridCanvas.setStrokeWidth(w)
+                        applyCurrentStyle()
+                    }
+                }
+            )
+            true
         }
         btnRect.setOnLongClickListener(shapeLongClick)
         btnCircle.setOnLongClickListener(shapeLongClick)
 
         btnText.setOnLongClickListener {
             showTextQuickActions(
-                onPickColor = { pickColor(currentTextColor) { c ->
-                    currentTextColor = c
-                    gridCanvas.setTextColor(c)
-                    applyCurrentStyle()
-                }},
-                onPickSize  = { pickTextSize(currentTextSize) { s ->
-                    currentTextSize = s
-                    gridCanvas.setTextSize(s)
-                    applyCurrentStyle()
-                }}
-            ); true
+                onPickColor = {
+                    pickColor(currentTextColor) { c ->
+                        currentTextColor = c
+                        gridCanvas.setTextColor(c)
+                        applyCurrentStyle()
+                    }
+                },
+                onPickSize = {
+                    pickTextSize(currentTextSize) { s ->
+                        currentTextSize = s
+                        gridCanvas.setTextSize(s)
+                        applyCurrentStyle()
+                    }
+                }
+            )
+            true
         }
 
         btnColor.setOnClickListener { showGlobalPalette() }
     }
 
-    // ---- diálogos rápidos ----
+    // === diálogos auxiliares de cor/tamanho texto etc. ===
     private fun showGlobalPalette() = with(binding) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Paleta")
             .setItems(arrayOf("Cor do traço", "Cor de preenchimento", "Cor do texto")) { d, which ->
                 when (which) {
                     0 -> pickColor(currentStrokeColor) { c ->
-                        currentStrokeColor = c; gridCanvas.setStrokeColor(c); applyCurrentStyle()
+                        currentStrokeColor = c
+                        gridCanvas.setStrokeColor(c)
+                        applyCurrentStyle()
                     }
                     1 -> pickColor(currentFillColor) { c ->
-                        currentFillColor = c; gridCanvas.setFillColor(c); applyCurrentStyle()
+                        currentFillColor = c
+                        gridCanvas.setFillColor(c)
+                        applyCurrentStyle()
                     }
                     2 -> pickColor(currentTextColor) { c ->
-                        currentTextColor = c; gridCanvas.setTextColor(c); applyCurrentStyle()
+                        currentTextColor = c
+                        gridCanvas.setTextColor(c)
+                        applyCurrentStyle()
                     }
                 }
                 d.dismiss()
@@ -366,17 +517,28 @@ class GameFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Traço")
             .setItems(arrayOf("Cor", "Espessura")) { d, which ->
-                when (which) { 0 -> onPickColor(); 1 -> onPickWidth() }
+                when (which) {
+                    0 -> onPickColor()
+                    1 -> onPickWidth()
+                }
                 d.dismiss()
             }
             .show()
     }
 
-    private fun showShapeQuickActions(onPickStroke: () -> Unit, onPickFill: () -> Unit, onPickWidth: () -> Unit) {
+    private fun showShapeQuickActions(
+        onPickStroke: () -> Unit,
+        onPickFill: () -> Unit,
+        onPickWidth: () -> Unit
+    ) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Forma")
             .setItems(arrayOf("Cor do traço", "Cor de preenchimento", "Espessura")) { d, which ->
-                when (which) { 0 -> onPickStroke(); 1 -> onPickFill(); 2 -> onPickWidth() }
+                when (which) {
+                    0 -> onPickStroke()
+                    1 -> onPickFill()
+                    2 -> onPickWidth()
+                }
                 d.dismiss()
             }.show()
     }
@@ -385,7 +547,10 @@ class GameFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Texto")
             .setItems(arrayOf("Cor", "Tamanho")) { d, which ->
-                when (which) { 0 -> onPickColor(); 1 -> onPickSize() }
+                when (which) {
+                    0 -> onPickColor()
+                    1 -> onPickSize()
+                }
                 d.dismiss()
             }
             .show()
@@ -410,7 +575,8 @@ class GameFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Escolha a cor")
             .setSingleChoiceItems(names, sel) { dialog, which ->
-                onPick(colors[which]); dialog.dismiss()
+                onPick(colors[which])
+                dialog.dismiss()
             }.show()
     }
 
@@ -423,7 +589,8 @@ class GameFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Espessura do traço")
             .setSingleChoiceItems(labels, sel) { dialog, which ->
-                onPick(widths[which]); dialog.dismiss()
+                onPick(widths[which])
+                dialog.dismiss()
             }.show()
     }
 
@@ -436,7 +603,8 @@ class GameFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Tamanho do texto")
             .setSingleChoiceItems(labels, sel) { dialog, which ->
-                onPick(sizes[which]); dialog.dismiss()
+                onPick(sizes[which])
+                dialog.dismiss()
             }.show()
     }
 
@@ -456,11 +624,11 @@ class GameFragment : Fragment() {
             .show()
     }
 
-    /** Extrai um id estável do MapDataModel — ajuste conforme seu modelo. */
     private fun mapIdOf(m: MapDataModel): String = m.id
 
     override fun onPause() {
         super.onPause()
+        // salva estado atual do canvas pro mapa atual
         canvasVm.currentMapId?.let { id ->
             canvasVm.saveCanvasState(id, binding.gridCanvas.exportState())
             canvasVm.saveTransform(id, lastScale, lastOffX, lastOffY)
@@ -469,6 +637,11 @@ class GameFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        // se o diálogo ainda estiver aberto, fecha
+        playersDialog?.dismiss()
+        playersDialog = null
+
         mapTarget?.let { Glide.with(this).clear(it) }
         mapTarget = null
         _binding = null
