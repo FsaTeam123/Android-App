@@ -15,7 +15,7 @@ class StompTransport @Inject constructor(
 
     override fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
         // registra callback global e agenda subscribe
-        return socket.subscribe(chatId, onMessage)
+        return socket.subscribeChat(chatId, onMessage)
     }
 
     override fun connectIfNeeded() {

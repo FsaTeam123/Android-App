@@ -70,7 +70,7 @@
                 android:id="@+id/cardsGridLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="90dp"
                 android:layout_marginBottom="16dp"
                 app:columnCount="2"
                 app:rowCount="3">
@@ -84,13 +84,12 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="@drawable/card_ripple"
-                    app:layout_columnWeight="1"
+                    app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="18dp"
                     app:cardElevation="8dp"
-                    app:strokeWidth="2dp"
+                    app:layout_columnWeight="1"
                     app:strokeColor="@color/DouradoEspecial"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    >
+                    app:strokeWidth="2dp">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -101,29 +100,28 @@
                             android:id="@+id/bg1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
                             android:contentDescription="@null"
-                            />
+                            android:scaleType="centerCrop" />
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/card_inner_border"
-                            android:contentDescription="@null"/>
+                            android:contentDescription="@null"
+                            android:src="@drawable/card_inner_border" />
 
                         <TextView
                             android:id="@+id/title1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="@string/biografia"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:textColor="@color/BordasDouradas"
                             android:shadowColor="#99000000"
                             android:shadowDx="0"
                             android:shadowDy="2"
-                            android:shadowRadius="6"/>
+                            android:shadowRadius="6"
+                            android:text="@string/biografia"
+                            android:textColor="@color/BordasDouradas"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -131,19 +129,21 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card2"
                     style="@style/CardItemStyle"
-                    app:layout_columnWeight="1"
-                    >
+                    app:layout_columnWeight="1">
+
                     <FrameLayout style="@style/CardFrameStyle">
+
                         <ImageView
                             android:id="@+id/bg2"
-                            style="@style/CardBgStyle"
-                            />
-                        <ImageView style="@style/CardInnerBorderStyle"/>
+                            style="@style/CardBgStyle" />
+
+                        <ImageView style="@style/CardInnerBorderStyle" />
+
                         <TextView
                             android:id="@+id/title2"
                             style="@style/CardTitleStyle"
                             android:text="@string/arma"
-                            android:textColor="@color/BordasDouradas"/>
+                            android:textColor="@color/BordasDouradas" />
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -151,19 +151,21 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card3"
                     style="@style/CardItemStyle"
-                    app:layout_columnWeight="1"
-                    >
+                    app:layout_columnWeight="1">
+
                     <FrameLayout style="@style/CardFrameStyle">
+
                         <ImageView
                             android:id="@+id/bg3"
-                            style="@style/CardBgStyle"
-                            />
-                        <ImageView style="@style/CardInnerBorderStyle"/>
+                            style="@style/CardBgStyle" />
+
+                        <ImageView style="@style/CardInnerBorderStyle" />
+
                         <TextView
                             android:id="@+id/title3"
                             style="@style/CardTitleStyle"
                             android:text="@string/poder"
-                            android:textColor="@color/BordasDouradas"/>
+                            android:textColor="@color/BordasDouradas" />
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -171,61 +173,24 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card4"
                     style="@style/CardItemStyle"
-                    app:layout_columnWeight="1"
-                    >
+                    app:layout_columnWeight="1">
+
                     <FrameLayout style="@style/CardFrameStyle">
+
                         <ImageView
                             android:id="@+id/bg4"
-                            style="@style/CardBgStyle"
-                            />
-                        <ImageView style="@style/CardInnerBorderStyle"/>
+                            style="@style/CardBgStyle" />
+
+                        <ImageView style="@style/CardInnerBorderStyle" />
+
                         <TextView
                             android:id="@+id/title4"
                             style="@style/CardTitleStyle"
                             android:text="@string/magia"
-                            android:textColor="@color/BordasDouradas"/>
+                            android:textColor="@color/BordasDouradas" />
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- 5: Habilidades -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card5"
-                    style="@style/CardItemStyle"
-                    app:layout_columnWeight="1"
-                    >
-                    <FrameLayout style="@style/CardFrameStyle">
-                        <ImageView
-                            android:id="@+id/bg5"
-                            style="@style/CardBgStyle"
-                            />
-                        <ImageView style="@style/CardInnerBorderStyle"/>
-                        <TextView
-                            android:id="@+id/title5"
-                            style="@style/CardTitleStyle"
-                            android:text="@string/habilidade"
-                            android:textColor="@color/BordasDouradas"/>
-                    </FrameLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- 6: Mochila -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card6"
-                    style="@style/CardItemStyle"
-                    app:layout_columnWeight="1"
-                    >
-                    <FrameLayout style="@style/CardFrameStyle">
-                        <ImageView
-                            android:id="@+id/bg6"
-                            style="@style/CardBgStyle"
-                            />
-                        <ImageView style="@style/CardInnerBorderStyle"/>
-                        <TextView
-                            android:id="@+id/title6"
-                            style="@style/CardTitleStyle"
-                            android:text="@string/mochila"
-                            android:textColor="@color/BordasDouradas"/>
-                    </FrameLayout>
-                </com.google.android.material.card.MaterialCardView>
 
             </androidx.gridlayout.widget.GridLayout>
         </LinearLayout>

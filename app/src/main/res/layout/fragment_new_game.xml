@@ -262,7 +262,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/DouradoEspecial"
-                    android:popupBackground="@color/white"
+                    android:popupBackground="@drawable/spinner_popup_bg"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
@@ -296,7 +296,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/DouradoEspecial"
-                    android:popupBackground="@color/white"
+                    android:popupBackground="@drawable/spinner_popup_bg"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
@@ -330,7 +330,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/DouradoEspecial"
-                    android:popupBackground="@color/white"
+                    android:popupBackground="@drawable/spinner_popup_bg"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
@@ -364,7 +364,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/DouradoEspecial"
-                    android:popupBackground="@color/white"
+                    android:popupBackground="@drawable/spinner_popup_bg"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 

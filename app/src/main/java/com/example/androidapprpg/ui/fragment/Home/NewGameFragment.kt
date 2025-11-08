@@ -1,13 +1,15 @@
 // com/example/androidapprpg/ui/fragment/Home/NewGameFragment.kt
 package com.example.androidapprpg.ui.fragment.Home
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -106,10 +108,36 @@ class NewGameFragment : Fragment() {
                 launch {
                     vm.dropdowns.collect { d ->
                         binding.btnCriarJogo.isEnabled = !d.isLoading
-                        d.estilos.takeIf { it.isNotEmpty() }?.let { adapterEstilos = setAdapter(binding.spEstiloCampanha, it.map { p -> p.second }, adapterEstilos) }
-                        d.geracoes.takeIf { it.isNotEmpty() }?.let { adapterGeracoes = setAdapter(binding.spGeracaoMundo, it.map { p -> p.second }, adapterGeracoes) }
-                        d.historias.takeIf { it.isNotEmpty() }?.let { adapterHistorias = setAdapter(binding.spHistoria, it.map { p -> p.second }, adapterHistorias) }
-                        d.temas.takeIf { it.isNotEmpty() }?.let { adapterTemas = setAdapter(binding.spTema, it.map { p -> p.second }, adapterTemas) }
+
+                        d.estilos.takeIf { it.isNotEmpty() }?.let {
+                            adapterEstilos = setAdapterStyled(
+                                spinner = binding.spEstiloCampanha,
+                                labels = it.map { p -> p.second },
+                                current = adapterEstilos
+                            )
+                        }
+                        d.geracoes.takeIf { it.isNotEmpty() }?.let {
+                            adapterGeracoes = setAdapterStyled(
+                                spinner = binding.spGeracaoMundo,
+                                labels = it.map { p -> p.second },
+                                current = adapterGeracoes
+                            )
+                        }
+                        d.historias.takeIf { it.isNotEmpty() }?.let {
+                            adapterHistorias = setAdapterStyled(
+                                spinner = binding.spHistoria,
+                                labels = it.map { p -> p.second },
+                                current = adapterHistorias
+                            )
+                        }
+                        d.temas.takeIf { it.isNotEmpty() }?.let {
+                            adapterTemas = setAdapterStyled(
+                                spinner = binding.spTema,
+                                labels = it.map { p -> p.second },
+                                current = adapterTemas
+                            )
+                        }
+
                         d.error?.let { showToast("Falha ao carregar listas: $it") }
                     }
                 }
@@ -119,7 +147,6 @@ class NewGameFragment : Fragment() {
                         binding.senhaSection.isVisible = f.mostrarSenha
                         binding.btnCriarJogo.isEnabled = !f.enviando
                         f.error?.let { showToast(it) }
-
                     }
                 }
 
@@ -129,7 +156,7 @@ class NewGameFragment : Fragment() {
                             is NewGameViewModel.UiEvent.Toast -> showToast(e.msg)
                             is NewGameViewModel.UiEvent.GoToCartas -> {
                                 val intent = Intent(requireContext(), ActivityMainCard::class.java).apply {
-                                    putExtra(ActivityMainCard.EXTRA_ID_JOGO, e.idJogo) // e.idJogo é Long
+                                    putExtra(ActivityMainCard.EXTRA_ID_JOGO, e.idJogo)
                                 }
                                 startActivity(intent)
                             }
@@ -142,23 +169,57 @@ class NewGameFragment : Fragment() {
         }
     }
 
-    /* utils */
+    /* ---------- utils ---------- */
     private fun watcher(on: (String) -> Unit) = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { on(s?.toString().orEmpty()) }
         override fun afterTextChanged(s: Editable?) {}
     }
+
     private fun listener(on: (Int) -> Unit) = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p: AdapterView<*>?, v: View?, pos: Int, id: Long) { on(pos) }
         override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
-    private fun setAdapter(spinner: Spinner, labels: List<String>, current: ArrayAdapter<String>?): ArrayAdapter<String> {
-        val adapter = current ?: ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, labels).also { spinner.adapter = it }
-        if (current != null) { adapter.clear(); adapter.addAll(labels); adapter.notifyDataSetChanged() }
+
+    /**
+     * Cria ou atualiza um ArrayAdapter com estilos customizados para Spinner.
+     * Usa R.layout.item_spinner_text (fechado) e R.layout.item_spinner_dropdown (lista),
+     * preservando a seleção atual sempre que possível.
+     */
+    private fun setAdapterStyled(
+        spinner: Spinner,
+        labels: List<String>,
+        current: ArrayAdapter<String>?
+    ): ArrayAdapter<String> {
+        val previousSelection = spinner.selectedItemPosition.coerceAtLeast(0)
+
+        val adapter = current ?: ArrayAdapter(
+            requireContext(),
+            R.layout.item_spinner_text,
+            labels.toMutableList()
+        ).also {
+            it.setDropDownViewResource(R.layout.item_spinner_dropdown)
+            spinner.adapter = it
+        }
+
+        if (current != null) {
+            adapter.clear()
+            adapter.addAll(labels)
+            adapter.notifyDataSetChanged()
+        }
+
         spinner.isEnabled = labels.isNotEmpty()
+
+        // Restaura seleção se ainda for válida
+        val newSelection = previousSelection.coerceIn(0, (labels.size - 1).coerceAtLeast(0))
+        if (labels.isNotEmpty() && spinner.selectedItemPosition != newSelection) {
+            spinner.setSelection(newSelection, false)
+        }
         return adapter
     }
-    private fun showToast(msg: String) = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+
+    private fun showToast(msg: String) =
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 
     override fun onDestroyView() {
         super.onDestroyView()

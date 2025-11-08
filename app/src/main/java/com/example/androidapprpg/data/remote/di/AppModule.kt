@@ -14,8 +14,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.ConnectionPool
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,17 +32,21 @@ import javax.inject.Singleton
 object AppModule {
 
     // -------- LOG ----------
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
     // -------- Auth ----------
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideAuthInterceptor(sessionManager: SessionManager): AuthInterceptor =
         AuthInterceptor(sessionManager)
 
     // -------- OKHTTP (API) ----------
-    @Provides @Singleton @Named("apiClient")
+    @Provides
+    @Singleton
+    @Named("apiClient")
     fun provideApiOkHttp(
         logging: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor
@@ -52,7 +58,9 @@ object AppModule {
         .build()
 
     // -------- RETROFIT (API) ----------
-    @Provides @Singleton @Named("api")
+    @Provides
+    @Singleton
+    @Named("api")
     fun provideRetrofit(@Named("apiClient") okHttpClient: OkHttpClient): Retrofit {
         // LOGS para cravar qual base está sendo usada
         Log.d("DI", "BuildConfig.BASE_URL_GAME=${BuildConfig.BASE_URL_GAME}")
@@ -69,125 +77,178 @@ object AppModule {
     }
 
     // -------- SERVICES (sempre com @Named("api")) ----------
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideAuthService(@Named("api") retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideCadastroService(@Named("api") retrofit: Retrofit): RegisterService =
         retrofit.create(RegisterService::class.java)
 
-    @Provides @Singleton
-    fun provideCharactersService(@Named("api") retrofit: Retrofit) : CharactersService =
+    @Provides
+    @Singleton
+    fun provideCharactersService(@Named("api") retrofit: Retrofit): CharactersService =
         retrofit.create(CharactersService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideNewGamesService(@Named("api") retrofit: Retrofit): NewGameService =
         retrofit.create(NewGameService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideMyGamesService(@Named("api") retrofit: Retrofit): MyGamesService =
         retrofit.create(MyGamesService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideJoinGameService(@Named("api") retrofit: Retrofit): JoinGameService =
         retrofit.create(JoinGameService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideGameLobbyService(@Named("api") retrofit: Retrofit): GameLobbyService =
         retrofit.create(GameLobbyService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideCardMasterService(@Named("api") retrofit: Retrofit): CardMasterService =
         retrofit.create(CardMasterService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideCardPoderesService(@Named("api") retrofit: Retrofit): CardPoderService =
         retrofit.create(CardPoderService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideCardMagiasService(@Named("api") retrofit: Retrofit): CardMagiasService =
         retrofit.create(CardMagiasService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideForgotPasswordService(@Named("api") retrofit: Retrofit): ForgotPasswordService =
         retrofit.create(ForgotPasswordService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideProfileService(@Named("api") retrofit: Retrofit): ProfileService =
         retrofit.create(ProfileService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideHomeService(@Named("api") retrofit: Retrofit): HomeService =
         retrofit.create(HomeService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideAgenteService(@Named("api") retrofit: Retrofit): AgenteService =
         retrofit.create(AgenteService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideNotesService(@Named("api") retrofit: Retrofit): NotesService =
         retrofit.create(NotesService::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideNotesRepository(service: NotesService): NotesRepository =
         NotesRepositoryImpl(service)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideMapService(@Named("api") retrofit: Retrofit): MapService =
         retrofit.create(MapService::class.java)
 
-    @Provides @Singleton
-    fun provideArmasService(@Named("api") retrofit: Retrofit) : CardArmaService =
+    @Provides
+    @Singleton
+    fun provideArmasService(@Named("api") retrofit: Retrofit): CardArmaService =
         retrofit.create(CardArmaService::class.java)
 
-    @Provides @Singleton
-    fun provideDeleAccounService(@Named("api") retrofit: Retrofit) : DeleteAccountService=
+    @Provides
+    @Singleton
+    fun provideDeleAccounService(@Named("api") retrofit: Retrofit): DeleteAccountService =
         retrofit.create(DeleteAccountService::class.java)
 
-    @Provides @Singleton
-    fun provideGameFragmentService(@Named("api") retrofit: Retrofit) : GameFragmentService =
+    @Provides
+    @Singleton
+    fun provideGameFragmentService(@Named("api") retrofit: Retrofit): GameFragmentService =
         retrofit.create(GameFragmentService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCardsManagementService(@Named("api") retrofit: Retrofit) : CardsService =
+        retrofit.create(CardsService::class.java)
 
     // ==================== REPOSITORY ====================
 
-    @Provides @Singleton @Named("gameBaseUrl")
+    @Provides
+    @Singleton
+    @Named("gameBaseUrl")
     fun provideGameBaseUrl(): String = BuildConfig.BASE_URL_GAME
 
-    @Provides @Singleton
-    fun provideMapRepository(service: MapService, @ApplicationContext appContext: android.content.Context, @Named("gameBaseUrl") baseUrl: String): MapRepository = MapRepositoryImpl(
+    @Provides
+    @Singleton
+    fun provideMapRepository(
+        service: MapService,
+        @ApplicationContext appContext: android.content.Context,
+        @Named("gameBaseUrl") baseUrl: String
+    ): MapRepository = MapRepositoryImpl(
         service = service,
         appContext = appContext,
         baseUrl = baseUrl
     )
 
     // ==================== WEBSOCKET / STOMP ====================
-    @Provides @Singleton fun provideGson(): Gson = Gson()
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = Gson()
 
     @Provides
     @Singleton
     @Named("ws")
     fun provideWsOkHttp(): OkHttpClient {
-        // SockJS do Spring não depende mais estritamente de cookie JSESSIONID (setSessionCookieNeeded(false)),
-        // então podemos ir simples aqui.
         return OkHttpClient.Builder()
-            .readTimeout(0, TimeUnit.MILLISECONDS)   // streaming
-            .pingInterval(0, TimeUnit.SECONDS)       // vamos deixar heartbeat pro STOMP
+            // Conexão ágil
+            .connectTimeout(7, TimeUnit.SECONDS)
+            .readTimeout(0, TimeUnit.MILLISECONDS)     // streaming contínuo
+            .writeTimeout(0, TimeUnit.MILLISECONDS)    // sem timeout pra WS
+            .pingInterval(15, TimeUnit.SECONDS)        // keepalive TCP + detecta quedas
+            .retryOnConnectionFailure(true)
+
+            // Pool enxuto e quente só pro WS
+            .connectionPool(ConnectionPool(1, 60, TimeUnit.SECONDS))
+
+            // Para WS, HTTP/1.1 é o caminho (evita negociações supérfluas)
+            .protocols(listOf(Protocol.HTTP_1_1))
+
+            // Nada de interceptores de logging pesados aqui
             .build()
     }
 
-    @Provides @Singleton @Named("wsBase")
+    @Provides
+    @Singleton
+    @Named("wsBase")
     fun provideWsBase(): String =
+        // RECOMENDADO usar HTTPS/WSS em prod (mude ALB p/ TLS)
         "http://alob-rpg-958777443.sa-east-1.elb.amazonaws.com"
 
-    @Provides @Singleton @Named("wsStage")
+    @Provides
+    @Singleton
+    @Named("wsStage")
     fun provideWsStage(): String? = null
 
-    @Provides @Singleton @Named("wsEndpoint")
+    @Provides
+    @Singleton
+    @Named("wsEndpoint")
     fun provideWsEndpoint(): String = "ws"
 
-    @Provides @Singleton @Named("wsSockJs")
-    fun provideWsSockJs(): Boolean = true // ISSO É CRÍTICO
+    @Provides
+    @Singleton
+    @Named("wsSockJs")
+    fun provideWsSockJs(): Boolean = true // mantém SockJS, mas com client otimizado
 
     @Provides
     @Singleton
@@ -206,11 +267,12 @@ object AppModule {
             stage = stage,
             endpoint = endpoint,
             useSockJs = sockJs,
-            logBodies = true
+            logBodies = false // deixe false em prod -> menos GC / mais fluidez
         ).apply {
-            // se depois você usar auth:
+            // Se tiver JWT depois:
             // setAuth(mapOf("authorization" to "Bearer <token>"))
             setAuth(emptyMap())
         }
     }
+
 }

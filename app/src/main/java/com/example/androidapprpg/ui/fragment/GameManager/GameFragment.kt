@@ -29,6 +29,7 @@ import com.example.androidapprpg.BuildConfig
 import com.example.androidapprpg.R
 import com.example.androidapprpg.adapter.PlayersAdapter
 import com.example.androidapprpg.data.model.MapDataModel.MapDataModel
+import com.example.androidapprpg.data.model.MapDataModel.MapSelectedMsg
 import com.example.androidapprpg.data.model.UsersGameDataModel.UsersGameDataModel
 import com.example.androidapprpg.databinding.FragmentGameBinding
 import com.example.androidapprpg.ui.activity.ActivityGameMaster
@@ -37,9 +38,14 @@ import com.example.androidapprpg.ui.viewmodel.GameFragmentViewModel
 import com.example.androidapprpg.ui.viewmodel.MapViewModel
 import com.example.androidapprpg.ui.widget.GridCanvasView
 import com.example.androidapprpg.utils.Result
+import com.example.androidapprpg.utils.websocket.StompChatSocket
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
@@ -77,8 +83,13 @@ class GameFragment : Fragment() {
     // último mapa aplicado
     private var lastAppliedMapId: String? = null
 
-    // vamos guardar a instância do diálogo atual pra conseguir fechar no botão "Fechar"
+    // diálogo de jogadores
     private var playersDialog: AlertDialog? = null
+
+    // === NOVO: STOMP para sincronizar seleção/transform do mapa ===
+    @Inject lateinit var stomp: StompChatSocket
+    private var unsubMapa: (() -> Unit)? = null
+    private var applyingFromWs = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,6 +126,24 @@ class GameFragment : Fragment() {
                     val mapId = canvasVm.currentMapId
                     Log.d(TAG, "onTransformChanged s=$scale off=($offsetX,$offsetY) -> save mapId=$mapId")
                     canvasVm.saveTransform(mapId, scale, offsetX, offsetY)
+
+                    // OPCIONAL: publicar transform em tempo real (evita eco quando veio do WS)
+                    if (!applyingFromWs) {
+                        val idJogo = requireActivity().intent.getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+                        val mId = mapId?.toLongOrNull()
+                        if (idJogo > 0 && mId != null) {
+                            stomp.sendMapaSelect(
+                                idJogo = idJogo,
+                                body = MapSelectedMsg(
+                                    mapaId = mId,
+                                    scale = scale,
+                                    offsetX = offsetX,
+                                    offsetY = offsetY,
+                                    ts = java.time.Instant.now().toString()
+                                )
+                            )
+                        }
+                    }
                 }
             }
 
@@ -170,6 +199,50 @@ class GameFragment : Fragment() {
                 }
             }
         }
+
+        // === NOVO: Assina o tópico de seleção de mapa desta mesa ===
+        val idJogo = requireActivity().intent.getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+        if (idJogo > 0) {
+            stomp.connectIfNeeded()
+            unsubMapa?.invoke()
+            unsubMapa = stomp.subscribeMapaSelected(idJogo) { raw ->
+                try {
+                    val msg = com.google.gson.Gson().fromJson(raw, MapSelectedMsg::class.java)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        applyIncomingMapSelect(msg)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "payload mapa inválido: ${e.message}")
+                }
+            }
+        }
+    }
+
+    private suspend fun applyIncomingMapSelect(msg: MapSelectedMsg) = withContext(Dispatchers.Main) {
+        val mapaId = msg.mapaId ?: return@withContext
+
+        // 1) Troca para o mapa recebido (dispara seu fluxo normal)
+        val current = vm.selectedMap.value?.id?.toLongOrNull()
+        if (current != mapaId) {
+            vm.setSelected(mapaId.toString())
+        }
+
+        // 2) Se vier transform, aplica sem notificar (evita loop)
+        if (msg.scale != null || msg.offsetX != null || msg.offsetY != null) {
+            // pequena espera caso o bitmap esteja carregando agora
+            delay(80)
+            applyingFromWs = true
+            try {
+                val s  = msg.scale   ?: this@GameFragment.lastScale
+                val ox = msg.offsetX ?: this@GameFragment.lastOffX
+                val oy = msg.offsetY ?: this@GameFragment.lastOffY
+                binding.gridCanvas.setTransform(s, ox, oy, /*notify=*/false)
+                lastScale = s; lastOffX = ox; lastOffY = oy
+            } finally {
+                delay(40)
+                applyingFromWs = false
+            }
+        }
     }
 
     // top bar (dado e chat)
@@ -178,80 +251,93 @@ class GameFragment : Fragment() {
             DiceBottomSheet().show(childFragmentManager, "DiceBottomSheet")
         }
         btnChat.setOnClickListener {
-            val action = GameFragmentDirections.actionGameManagerToChatFragment()
-            findNavController().navigate(action)
+            val idJogo = requireActivity()
+                .intent
+                .getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+
+            navToChat(
+                tipo = "global",       // ou "mesa" se preferir essa semântica
+                idJogo = idJogo,       // obrigatório para global/mesa
+                peerUserId = null      // só usado em DM
+            )
         }
     }
 
-    /**
-     * Configura o clique do botão redondo `btnPlayers` (aquele FrameLayout no canto do mapa).
-     * Ao clicar: abre um diálogo customizado com a lista de jogadores.
-     */
+
+    private fun navToChat(
+        tipo: String,
+        idJogo: Long? = null,
+        peerUserId: Long? = null
+    ) {
+        val t = tipo.lowercase().trim()
+
+        // validação rápida para evitar abrir chat inválido
+        val isGlobal = (t == "global" || t == "mesa")
+        if (isGlobal && (idJogo == null || idJogo <= 0L)) {
+            android.util.Log.e(TAG, "navToChat: idJogo inválido para chat $t")
+            return
+        }
+        if (t == "dm" && (peerUserId == null || peerUserId <= 0L)) {
+            android.util.Log.e(TAG, "navToChat: peerUserId inválido para chat DM")
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putString("tipoChat", t)
+            idJogo?.let { putLong("idJogo", it) }          // usado pelo ChatFragment nos modos global/mesa
+            peerUserId?.let { putLong("peerUserId", it) }  // usado apenas no modo DM
+        }
+
+        // Ação do seu nav_graph (sem Safe Args)
+        findNavController().navigate(
+            R.id.action_gameManager_to_ChatFragment,
+            bundle
+        )
+    }
+
     private fun setupPlayersButton() = with(binding) {
         btnPlayers.setOnClickListener {
             showPlayersDialog()
         }
     }
 
-    /**
-     * Cria e mostra o diálogo de jogadores.
-     * - Infla o layout players_dialog.xml
-     * - Pluga RecyclerView + Adapter
-     * - Observa playersVm.playersResult e atualiza loading/lista
-     */
     private fun showPlayersDialog() {
-        // infla o layout customizado do diálogo
         val dialogView = layoutInflater.inflate(R.layout.dialog_players, null)
 
         val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerPlayers)
         val fecharBtn    = dialogView.findViewById<TextView>(R.id.btnFecharPlayers)
 
-        // cria / seta adapter
         playersAdapter = PlayersAdapter(emptyList())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = playersAdapter
         recyclerView.setHasFixedSize(false)
 
-        // monta o AlertDialog
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
             .create()
 
-        // botão fechar do próprio layout
-        fecharBtn.setOnClickListener {
-            dialog.dismiss()
-        }
+        fecharBtn.setOnClickListener { dialog.dismiss() }
 
-        // Observador do LiveData. Ele atualiza a UI do diálogo.
         val observer = object : Observer<Result<*>> {
             @Suppress("UNCHECKED_CAST")
             override fun onChanged(result: Result<*>) {
                 when (result) {
-                    is Result.Loading -> {
-
-                    }
+                    is Result.Loading -> Unit
                     is Result.Success<*> -> {
-
                         val lista = result.data as? List<*>
                         @Suppress("UNCHECKED_CAST")
                         playersAdapter.submitList(lista as? List<UsersGameDataModel> ?: emptyList())
                     }
                     is Result.Error -> {
-
                         Log.e(TAG, "Erro carregando jogadores: ${result.message}")
                     }
-
-                    is Result.StopViewModel -> {
-
-                    }
+                    is Result.StopViewModel -> Unit
                 }
             }
         }
 
-        // começa a observar
         playersVm.playersResult.observe(viewLifecycleOwner, observer)
 
-        // quando o diálogo fechar, remove o observer pra não vazar
         dialog.setOnDismissListener {
             playersVm.playersResult.removeObserver(observer)
             playersDialog = null
@@ -261,7 +347,6 @@ class GameFragment : Fragment() {
         dialog.show()
     }
 
-    // pega o idJogo da ActivityGameMaster e dispara o load no ViewModel
     private fun loadPlayersFromGame() {
         val gameId = requireActivity()
             .intent
@@ -275,7 +360,6 @@ class GameFragment : Fragment() {
         playersVm.loadPlayers(gameId)
     }
 
-    // aplica estilos atuais ao canvas
     private fun applyCurrentStyle() = with(binding.gridCanvas) {
         setStrokeColor(currentStrokeColor)
         setFillColor(currentFillColor)
@@ -284,7 +368,6 @@ class GameFragment : Fragment() {
         setTextSize(currentTextSize)
     }
 
-    // carrega o bitmap do mapa atual e restaura estado/shapes
     private fun loadBitmapIntoCanvas(selected: MapDataModel) {
         val mapId = mapIdOf(selected)
 
@@ -349,7 +432,6 @@ class GameFragment : Fragment() {
             .into(mapTarget!!)
     }
 
-    // toolbar lateral (desenho / borracha / undo / cor etc.)
     private fun setupSideToolbar() = with(binding) {
         fun select(v: View) {
             listOf(
@@ -401,7 +483,6 @@ class GameFragment : Fragment() {
             applyCurrentStyle(); select(it)
         }
 
-        // segurar a borracha => vira "pincel com cor do fundo" pra apagar
         btnEraser.setOnLongClickListener {
             gridCanvas.setTool(GridCanvasView.Tool.PEN)
             canvasVm.setTool(GridCanvasView.Tool.PEN)
@@ -487,7 +568,6 @@ class GameFragment : Fragment() {
         btnColor.setOnClickListener { showGlobalPalette() }
     }
 
-    // === diálogos auxiliares de cor/tamanho texto etc. ===
     private fun showGlobalPalette() = with(binding) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Paleta")
@@ -638,7 +718,9 @@ class GameFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        // se o diálogo ainda estiver aberto, fecha
+        unsubMapa?.invoke()
+        unsubMapa = null
+
         playersDialog?.dismiss()
         playersDialog = null
 

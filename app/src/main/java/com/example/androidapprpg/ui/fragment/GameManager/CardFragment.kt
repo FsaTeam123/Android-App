@@ -4,17 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewPropertyAnimator
-import android.widget.TextView
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import com.example.androidapprpg.R
+import androidx.fragment.app.activityViewModels
 import com.example.androidapprpg.databinding.FragmentCardsManagementBinding
+import com.example.androidapprpg.ui.fragment.GameManager.CardsBottomSheetFragment.CardKind
+import com.example.androidapprpg.ui.viewmodel.CardsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CardFragment : Fragment() {
 
     private var _binding: FragmentCardsManagementBinding? = null
     private val binding get() = _binding!!
+
+    private val vm: CardsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,72 +30,41 @@ class CardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        wireGridClicks()
-        handleBackPress()
 
-        binding.btnCloseExpanded.setOnClickListener { hideExpanded() }
-        binding.expandedOverlay.setOnClickListener { hideExpanded() }
-        binding.expandedCard.apply {
-            isClickable = true // garante que o clique não “passe” pro overlay
-            setOnClickListener { /* consume */ }
-        }
+        // carrega o player uma vez (para Biografia)
+        vm.loadPlayer()
+
+        wireGridClicks()
     }
 
     private fun wireGridClicks() = with(binding) {
-        for (i in 0 until cardsGridLayout.childCount) {
-            val card = cardsGridLayout.getChildAt(i)
-            card.isClickable = true
-            card.setOnClickListener {
-                val title = extractTitleFromCard(card)
-                val bgRes = (card.tag as? Int) ?: R.drawable.card_nine
-                showExpanded(title, "descrição/efeitos da carta selecionada.", bgRes)
-            }
+
+        // 1: Biografia
+        card1.setOnClickListener {
+            CardsBottomSheetFragment
+                .newInstance(CardKind.BIOGRAFIA)
+                .show(childFragmentManager, "cardBioSheet")
         }
-    }
 
-    private fun extractTitleFromCard(view: View): String {
-        fun findFirstText(v: View): String? = when (v) {
-            is TextView -> v.text?.toString()
-            is ViewGroup -> (0 until v.childCount).asSequence()
-                .mapNotNull { findFirstText(v.getChildAt(it)) }.firstOrNull()
-            else -> null
+        // 2: Armas
+        card2.setOnClickListener {
+            CardsBottomSheetFragment
+                .newInstance(CardKind.ARMAS)
+                .show(childFragmentManager, "cardArmasSheet")
         }
-        return findFirstText(view) ?: "Carta"
-    }
 
-    private fun showExpanded(title: String, body: String, bgRes: Int) = with(binding) {
-        expandedTitle.text = title
-        expandedBody.text  = body
-        expandedBg.setImageResource(bgRes)
+        // 3: Poderes
+        card3.setOnClickListener {
+            CardsBottomSheetFragment
+                .newInstance(CardKind.PODERES)
+                .show(childFragmentManager, "cardPoderSheet")
+        }
 
-        expandedOverlay.bringToFront()
-        rootScroll.isEnabled = false
-
-        expandedOverlay.alpha = 0f
-        expandedOverlay.visibility = View.VISIBLE
-        expandedOverlay.animate().alpha(1f).setDuration(160).start()
-
-        expandedCard.scaleX = 0.95f
-        expandedCard.scaleY = 0.95f
-        expandedCard.animate().scaleX(1f).scaleY(1f).setDuration(220).start()
-    }
-
-    private fun hideExpanded() = with(binding) {
-        expandedCard.animate().scaleX(0.98f).scaleY(0.98f).setDuration(140).start()
-        expandedOverlay.animate().alpha(0f).setDuration(160).withEndAction {
-            expandedOverlay.visibility = View.GONE
-            rootScroll.isEnabled = true
-        }.start()
-    }
-
-    private fun handleBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (binding.expandedOverlay.visibility == View.VISIBLE) {
-                hideExpanded()
-            } else {
-                isEnabled = false
-                requireActivity().onBackPressed()
-            }
+        // 4: Magias
+        card4.setOnClickListener {
+            CardsBottomSheetFragment
+                .newInstance(CardKind.MAGIAS)
+                .show(childFragmentManager, "cardMagiaSheet")
         }
     }
 
@@ -101,3 +73,4 @@ class CardFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -374,8 +374,14 @@ class GridCanvasView @JvmOverloads constructor(
 
         // --- ordem de camadas ---
         if (!drawGridOnTop) drawGrid(canvas)
-        // mapa
-        mapBitmap?.let { bmp -> canvas.drawBitmap(bmp, mapMatrix, mapPaint) }
+
+        // mapa (defensivo: checar recycled)
+        mapBitmap?.let { bmp ->
+            if (!bmp.isRecycled) {
+                canvas.drawBitmap(bmp, mapMatrix, mapPaint)
+            }
+        }
+
         if (drawGridOnTop) drawGrid(canvas)
 
         // shapes
@@ -443,26 +449,35 @@ class GridCanvasView @JvmOverloads constructor(
     fun setStrokeWidth(px: Float)  { currStrokeWidth = px;    invalidate() }
     fun setTextSize(px: Float)     { currTextSize    = px;    invalidate() }
 
+    /** Cópia defensiva para evitar bitmaps reciclados por loaders (Glide/Coil/etc). */
+    private fun defensivelyCopy(bmp: Bitmap): Bitmap {
+        val cfg = bmp.config ?: Bitmap.Config.ARGB_8888
+        return bmp.copy(cfg, /* mutable = */ false)
+    }
+
     /** Define/atualiza o bitmap do mapa e calcula um fit centralizado no viewport atual. */
     fun setMapBitmap(bmp: Bitmap?) {
         Log.d(TAG, "setMapBitmap() hasBmp=${bmp!=null}, view=$width x $height")
-        mapBitmap = bmp
-        if (bmp == null) { invalidate(); return }
+        mapBitmap = bmp?.let { defensivelyCopy(it) }
+
+        val safe = mapBitmap
+        if (safe == null || safe.isRecycled) { invalidate(); return }
 
         if (width == 0 || height == 0) {
-            post { setMapBitmap(bmp) }
+            post { refitMapToView() }
             return
         }
-        computeMapMatrixForViewport(bmp)
+        computeMapMatrixForViewport(safe)
         invalidate()
     }
 
     /** Recalcula o encaixe do mapa considerando o viewport atual (útil após mudanças programáticas de zoom/pan). */
     fun refitMapToView() {
-        mapBitmap?.let { computeMapMatrixForViewport(it); invalidate() }
+        mapBitmap?.let { if (!it.isRecycled) { computeMapMatrixForViewport(it); invalidate() } }
     }
 
     private fun computeMapMatrixForViewport(bmp: Bitmap) {
+        if (bmp.isRecycled) return
         // viewport em coordenadas DO MUNDO
         val worldW = width  / scale
         val worldH = height / scale
@@ -517,6 +532,12 @@ class GridCanvasView @JvmOverloads constructor(
         invalidate()
     }
 
+    /** Libera referência para GC (não chame recycle). */
+    fun releaseMap() {
+        mapBitmap = null
+        invalidate()
+    }
+
     // ================= Helpers =================
     private fun screenToWorldX(x: Float) = (x - offsetX) / scale
     private fun screenToWorldY(y: Float) = (y - offsetY) / scale
@@ -533,6 +554,7 @@ class GridCanvasView @JvmOverloads constructor(
     /** Encaixa o mapa na tela com a ORIGEM DO MUNDO (0,0) no CENTRO do bitmap. */
     fun fitMapCenteredOrigin() {
         val bmp = mapBitmap ?: return
+        if (bmp.isRecycled) return
         if (width == 0 || height == 0) {
             post { fitMapCenteredOrigin() }
             return
@@ -553,10 +575,12 @@ class GridCanvasView @JvmOverloads constructor(
     /** Define o bitmap e já posiciona com a origem do mundo no centro do mapa. */
     fun setMapBitmapCenteredOrigin(bmp: Bitmap?) {
         Log.d(TAG, "setMapBitmapCenteredOrigin() hasBmp=${bmp!=null}, view=$width x $height")
-        mapBitmap = bmp
-        if (bmp == null) { invalidate(); return }
+        mapBitmap = bmp?.let { defensivelyCopy(it) }
+
+        val safe = mapBitmap
+        if (safe == null || safe.isRecycled) { invalidate(); return }
         if (width == 0 || height == 0) {
-            post { setMapBitmapCenteredOrigin(bmp) }
+            post { fitMapCenteredOrigin() }
             return
         }
         fitMapCenteredOrigin()

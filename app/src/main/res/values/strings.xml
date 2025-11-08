@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Reinos Perdidos</string>
+    <string name="app_name">Codéx RPG</string>
     <string name="rpg">Codéx RPG</string>
     <string name="codex">Codéx</string>
     <string name="rpg_login">rpg</string>
@@ -109,11 +109,11 @@
     <string name="exit_session">Sair</string>
     <string name="confirm_exit">Deseja encerrar a sessão?</string>
     <string name="opções">Opções</string>
-    <string name="biografia">Biografia</string>
+    <string name="biografia">BIOGRAFIA</string>
     <string name="Personagem">Personagem</string>
-    <string name="arma">Armamento</string>
-    <string name="poder">Poderes</string>
-    <string name="magia">Magias</string>
+    <string name="arma">ARMAMENTO</string>
+    <string name="poder">PODERES</string>
+    <string name="magia">MAGIAS</string>
     <string name="habilidade">Habilidades</string>
     <string name="mochila">Mochila</string>
     <string name="cartas">Cartas</string>
@@ -193,10 +193,132 @@
     <string name="tipo_poder_nome">Tipo Poder Nome</string>
     <string name="sucesso">Sucesso</string>
     <string name="escolha_armas">Escolha suas armas</string>
-    <string name="tipo_de_arma">Selecione seu tipo de arma</string>
+    <string name="tipo_de_arma">Selecione seu tipo de arma: </string>
     <string name="id_do_jogo">ID JOGO</string>
     <string name="player_icon">player_icon</string>
     <string name="jogadores_na_mesa">Jogadores na mesa</string>
+    <string name="dano">Dano</string>
+    <string name="critico">Critico</string>
+    <string name="margem_ameaca">Margem de Ameaça</string>
+    <string name="multiplicador_critico">Multiplicador Critico</string>
+    <string name="alcance">Alcance</string>
+    <string name="espacos">Espaços</string>
+    <string name="preco">Preço</string>
+    <string name="atributo">Atributo</string>
+    <string name="selecione_seu_tipo_de_dano">Selecione seu tipo de dano: </string>
+    <string name="duracao">Duração</string>
+    <string name="alvo_area">Alvo Area</string>
+    <string name="custo">Custo</string>
+    <string name="circulo">Circulo</string>
+    <string name="tipo_magia">Tipo Magia: </string>
+    <string name="escola_magia">Escola Magia: </string>
+    <string name="execucao">Execução Magia: </string>
+    <string name="resistencia">Resistência: </string>
+    <string name="erro_dados_invalidos">Erro Dados Inválidos</string>
+    <string name="player_id_nao_definido">Player ID não definido</string>
+    <string name="selecione_seu_tipo_de_poder">Selecione seu Tipo de Poder</string>
+    <string name="selecione_uma_escola">Selecione uma escola</string>
+    <string name="selecione_uma_execucao">Selecione uma execução</string>
+    <string name="selecione_uma_resistencia">Selecione uma resistencia</string>
+    <string name="dados_indisponiveis">Dados indisponiveis</string>
+    <string name="nenhum_poder_selecionado">Nenhum poder selecionado</string>
+    <string name="nenhuma_magia_selecionada">Nenhuma magia selecionada</string>
+    <string name="magias">MAGIAS</string>
+    <string name="poderes">PODERES</string>
+    <string name="armamento">ARMAMENTO</string>
+
+
+              <string name="privacy_policy_codex_rpg"><![CDATA[
+🛡️ Política de Privacidade – Codéx RPG
+
+Última atualização: 28 de outubro de 2025
+
+A presente Política de Privacidade tem como finalidade demonstrar o compromisso do Codéx RPG com a segurança e a privacidade das informações coletadas de seus usuários, em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 – LGPD) e demais normas aplicáveis.
+
+1. Informações Gerais
+
+O Codéx RPG é um aplicativo de entretenimento voltado para experiências de RPG (Role-Playing Game), oferecendo recursos interativos como criação de personagens, gerenciamento de campanhas e integração com um assistente inteligente (Agente RPG) para auxiliar mestres e jogadores durante as partidas.
+
+Ao utilizar o aplicativo, o usuário concorda com os termos descritos nesta política.
+
+2. Dados Pessoais Coletados
+
+Durante o uso do Codéx RPG, poderemos coletar os seguintes dados pessoais informados diretamente pelo usuário:
+
+• Nome e sobrenome
+• Endereço de e-mail
+• Gênero (opcional)
+• Nickname (apelido utilizado no jogo)
+• Fotos de perfil (enviadas voluntariamente pelo usuário)
+
+O aplicativo também poderá solicitar permissão para acessar a galeria de imagens do dispositivo, apenas para permitir o envio de fotos de perfil ou imagens personalizadas de personagens.
+
+Nenhum outro dado sensível, como localização, contatos ou arquivos pessoais, é acessado ou armazenado.
+
+3. Finalidade da Coleta de Dados
+
+Os dados são utilizados exclusivamente para:
+• Criar e gerenciar o perfil do usuário no aplicativo;
+• Personalizar a experiência de jogo;
+• Permitir interações entre jogadores e mestres;
+• Fornecer suporte técnico e respostas por meio do Agente RPG (integração com OpenAI);
+• Garantir a segurança e o bom funcionamento dos serviços.
+
+4. Armazenamento e Segurança das Informações
+
+Os dados coletados são armazenados em servidores seguros hospedados na Amazon Web Services (AWS), que seguem padrões internacionais de proteção e criptografia.
+
+Adotamos medidas técnicas e organizacionais adequadas para proteger as informações contra acessos não autorizados, perda, alteração ou divulgação indevida.
+
+5. Compartilhamento de Dados com Terceiros
+
+O Codéx RPG não vende nem compartilha dados pessoais com terceiros para fins comerciais.
+O compartilhamento ocorre apenas nos seguintes casos:
+• Integração com a OpenAI, utilizada exclusivamente para alimentar o Agente RPG, que responde a perguntas e interage com o jogador de forma contextual;
+• Cumprimento de obrigações legais, ordens judiciais ou solicitações de autoridades competentes.
+
+Em todas as situações, buscamos garantir o mínimo de dados possível e a anonimização quando aplicável.
+
+6. Direitos do Usuário
+
+O usuário tem o direito de, a qualquer momento:
+• Confirmar a existência de tratamento de seus dados pessoais;
+• Acessar e obter cópia dos dados;
+• Corrigir informações incorretas, incompletas ou desatualizadas;
+• Solicitar a exclusão de seus dados pessoais;
+• Revogar o consentimento para o uso dos dados;
+• Solicitar informações sobre o compartilhamento com terceiros.
+
+Essas solicitações podem ser realizadas por meio do e-mail:
+📧 timedeengenhariadesoftware@gmail.com
+
+7. Retenção e Exclusão de Dados
+
+Os dados pessoais serão mantidos apenas pelo período necessário para a execução das funcionalidades do aplicativo ou cumprimento de obrigações legais.
+Após esse período, as informações serão excluídas de forma segura e permanente.
+
+8. Uso de Cookies e Tecnologias de Rastreamento
+
+O Codéx RPG não utiliza cookies, Google Analytics, Firebase Analytics, Crashlytics ou qualquer tecnologia de rastreamento de comportamento do usuário.
+
+9. Alterações nesta Política
+
+Esta Política de Privacidade pode ser atualizada periodicamente.
+Recomenda-se a leitura periódica deste documento.
+Em caso de alterações relevantes, os usuários serão notificados dentro do próprio aplicativo.
+
+10. Contato
+
+Em caso de dúvidas, solicitações ou reclamações relacionadas à privacidade e ao tratamento de dados pessoais, o usuário poderá entrar em contato pelo e-mail:
+📩 timedeengenhariadesoftware@gmail.com
+
+Codéx RPG
+© 2025 – Todos os direitos reservados.
+    ]]></string>
+
+
+
+
 
     <string-array name="mock_spinner_values">
         <item>Humano</item>

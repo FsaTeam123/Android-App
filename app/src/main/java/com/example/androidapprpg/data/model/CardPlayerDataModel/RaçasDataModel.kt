@@ -1,5 +1,6 @@
 package com.example.androidapprpg.data.model.CardPlayerDataModel
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class RaçasDataModel(
@@ -31,7 +32,5 @@ data class RaçasDataModel(
     @SerializedName("fotoAtualizadaEm")
     val fotoAtualizadaEm : String?,
 
-    @SerializedName("habilidades")
-    val habilidades : HabilidadesDataModel? = null
 
 )

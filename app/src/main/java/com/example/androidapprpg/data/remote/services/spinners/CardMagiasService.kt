@@ -3,6 +3,7 @@ package com.example.androidapprpg.data.remote.services.spinners
 import com.example.androidapprpg.data.model.CardMagiasDataModel.EscolaMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModelRequest
+import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModelResponse
 import com.example.androidapprpg.data.model.CardMagiasDataModel.ExecucaoMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.ResistenciaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.TiposMagiaDataModel
@@ -15,7 +16,7 @@ interface CardMagiasService {
 
     //===========POST MAGIA==================//
     @POST("magia-player")
-    suspend fun createMagia(@Body body: CardMagiaDataModelRequest): Response<CardMagiaDataModel>
+        suspend fun createMagia(@Body body: CardMagiaDataModelRequest): Response<CardMagiaDataModelResponse>
 
     //==========GET MAGIA===================//
     @GET("magias")

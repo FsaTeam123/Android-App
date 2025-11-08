@@ -1,3 +1,4 @@
+// com/example/androidapprpg/data/repository/SessionManager.kt
 package com.example.androidapprpg.data.repository
 
 import android.content.Context
@@ -17,11 +18,12 @@ import javax.inject.Singleton
 @Singleton
 class SessionManager @Inject constructor(@ApplicationContext private val context: Context) {
 
-    // ---- Nomes de arquivos/keys ----
     private companion object {
         private const val SECURE_PREFS = "UserPrefs.secure"
-        private const val KEY_USER_ID  = "USER_ID"
-        private const val KEY_TOKEN    = "TOKEN"
+        private const val KEY_USER_ID   = "USER_ID"
+        private const val KEY_TOKEN     = "TOKEN"
+        private const val KEY_USER_NICK = "USER_NICK"
+
         private const val ANDROID_KEYSTORE = "AndroidKeyStore"
         private const val KEY_ALIAS = "SESSION_AES_KEY"
         private const val AES_MODE = "AES/GCM/NoPadding"
@@ -32,21 +34,31 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         context.getSharedPreferences(SECURE_PREFS, Context.MODE_PRIVATE)
     }
 
-
     // ===================== API pública =====================
 
+    /** Backward-compat */
     fun saveLogin(id: Long, token: String?) {
         putLongSecure(KEY_USER_ID, id)
         putStringSecure(KEY_TOKEN, token)
+        // não mexe no nick aqui para manter compatibilidade
     }
 
-    fun saveToken(token: String?) {
+    /** Preferir este: salva id, token e nickname */
+    fun saveLogin(id: Long, token: String?, nickname: String?) {
+        putLongSecure(KEY_USER_ID, id)
         putStringSecure(KEY_TOKEN, token)
+        putStringSecure(KEY_USER_NICK, nickname?.trim().orEmpty().ifBlank { null })
+    }
+
+    fun saveToken(token: String?) { putStringSecure(KEY_TOKEN, token) }
+
+    fun saveUserNick(nickname: String?) {
+        putStringSecure(KEY_USER_NICK, nickname?.trim().orEmpty().ifBlank { null })
     }
 
     fun getUserIdOrNull(): Long? = getLongSecure(KEY_USER_ID)
-
     fun getToken(): String? = getStringSecure(KEY_TOKEN)
+    fun getUserNick(): String? = getStringSecure(KEY_USER_NICK)
 
     fun isLoggedIn(): Boolean = getUserIdOrNull() != null && getToken() != null
 
@@ -66,7 +78,6 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
             .setKeySize(256)
-            // .setUserAuthenticationRequired(true) // opcional: exige biometria/bloqueio antes de usar a chave
             .build()
         keyGen.init(spec)
         return keyGen.generateKey()
@@ -107,8 +118,6 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         return try {
             String(decrypt(iv, ct), Charsets.UTF_8)
         } catch (_: Exception) {
-            // Chave inválida (ex.: app reinstalado) ou dados corrompidos.
-            // Limpe a entrada para evitar loops e retorne null.
             prefs.edit().remove("${key}_iv").remove("${key}_ct").apply()
             null
         }
@@ -119,5 +128,4 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
 
     private fun getLongSecure(key: String): Long? =
         getStringSecure(key)?.toLongOrNull()
-
 }

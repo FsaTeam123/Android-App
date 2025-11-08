@@ -81,7 +81,11 @@ class LoginFragment : Fragment() {
                 is Result.Success -> {
                     setLoginEnabled(true)
                     val user = result.data
-                    session.saveLogin(user.idUsuario.toLong(), user.token)
+                    session.saveLogin(
+                        id = user.idUsuario.toLong(),
+                        token = user.token,
+                        nickname = user.nickname ?: user.nome
+                    )
                     findNavController().navigate(R.id.action_to_home_fragment)
                 }
                 is Result.StopViewModel -> Unit

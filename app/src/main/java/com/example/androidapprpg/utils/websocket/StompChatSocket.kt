@@ -7,6 +7,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.json.JSONArray
 import java.io.IOException
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Singleton
@@ -24,10 +25,12 @@ class StompChatSocket(
 
     private object WS {
         object topics {
-            fun chat(id: Any) = "/topic/chat.${id}"
+            fun chat(id: Any) = "/topic/chat.$id"
+            fun mapaSelected(idJogo: Any) = "/topic/mapa.$idJogo.selected"
         }
         object app {
-            fun chatSend(id: Any) = "/app/chat.${id}.message"
+            fun chatSend(id: Any) = "/app/chat.$id.message"
+            fun mapaSelect(idJogo: Any) = "/app/mapa.$idJogo.select"
         }
     }
 
@@ -38,19 +41,22 @@ class StompChatSocket(
 
     private var ws: WebSocket? = null
 
-    private val isActive     = AtomicBoolean(false)   // só true depois de CONNECTED
-    private val connecting   = AtomicBoolean(false)   // estamos em processo de conectar
-    private val sockJsOpened = AtomicBoolean(false)   // já recebemos "o"
+    private val isActive     = AtomicBoolean(false)
+    private val connecting   = AtomicBoolean(false)
+    private val sockJsOpened = AtomicBoolean(false)
 
-    private val pendingSubs  = ConcurrentLinkedQueue<String>()
+    // pendências
+    private data class PendingSub(val cmd: String, val subId: String)
+    private val pendingSubs  = ConcurrentLinkedQueue<PendingSub>()
     private val pendingSends = ConcurrentLinkedQueue<Triple<String, String, Map<String, String>>>()
+
+    // callbacks por subscription-id
+    private val subCallbacks = ConcurrentHashMap<String, (String) -> Unit>()
 
     var sockJsUseNullTerminator: Boolean = true
 
     private lateinit var wsUrl: String
-
     @Volatile private var connectHeaders: Map<String, String> = emptyMap()
-    @Volatile private var messageCallback: ((String) -> Unit)? = null
 
     // -------------------- API pública --------------------
 
@@ -59,69 +65,67 @@ class StompChatSocket(
         Log.d(t("AUTH"), "setAuth headers=${redact(headers)}")
     }
 
-    fun onMessage(listener: (String) -> Unit) {
-        Log.d(t("CB"), "onMessage(): listener registrado")
-        messageCallback = listener
-    }
-
     fun connect() {
         if (!connecting.compareAndSet(false, true)) return
-
         wsUrl = buildWsUrl()
-
-        if (!useSockJs) {
-            openWebSocket()
-            return
-        }
-
-        warmUpSockJsCookieAsync {
-            openWebSocket()
-        }
+        if (!useSockJs) { openWebSocket(); return }
+        warmUpSockJsCookieAsync { openWebSocket() }
     }
 
     fun connectIfNeeded() {
-        if (!isActive.get() && !connecting.get()) {
-            connect()
-        }
+        if (!isActive.get() && !connecting.get()) connect()
     }
 
     fun isConnected(): Boolean = isActive.get()
 
     fun disconnect() {
-        Log.i(t("CONNECT"), "disconnect() called")
-        isActive.set(false)
-        connecting.set(false)
-        sockJsOpened.set(false)
-        ws?.close(1000, "bye")
-        ws = null
+        Log.i(t("CONNECT"), "disconnect()")
+        isActive.set(false); connecting.set(false); sockJsOpened.set(false)
+        ws?.close(1000, "bye"); ws = null
+        subCallbacks.clear()
+        pendingSubs.clear()
+        pendingSends.clear()
     }
 
-    fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
-        messageCallback = onMessage
+    // ===== Assinaturas específicas =====
 
-        val destination = WS.topics.chat(chatId)
+    fun subscribeChat(id: String, onMessage: (String) -> Unit): () -> Unit =
+        subscribeInternal(WS.topics.chat(id), onMessage)
+
+    fun sendChat(chatId: String, body: Any, headers: Map<String, String> = emptyMap()) {
+        send(WS.app.chatSend(chatId), body, headers)
+    }
+
+    fun subscribeMapaSelected(idJogo: Long, onMessage: (String) -> Unit): () -> Unit =
+        subscribeInternal(WS.topics.mapaSelected(idJogo), onMessage)
+
+    fun sendMapaSelect(idJogo: Long, body: Any, headers: Map<String, String> = emptyMap()) {
+        send(WS.app.mapaSelect(idJogo), body, headers)
+    }
+
+    // ===== Genéricos =====
+
+    private fun subscribeInternal(destination: String, onMessage: (String) -> Unit): () -> Unit {
         val subId = "sub-${destination.trimStart('/')}"
         val cmd = buildSubscribe(destination, subId)
+
+        subCallbacks[subId] = onMessage
 
         if (isActive.get()) {
             sendRaw(cmd)
         } else {
-            pendingSubs.add(cmd)
-            Log.d(t("SUB"), "socket ainda não CONNECTED -> SUB pendente $destination")
+            pendingSubs.add(PendingSub(cmd, subId))
+            Log.d(t("SUB"), "SUB pendente $destination")
         }
 
         return {
             runCatching {
                 sendRaw(buildUnsubscribe(subId))
+                subCallbacks.remove(subId)
             }.onFailure { e ->
                 Log.w(t("SUB"), "unsubscribe falhou: ${e.message}", e)
             }
         }
-    }
-
-    fun sendChat(chatId: String, body: Any, headers: Map<String, String> = emptyMap()) {
-        val destination = WS.app.chatSend(chatId)
-        send(destination, body, headers)
     }
 
     fun send(destination: String, body: Any, headers: Map<String, String> = emptyMap()) {
@@ -134,7 +138,7 @@ class StompChatSocket(
             sendRaw(frame)
         } else {
             pendingSends.add(Triple(destination, jsonBody, headers))
-            Log.d(t("SEND"), "AINDA NÃO CONNECTED -> SEND pendente $destination")
+            Log.d(t("SEND"), "SEND pendente $destination")
         }
     }
 
@@ -145,31 +149,26 @@ class StompChatSocket(
             .url(wsUrl)
             .header("Origin", "https://main.d3r5mqem6d9ler.amplifyapp.com")
             .build()
-
         ws = ok.newWebSocket(req, socketListener)
         Log.i(t("CONNECT"), "Connecting to $wsUrl (sockJs=$useSockJs)")
     }
 
     private fun warmUpSockJsCookieAsync(done: () -> Unit) {
         val infoUrl = base.toHttpUrl().newBuilder()
-            .addPathSegment(sanitizeEndpoint(endpoint)) // "ws"
+            .addPathSegment(sanitizeEndpoint(endpoint))
             .addPathSegment("info")
             .addQueryParameter("_", System.currentTimeMillis().toString())
             .build()
 
-        ok.newCall(Request.Builder().url(infoUrl).get().build())
-            .enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.w(t("CONNECT"), "préflight /ws/info falhou: ${e.message}")
-                    done()
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    Log.d(t("CONNECT"), "preflight /ws/info -> ${response.code}")
-                    response.close()
-                    done()
-                }
-            })
+        ok.newCall(Request.Builder().url(infoUrl).get().build()).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.w(t("CONNECT"), "préflight /ws/info falhou: ${e.message}"); done()
+            }
+            override fun onResponse(call: Call, response: Response) {
+                Log.d(t("CONNECT"), "preflight /ws/info -> ${response.code}")
+                response.close(); done()
+            }
+        })
     }
 
     // -------------------- WebSocketListener --------------------
@@ -177,12 +176,9 @@ class StompChatSocket(
     private val socketListener = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             Log.i(t("WS"), "onOpen code=${response.code} url=$wsUrl")
-
             if (!useSockJs) {
-                // caminho WS puro (não usado no teu backend atual)
                 sendRaw(buildNativeConnectFrame())
             } else {
-                // SockJS handshake: servidor manda "o" primeiro
                 sockJsOpened.set(false)
             }
         }
@@ -193,54 +189,31 @@ class StompChatSocket(
                     text == "o" -> {
                         Log.v(t("WS"), "SockJS OPEN (o)")
                         if (sockJsOpened.compareAndSet(false, true)) {
-                            // >>> IMPORTANTE <<<
-                            // SockJS cliente -> servidor NÃO manda "a[...]".
-                            // Ele manda só ["..."].
-                            // Então aqui a gente usa wrapSockJsClient().
                             val connectPayload = buildNativeConnectFrame()
-                            val sockJsFrame = wrapSockJsClient(connectPayload)
-                            sendRaw(sockJsFrame)
+                            sendRaw(wrapSockJsClient(connectPayload))
                         }
                         return
                     }
-                    text == "h" -> {
-                        Log.v(t("WS"), "SockJS heartbeat (h)")
-                        return
-                    }
-                    text.startsWith("a[") -> {
-                        // servidor -> cliente, sempre vem começando com "a["
-                        parseSockJsServerFrame(text).forEach { handleStompFrame(it) }
-                        return
-                    }
+                    text == "h" -> { Log.v(t("WS"), "SockJS heartbeat (h)"); return }
+                    text.startsWith("a[") -> { parseSockJsServerFrame(text).forEach { handleStompFrame(it) }; return }
                     text.startsWith("c[") -> {
-                        isActive.set(false)
-                        connecting.set(false)
-                        sockJsOpened.set(false)
-                        Log.w(t("WS"), "SockJS CLOSE recebido: $text")
-                        return
+                        isActive.set(false); connecting.set(false); sockJsOpened.set(false)
+                        Log.w(t("WS"), "SockJS CLOSE: $text"); return
                     }
                 }
             }
-
-            // fallback STOMP puro (sem SockJS)
             handleStompFrame(text)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             Log.w(t("WS"), "onClosed code=$code reason=$reason")
-            isActive.set(false)
-            connecting.set(false)
-            sockJsOpened.set(false)
+            isActive.set(false); connecting.set(false); sockJsOpened.set(false)
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.e(t("WS"), "onFailure: ${t.message}", t)
-            response?.let {
-                Log.e(t("WS"), "resp=${it.code} ${it.message}")
-            }
-            isActive.set(false)
-            connecting.set(false)
-            sockJsOpened.set(false)
+            response?.let { Log.e(t("WS"), "resp=${it.code} ${it.message}") }
+            isActive.set(false); connecting.set(false); sockJsOpened.set(false)
         }
     }
 
@@ -252,22 +225,19 @@ class StompChatSocket(
             if (frame.isEmpty() || !connecting.get()) return@forEach
 
             val command = frame.substringBefore('\n', frame)
-
             when {
                 command.startsWith("CONNECTED") -> {
-                    Log.i(t("STOMP"), "CONNECTED recebido 🎉")
+                    Log.i(t("STOMP"), "CONNECTED 🎉")
                     isActive.set(true)
 
-                    // drena SUBSCRIBEs pendentes
                     var drainedSubs = 0
                     while (true) {
-                        val s = pendingSubs.poll() ?: break
+                        val ps = pendingSubs.poll() ?: break
                         drainedSubs++
-                        sendRaw(s)
+                        sendRaw(ps.cmd)
                     }
-                    Log.d(t("STOMP"), "SUBSCRIBEs drenados: $drainedSubs")
+                    Log.d(t("STOMP"), "SUBs drenados: $drainedSubs")
 
-                    // drena SENDs pendentes
                     var drainedSends = 0
                     while (true) {
                         val p = pendingSends.poll() ?: break
@@ -280,138 +250,70 @@ class StompChatSocket(
                 }
 
                 command.startsWith("MESSAGE") -> {
-                    val body = frame.substringAfter("\n\n", "")
-                    if (logBodies) Log.v(t("MSG"), "body=$body")
-                    try {
-                        messageCallback?.invoke(body)
-                    } catch (e: Throwable) {
-                        Log.e(t("MSG"), "callback error: ${e.message}", e)
-                    }
+                    val headersEnd = frame.indexOf("\n\n")
+                    val headerBlock = if (headersEnd > 0) frame.substring(0, headersEnd) else frame
+                    val body = if (headersEnd > 0) frame.substring(headersEnd + 2) else ""
+
+                    val subId = headerBlock
+                        .lineSequence()
+                        .firstOrNull { it.startsWith("subscription:") }
+                        ?.substringAfter("subscription:")
+                        ?.trim()
+
+                    if (logBodies) Log.v(t("MSG"), "sub=$subId body=$body")
+
+                    subId?.let { id ->
+                        subCallbacks[id]?.invoke(body)
+                            ?: Log.w(t("MSG"), "sem callback para subId=$id")
+                    } ?: Log.w(t("MSG"), "sem header 'subscription' em MESSAGE")
                 }
 
-                command.startsWith("ERROR") -> {
-                    Log.e(t("STOMP"), "ERROR frame: ${preview(frame)}")
-                }
-
-                command.startsWith("RECEIPT") -> {
-                    Log.v(t("STOMP"), "RECEIPT frame: ${preview(frame)}")
-                }
-
-                else -> {
-                    Log.v(t("STOMP"), "FRAME outro: ${preview(frame)}")
-                }
+                command.startsWith("ERROR")   -> Log.e(t("STOMP"), "ERROR: ${preview(frame)}")
+                command.startsWith("RECEIPT") -> Log.v(t("STOMP"), "RECEIPT: ${preview(frame)}")
+                else                          -> Log.v(t("STOMP"), "FRAME: ${preview(frame)}")
             }
         }
     }
 
     // -------------------- STOMP frames builders --------------------
 
-    /**
-     * Frame CONNECT nativo STOMP.
-     * Esse texto ENTROU dentro do array JSON ["..."] que mandamos pro SockJS servidor.
-     *
-     * Importante:
-     * - accept-version:1.1,1.0
-     * - heart-beat:10000,10000
-     * - NÃO vamos colocar "host:" porque não é obrigatório pro Spring SimpleBroker.
-     * - linha em branco
-     * - terminador '\u0000'
-     */
-    private fun buildNativeConnectFrame(): String {
-        val sb = StringBuilder()
-        sb.append("CONNECT\n")
-        sb.append("accept-version:1.1,1.0\n")
-        sb.append("heart-beat:10000,10000\n")
-
-        // headers extras tipo Authorization se precisar
-        connectHeaders.forEach { (k, v) ->
-            sb.append(k).append(':').append(v).append('\n')
-        }
-
-        sb.append("\n")
-        sb.append('\u0000')
-        return sb.toString()
+    private fun buildNativeConnectFrame(): String = buildString {
+        append("CONNECT\n")
+        append("accept-version:1.1,1.0\n")
+        append("heart-beat:10000,10000\n")
+        connectHeaders.forEach { (k, v) -> append(k).append(':').append(v).append('\n') }
+        append("\n").append('\u0000')
     }
 
     private fun buildSubscribe(destination: String, id: String): String =
-        stompFrame(
-            command = "SUBSCRIBE",
-            headers = mapOf(
-                "id" to id,
-                "destination" to destination,
-                "ack" to "auto"
-            ),
-            body = null
-        )
+        stompFrame("SUBSCRIBE", mapOf("id" to id, "destination" to destination, "ack" to "auto"), null)
 
     private fun buildUnsubscribe(id: String): String =
-        stompFrame(
-            command = "UNSUBSCRIBE",
-            headers = mapOf("id" to id),
-            body = null
-        )
+        stompFrame("UNSUBSCRIBE", mapOf("id" to id), null)
 
-    private fun buildSend(
-        destination: String,
-        contentType: String,
-        body: String,
-        extraHeaders: Map<String, String> = emptyMap()
-    ): String =
-        stompFrame(
-            command = "SEND",
-            headers = mapOf(
-                "destination" to destination,
-                "content-type" to contentType
-            ) + extraHeaders,
-            body = body
-        )
+    private fun buildSend(destination: String, contentType: String, body: String, extraHeaders: Map<String, String>) =
+        stompFrame("SEND", mapOf("destination" to destination, "content-type" to contentType) + extraHeaders, body)
 
-    /**
-     * Monta um frame STOMP genérico e depois:
-     * - se SockJS=true, embrulha em um JSON array ["..."] (SEM 'a'!)
-     * - se SockJS=false, retorna o frame cru
-     *
-     * OBS: cada frame STOMP termina com \u0000 se sockJsUseNullTerminator=true
-     */
-    private fun stompFrame(
-        command: String,
-        headers: Map<String, String>,
-        body: String?
-    ): String {
+    private fun stompFrame(command: String, headers: Map<String, String>, body: String?): String {
         val sb = StringBuilder().apply {
             append(command).append('\n')
-            headers.forEach { (k, v) ->
-                append(k).append(':').append(v).append('\n')
-            }
+            headers.forEach { (k, v) -> append(k).append(':').append(v).append('\n') }
             append('\n')
             if (body != null) append(body)
-
             val needsNull = if (useSockJs) sockJsUseNullTerminator else true
             if (needsNull) append('\u0000')
         }
-
         val rawFrame = sb.toString()
-        return if (useSockJs) {
-            wrapSockJsClient(rawFrame)
-        } else {
-            rawFrame
-        }
+        return if (useSockJs) wrapSockJsClient(rawFrame) else rawFrame
     }
 
     // -------------------- SockJS helpers --------------------
 
     private fun buildWsUrl(): String {
-        val ep = sanitizeEndpoint(endpoint) // "ws"
-
+        val ep = sanitizeEndpoint(endpoint)
         val httpUrl = base.toHttpUrl().newBuilder().apply {
             addPathSegments(ep)
-
-            stage?.let { st ->
-                if (st.isNotBlank()) {
-                    addPathSegment(st.trim('/'))
-                }
-            }
-
+            stage?.let { st -> if (st.isNotBlank()) addPathSegment(st.trim('/')) }
             if (useSockJs) {
                 val serverId = "%03d".format((0..999).random())
                 val sid = UUID.randomUUID().toString().replace("-", "")
@@ -422,48 +324,30 @@ class StompChatSocket(
         }.build().toString()
 
         return when {
-            httpUrl.startsWith("https://", ignoreCase = true) ->
-                httpUrl.replaceFirst("https://", "wss://")
-            httpUrl.startsWith("http://", ignoreCase = true) ->
-                httpUrl.replaceFirst("http://", "ws://")
+            httpUrl.startsWith("https://", true) -> httpUrl.replaceFirst("https://", "wss://")
+            httpUrl.startsWith("http://",  true) -> httpUrl.replaceFirst("http://",  "ws://")
             else -> httpUrl
         }
     }
 
     private fun sanitizeEndpoint(raw: String): String = raw.trim().trim('/')
 
-    /**
-     * >>> CLIENTE → SERVIDOR <<<
-     * O cliente SockJS envia APENAS um array JSON. Ex: ["CONNECT....\u0000"]
-     * NÃO manda prefixo "a".
-     */
     private fun wrapSockJsClient(payload: String): String {
         val out = JSONArray().put(payload).toString()
-        if (logBodies) {
-            Log.v(t("WS"), "SockJS CLIENT OUT literal=${out.debugLiteral()}")
-        }
+        if (logBodies) Log.v(t("WS"), "SockJS CLIENT OUT literal=${out.debugLiteral()}")
         return out
     }
 
-    /**
-     * >>> SERVIDOR → CLIENTE <<<
-     * O servidor SockJS manda "a[\"...\"]"
-     * Aqui a gente desembrulha isso e retorna a lista de frames STOMP.
-     */
     private fun parseSockJsServerFrame(text: String): List<String> {
-        // text tipo: a["MESSAGE\nsubscription:..."]
         val inner = text.substringAfter("a[", "").removeSuffix("]")
         if (inner.isBlank()) return emptyList()
-
-        return inner
-            .split("\",\"")
-            .map {
-                it.trim('"')
-                    .replace("\\n", "\n")
-                    .replace("\\u0000", "\u0000")
-                    .replace("\\\"", "\"")
-                    .replace("\\\\", "\\")
-            }
+        return inner.split("\",\"").map {
+            it.trim('"')
+                .replace("\\n", "\n")
+                .replace("\\u0000", "\u0000")
+                .replace("\\\"", "\"")
+                .replace("\\\\", "\\")
+        }
     }
 
     // -------------------- envio bruto WS --------------------
@@ -478,34 +362,27 @@ class StompChatSocket(
         } else {
             Log.v(t("WIRE"), "OUT >>> ${preview(frame)}")
         }
-
         val ok = ws?.send(frame) ?: false
-        if (!ok) {
-            Log.w(t("WIRE"), "sendRaw falhou (ws nulo/fechado)")
-        }
+        if (!ok) Log.w(t("WIRE"), "sendRaw falhou (ws nulo/fechado)")
     }
 
     // -------------------- utils --------------------
 
     private fun redact(headers: Map<String, String>): Map<String, String> =
-        headers.mapValues { (k, v) ->
-            if (k.equals("authorization", true)) "***REDACTED***" else v
-        }
+        headers.mapValues { (k, v) -> if (k.equals("authorization", true)) "***REDACTED***" else v }
 
     private fun preview(s: String, max: Int = 200): String =
         if (s.length <= max) s else s.substring(0, max) + "…(+${s.length - max})"
 
     private fun String.debugLiteral(): String = buildString {
-        for (ch in this@debugLiteral) {
-            append(
-                when (ch) {
-                    '\n'     -> "\\n"
-                    '\r'     -> "\\r"
-                    '\t'     -> "\\t"
-                    '\u0000' -> "\\u0000"
-                    else -> if (ch.isISOControl()) "\\u%04X".format(ch.code) else ch
-                }
-            )
-        }
+        for (ch in this@debugLiteral) append(
+            when (ch) {
+                '\n' -> "\\n"
+                '\r' -> "\\r"
+                '\t' -> "\\t"
+                '\u0000' -> "\\u0000"
+                else -> if (ch.isISOControl()) "\\u%04X".format(ch.code) else ch
+            }
+        )
     }
 }

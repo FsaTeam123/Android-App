@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -93,13 +94,9 @@ class SettingsFragment : Fragment() {
         accountVm.deleteState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Result.Loading -> {
-                    // você pode exibir um "carregando" curto
                     showCustomToast("Encerrando conta...", requireContext())
-                    // se quiser, aqui também dá pra desabilitar botões da UI
-                    // binding.closeAccount.isEnabled = false
                 }
                 is Result.Success -> {
-                    // sucesso na deleção + logout já feito dentro do ViewModel
                     showCustomToast("Conta encerrada com sucesso.", requireContext())
                 }
                 is Result.Error -> {
@@ -107,22 +104,15 @@ class SettingsFragment : Fragment() {
                         state.message.ifBlank { "Erro ao encerrar conta." },
                         requireContext()
                     )
-                    // binding.closeAccount.isEnabled = true
                 }
-                is Result.StopViewModel -> {
-                    // provavelmente você não precisa tratar isso aqui
-                }
+                is Result.StopViewModel -> { /* noop */ }
             }
         }
 
         // Evento de navegação para tela de Login
         accountVm.navigateToLogin.observe(viewLifecycleOwner) { go ->
             if (go == true) {
-                // navega pra tela de Login e limpa a pilha de navegação
-                // aqui estou assumindo que R.id.login é o destino da tela de login
                 findNavController().navigate(R.id.login)
-
-                // avisa pro VM que já navegou, pra não repetir em recriação
                 accountVm.onNavigatedToLogin()
             }
         }
@@ -151,34 +141,36 @@ class SettingsFragment : Fragment() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_termos_privacidade, null, false)
 
+        val tvBody      = dialogView.findViewById<TextView>(R.id.tvDialogBody)
         val checkAceito = dialogView.findViewById<CheckBox>(R.id.checkAceito)
         val btnFechar   = dialogView.findViewById<TextView>(R.id.btnFechar)
         val btnAceitar  = dialogView.findViewById<TextView>(R.id.btnAceitar)
+
+        // Carrega o texto completo da Política a partir de strings.xml.
+        // Se preferir sem HTML, troque a linha por: tvBody.text = getString(R.string.privacy_policy_codex_rpg)
+        tvBody.text = HtmlCompat.fromHtml(
+            getString(R.string.privacy_policy_codex_rpg),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
 
         val alert = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
-        // Tirar fundo branco padrão do AlertDialog e deixar só nosso card marrom arredondado
+        // Fundo transparente para manter só o card customizado
         alert.setOnShowListener {
             alert.window?.setBackgroundDrawable(
                 ColorDrawable(android.graphics.Color.TRANSPARENT)
             )
         }
 
-        btnFechar.setOnClickListener {
-            alert.dismiss()
-        }
+        btnFechar.setOnClickListener { alert.dismiss() }
 
         btnAceitar.setOnClickListener {
             if (!checkAceito.isChecked) {
-                showCustomToast(
-                    "Marque que você aceita os termos.",
-                    requireContext()
-                )
+                showCustomToast("Marque que você aceita os termos.", requireContext())
                 return@setOnClickListener
             }
-
             saveTermsAccepted(requireContext())
             showCustomToast("Termos aceitos.", requireContext())
             alert.dismiss()
@@ -218,10 +210,7 @@ class SettingsFragment : Fragment() {
         // Botão "confirmar"
         dialogView.findViewById<Button>(R.id.confirm_button)
             .setOnClickListener {
-                // chama o fluxo de deleção de conta no ViewModel
                 accountVm.deleteAccount()
-
-                // fecha o dialog
                 dialog.dismiss()
             }
     }

@@ -26,7 +26,7 @@ class ChatSocketStompAdapter @Inject constructor(
     //  - enfileirar SUBSCRIBE se ainda não recebeu CONNECTED
     //  - mandar SUBSCRIBE real assim que CONNECTED chegar
     override fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
-        return stomp.subscribe(chatId, onMessage)
+        return stomp.subscribeChat(chatId, onMessage)
     }
 
     // publica no destino /app/chat.<chatId>.message

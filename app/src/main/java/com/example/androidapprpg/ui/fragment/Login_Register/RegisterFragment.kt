@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -281,15 +282,22 @@ class RegisterFragment : Fragment() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 
-    // ---------------------- Termos & Privacidade ----------------------
+    // ---------------------- Termos & Privacidade (igual Settings) ----------------------
 
     private fun showTermsDialog() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_termos_privacidade, null, false)
 
+        val tvBody      = dialogView.findViewById<TextView>(R.id.tvDialogBody)
         val checkAceito = dialogView.findViewById<CheckBox>(R.id.checkAceito)
         val btnFechar   = dialogView.findViewById<TextView>(R.id.btnFechar)
         val btnAceitar  = dialogView.findViewById<TextView>(R.id.btnAceitar)
+
+        // Mesmo comportamento do SettingsFragment:
+        tvBody.text = HtmlCompat.fromHtml(
+            getString(R.string.privacy_policy_codex_rpg),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
 
         val alert = AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -301,19 +309,16 @@ class RegisterFragment : Fragment() {
             )
         }
 
-        btnFechar.setOnClickListener {
-            alert.dismiss()
-        }
+        btnFechar.setOnClickListener { alert.dismiss() }
 
         btnAceitar.setOnClickListener {
             if (!checkAceito.isChecked) {
                 showCustomToast(
-                    "Marque que você aceita os Termos e a Privacidade.",
+                    "Marque que você aceita os termos.",
                     requireContext()
                 )
                 return@setOnClickListener
             }
-
             saveTermsAccepted(requireContext())
             showCustomToast("Termos aceitos.", requireContext())
             alert.dismiss()
@@ -341,4 +346,73 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

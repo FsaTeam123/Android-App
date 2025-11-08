@@ -20,13 +20,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidapprpg.R
 import com.example.androidapprpg.adapter.MapAdapter
 import com.example.androidapprpg.data.model.MapDataModel.MapDataModel
+import com.example.androidapprpg.data.model.MapDataModel.MapSelectedMsg
 import com.example.androidapprpg.databinding.FragmentMapBinding
 import com.example.androidapprpg.ui.activity.ActivityGameMaster
 import com.example.androidapprpg.ui.dialogs.MapFragmentNomeDialog
 import com.example.androidapprpg.ui.viewmodel.MapViewModel
 import com.example.androidapprpg.utils.Result
+import com.example.androidapprpg.utils.websocket.StompChatSocket
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
@@ -36,6 +39,10 @@ class MapFragment : Fragment() {
 
     private val vm: MapViewModel by  activityViewModels()
     private lateinit var adapter: MapAdapter
+
+    @Inject lateinit var stomp: StompChatSocket
+
+    private var idJogo: Long = -1L
 
     /** Abre a galeria; se houver mapa selecionado, troca a imagem;
      *  senão, cria um novo mapa já com essa imagem. */
@@ -75,8 +82,12 @@ class MapFragment : Fragment() {
         collectEvents()
 
         // inicializa com o jogo atual
-        val idJogo = requireActivity().intent.getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
+        idJogo = requireActivity().intent.getLongExtra(ActivityGameMaster.EXTRA_ID_JOGO, -1L)
         vm.attachGameAndRefresh(idJogo)
+
+        // garante WS on
+        // Ex.: se precisar auth: stomp.setAuth(mapOf("Authorization" to "Bearer $token"))
+        stomp.connectIfNeeded()
     }
 
     private fun setupRecycler() {
@@ -84,7 +95,23 @@ class MapFragment : Fragment() {
             onPreview = { showPreview(it) },
             onEdit    = { item -> novoNomeDialog(item) },
             onDelete  = { item -> vm.deleteMap(item.id) }, // lixeira remove imagem
-            onChecked = { item, checked -> vm.setSelected(if (checked) item.id else null) }
+            onChecked = { item, checked ->
+                vm.setSelected(if (checked) item.id else null)
+                // === NOVO: publica seleção para sincronizar com outros devices ===
+                if (checked && idJogo > 0) {
+                    runCatching {
+                        stomp.sendMapaSelect(
+                            idJogo = idJogo,
+                            body = MapSelectedMsg(
+                                mapaId = item.id.toLong(),
+                                // transform opcional não é enviado aqui
+                                senderId = null,
+                                ts = java.time.Instant.now().toString()
+                            )
+                        )
+                    }
+                }
+            }
         )
         binding.rvMaps.apply {
             layoutManager = LinearLayoutManager(requireContext())

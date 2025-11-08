@@ -16,7 +16,7 @@ class StompChatSocketImpl @Inject constructor(
     }
 
     override fun subscribe(chatId: String, onMessage: (String) -> Unit): () -> Unit {
-        return stomp.subscribe(chatId, onMessage)
+        return stomp.subscribeChat(chatId, onMessage)
     }
 
     override fun connectIfNeeded() = stomp.connect()

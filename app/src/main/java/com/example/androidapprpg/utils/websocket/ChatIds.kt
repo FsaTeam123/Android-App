@@ -5,15 +5,15 @@ import kotlin.math.min
 import kotlin.math.max
 
 object ChatIds {
-    fun global(gameId: Long?): String =
-        gameId?.let { "global.$it" } ?: "global"
+    /** Chat global/mesa: usa o próprio idJogo como chatId (ex.: "123") */
+    fun global(idJogo: Long): String = idJogo.toString()
 
-    fun mesa(gameId: Long): String =
-        "mesa.$gameId"
+    /** Alias caso você utilize “mesa” em algum lugar */
+    fun mesa(idJogo: Long): String = idJogo.toString()
 
-    fun dm(userA: Long, userB: Long): String =
-        "dm.${min(userA, userB)}-${max(userA, userB)}"
-
-    fun session(): String =
-        "session.${UUID.randomUUID().toString().replace("-", "").take(12)}"
+    /** DM simétrica: dm.<menor>_<maior> */
+    fun dm(a: Long, b: Long): String {
+        val (x, y) = if (a <= b) a to b else b to a
+        return "dm.${x}_${y}"
+    }
 }

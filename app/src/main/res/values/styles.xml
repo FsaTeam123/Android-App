@@ -182,4 +182,66 @@
     </style>
 
 
+
+    <style name="TextLabelKey">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textColor">@color/DouradoEspecial</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="TextLabelValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+
+    <style name="AttrItem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">6dp</item>
+    </style>
+
+    <style name="AttrLabel">
+        <item name="android:textColor">@color/DouradoEspecial</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AttrValue">
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="IdRow">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="IdKey">
+        <item name="android:textColor">@color/DouradoEspecial</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="IdVal">
+        <item name="android:textColor">@color/BordasDouradas</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+
 </resources>

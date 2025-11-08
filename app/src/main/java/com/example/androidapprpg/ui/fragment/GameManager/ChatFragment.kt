@@ -36,9 +36,7 @@ class ChatFragment : Fragment() {
     private val vm: ChatViewModel by viewModels()
     private lateinit var chatAdapter: ChatAdapter
 
-    private var chatId: String = "global"
-
-    // evita duplo disparo (botão + IME ao mesmo tempo)
+    private lateinit var chatId: String
     private var sendingNow = false
 
     override fun onCreateView(
@@ -59,11 +57,14 @@ class ChatFragment : Fragment() {
         )
 
         chatId = buildNewChatId()
+        android.util.Log.d("CHAT", ">> chatId resolvido = $chatId")
+
         setupRecycler()
         setupButtons()
         setupImeActions()
         applyImeInsets()
 
+        // SUBSCRIBE no tópico correto
         vm.subscribe(chatId)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -79,6 +80,12 @@ class ChatFragment : Fragment() {
         }
     }
 
+    /**
+     * Regras:
+     * - "global"/"mesa": exige idJogo e usa o próprio idJogo como chatId (ex.: "123")
+     * - "dm": exige myId e peerUserId -> "dm.<menor>_<maior>"
+     * Se idJogo não existir, aborta com erro explícito (evita cair em canais por sessão).
+     */
     private fun buildNewChatId(): String {
         val args = arguments
         val tipo = args?.getString("tipoChat")?.lowercase()?.trim()
@@ -101,10 +108,18 @@ class ChatFragment : Fragment() {
         val myId = vm.currentUserId()
 
         return when (tipo) {
-            "mesa"   -> idJogo?.let { ChatIds.mesa(it) } ?: ChatIds.session()
-            "global" -> ChatIds.global(idJogo)
-            "dm"     -> if (peerUserId != null && myId > 0) ChatIds.dm(myId, peerUserId) else ChatIds.session()
-            else     -> idJogo?.let { ChatIds.global(it) } ?: ChatIds.session()
+            "mesa", "global" -> {
+                requireNotNull(idJogo) { "idJogo obrigatório para chat de mesa/global" }
+                ChatIds.global(idJogo) // => "123"
+            }
+            "dm" -> {
+                require(myId > 0 && peerUserId != null) { "peerUserId e usuário atual obrigatórios para DM" }
+                ChatIds.dm(myId, peerUserId!!)
+            }
+            else -> {
+                requireNotNull(idJogo) { "idJogo obrigatório para chat" }
+                ChatIds.global(idJogo)
+            }
         }
     }
 
@@ -119,9 +134,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupButtons() = with(binding) {
-        btnSend.setOnClickListener {
-            sendCurrentText()
-        }
+        btnSend.setOnClickListener { sendCurrentText() }
         btnBackChat.setOnClickListener {
             val popped = findNavController().popBackStack(R.id.gameManager, false)
             if (!popped) findNavController().navigateUp()
@@ -130,31 +143,23 @@ class ChatFragment : Fragment() {
 
     private fun setupImeActions() = with(binding) {
         etMessage.setOnEditorActionListener { _, actionId, event ->
-            val pressedEnter =
-                event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
+            val pressedEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
             if (actionId == EditorInfo.IME_ACTION_SEND || pressedEnter) {
                 sendCurrentText()
                 true
-            } else {
-                false
-            }
+            } else false
         }
     }
 
-    /**
-     * Função centralizada: só manda se não estiver mandando já.
-     * Também limpa o campo de texto imediatamente pra evitar repetir conteúdo.
-     */
     private fun sendCurrentText() = with(binding) {
-        if (sendingNow) return@with  // bloqueia duplo clique/duplo enter
-
+        if (sendingNow) return@with
         val text = etMessage.text?.toString().orEmpty().trim()
         if (text.isEmpty()) return@with
 
         sendingNow = true
         btnSend.isEnabled = false
 
-        // dispara pro ViewModel
+        android.util.Log.d("CHAT", ">> SEND to /app/chat.$chatId.message : $text")
         vm.sendMessage(
             chatId = chatId,
             rawText = text,
@@ -162,11 +167,8 @@ class ChatFragment : Fragment() {
             senderId = vm.currentUserId(),
             senderNick = vm.currentUserNick() ?: "Você"
         )
-
-        // limpa a caixa ANTES que outro gatilho (IME/botão) tente mandar o mesmo texto
         etMessage.setText("")
 
-        // libera envio de novo num pequeno post no próximo loop
         btnSend.post {
             sendingNow = false
             btnSend.isEnabled = true

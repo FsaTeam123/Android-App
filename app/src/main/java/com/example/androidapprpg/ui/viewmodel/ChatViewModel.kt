@@ -2,17 +2,19 @@ package com.example.androidapprpg.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.androidapprpg.data.model.ChatDataModel.ChatMessage
+import com.example.androidapprpg.data.repository.SessionManager
 import com.example.androidapprpg.utils.websocket.ChatSocket
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.Instant
-import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val transport: ChatSocket
+    private val transport: ChatSocket,
+    private val session: SessionManager
 ) : ViewModel() {
 
     private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
@@ -22,10 +24,9 @@ class ChatViewModel @Inject constructor(
 
     fun subscribe(chatId: String) {
         transport.connectIfNeeded()
+        android.util.Log.d("CHAT", ">> SUB to /topic/chat.$chatId")
         transport.subscribe(chatId) { body ->
-            parseIncoming(body)?.let { incoming ->
-                handleIncomingFromServer(incoming)
-            }
+            parseIncoming(body)?.let { incoming -> handleIncomingFromServer(incoming) }
         }
     }
 
@@ -39,39 +40,29 @@ class ChatViewModel @Inject constructor(
         val text = rawText.trim()
         if (text.isEmpty()) return
 
-        // 1. monta msg do usuário
         val localMsg = ChatMessage(
             senderId = senderId,
             senderNick = senderNick,
             text = text,
             scope = scope,
-            tsMillis = System.currentTimeMillis(), // carimbo local temporário
+            tsMillis = System.currentTimeMillis(),
             pending = false
         )
 
-        // 2. coloca MINHA mensagem imediatamente na UI
+        // Renderiza imediatamente local
         appendLocalUserMessage(localMsg)
 
-        // 3. manda pro servidor
+        // Envia ao servidor
         transport.send(chatId, localMsg)
 
-        // 4. se chamou agente, coloca o placeholder AGORA
-        if (text.contains("@agente", ignoreCase = true)) {
-            addAgentThinkingPlaceholder()
-        }
+        // Placeholder do agente (se aplicável)
+        if (text.contains("@agente", ignoreCase = true)) addAgentThinkingPlaceholder()
     }
 
-    // ========== quando chega algo do servidor ==========
     private fun handleIncomingFromServer(m: ChatMessage) {
-        // se for resposta do agente, remover placeholder antes
-        if (m.senderId == -1L) {
-            removeAgentThinkingPlaceholderIfAny()
-        }
-
+        if (m.senderId == -1L) removeAgentThinkingPlaceholderIfAny()
         appendFromServerDedup(m)
     }
-
-    // ---- UI helpers ----
 
     private fun appendLocalUserMessage(m: ChatMessage) {
         _messages.value = _messages.value + m
@@ -79,7 +70,6 @@ class ChatViewModel @Inject constructor(
 
     private fun addAgentThinkingPlaceholder() {
         if (agentThinkingPending) return
-
         val placeholder = ChatMessage(
             senderId = -1L,
             senderNick = "Agente",
@@ -88,7 +78,6 @@ class ChatViewModel @Inject constructor(
             scope = "GLOBAL",
             pending = true
         )
-
         agentThinkingPending = true
         _messages.value = _messages.value + placeholder
     }
@@ -96,56 +85,31 @@ class ChatViewModel @Inject constructor(
     private fun removeAgentThinkingPlaceholderIfAny() {
         if (!agentThinkingPending) return
         agentThinkingPending = false
-
         val list = _messages.value.toMutableList()
         for (i in list.size - 1 downTo 0) {
             val msg = list[i]
             if (msg.senderId == -1L && msg.pending) {
-                list.removeAt(i)
-                break
+                list.removeAt(i); break
             }
         }
         _messages.value = list
     }
 
-    /**
-     * Adiciona mensagem vinda do servidor,
-     * mas evita duplicar se ela for idêntica à última mensagem local
-     * (mesmo senderId e mesmo texto).
-     */
     private fun appendFromServerDedup(m: ChatMessage) {
         val current = _messages.value
-
-        // 1. se NÃO é mensagem minha, não precisa dedupe
-        //    (ex.: agente, outro jogador, resposta final etc)
         if (m.senderId != currentUserId()) {
             _messages.value = current + m
             return
         }
-
-        // 2. achar da cauda pra trás a ÚLTIMA mensagem minha que não era placeholder,
-        //    ignorando o "Agente está pensando..." que veio depois
-        val lastRealMine: ChatMessage? = current
-            .asReversed()
+        val lastRealMine = current.asReversed()
             .firstOrNull { it.senderId == currentUserId() && !it.pending }
 
-        // 3. se eu já tenho uma mensagem minha igual (mesmo texto),
-        //    então esse 'eco' do servidor é duplicado -> ignora
-        val isDuplicateOfMyLocal =
-            lastRealMine != null &&
-                    lastRealMine.text == m.text
+        val isDuplicateOfMyLocal = lastRealMine != null && lastRealMine.text == m.text
+        if (isDuplicateOfMyLocal) return
 
-        if (isDuplicateOfMyLocal) {
-            // já renderizei essa mensagem localmente, então não adiciono de novo
-            return
-        }
-
-        // 4. caso contrário, adiciona normalmente
         _messages.value = current + m
     }
 
-
-    // ---------- parse incoming WS ----------
     private fun parseIncoming(json: String): ChatMessage? = runCatching {
         val el = JsonParser.parseString(json).asJsonObject
         val senderId   = el["senderId"]?.asLong ?: 0L
@@ -172,6 +136,7 @@ class ChatViewModel @Inject constructor(
         )
     }.getOrNull()
 
-    fun currentUserId(): Long = 1L
-    fun currentUserNick(): String? = "Você"
+    // ====== Agora usam SessionManager ======
+    fun currentUserId(): Long = session.getUserIdOrNull() ?: 0L
+    fun currentUserNick(): String? = session.getUserNick() ?: "Você"
 }

@@ -6,6 +6,7 @@ import android.util.Base64
 import android.util.LruCache
 import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModelRequest
+import com.example.androidapprpg.data.model.CardMagiasDataModel.CardMagiaDataModelResponse
 import com.example.androidapprpg.data.model.CardMagiasDataModel.EscolaMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.ExecucaoMagiaDataModel
 import com.example.androidapprpg.data.model.CardMagiasDataModel.ResistenciaDataModel
@@ -127,13 +128,12 @@ class CardMagiasRepository @Inject constructor(
      * POST de criar magia no backend.
      * Isso é intencional (ação do usuário), então aqui NÃO cacheia nada nem bloqueia.
      */
-    suspend fun createMagia(body: CardMagiaDataModelRequest): RepoResult<CardMagiaDataModel> {
+    // ---------- POST /magia-player ----------
+    suspend fun createMagia(body: CardMagiaDataModelRequest): RepoResult<CardMagiaDataModelResponse> {
         return safeCall {
             val resp = service.createMagia(body)
             if (resp.isSuccessful) {
-                val bodyOk = resp.body()
-                if (bodyOk != null) bodyOk
-                else throw IllegalStateException("Resposta sem corpo")
+                resp.body() ?: throw IllegalStateException("Resposta sem corpo")
             } else {
                 throw HttpException(resp)
             }

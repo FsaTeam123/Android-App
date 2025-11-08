@@ -20,6 +20,9 @@ data class UserResponseLogin(
     val nome: String?,
 
     @SerializedName("email")
-    val email: String?
+    val email: String?,
+
+    @SerializedName("nickname")
+    val nickname : String?
 
 )
